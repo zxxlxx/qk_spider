@@ -3,8 +3,8 @@ import re
 import unittest
 from flask import url_for
 from app import create_app, db
-from app.models.user import User
-from app.models.role import Role
+from app.models import User
+from app.models import Role
 
 
 class FlaskClientTestCase(unittest.TestCase):

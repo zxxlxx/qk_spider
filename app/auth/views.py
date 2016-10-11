@@ -92,7 +92,7 @@ def change_password():
     return render_template('auth/change_password.html', form=form)
 
 
-@auth.route('/change_email', methods=['GET', 'POST'])
+@auth.route('/change-email', methods=['GET', 'POST'])
 @login_required
 def change_email_request():
     form = ChangeEmailForm()
@@ -100,8 +100,12 @@ def change_email_request():
         if current_user.verify_password(form.password.data):
             new_email = form.email.data
             token = current_user.generate_email_change_token(new_email)
-            # send_
-            # TODO:/not finished
+            send_email(new_email, 'Confirm your email address', 'auth/email/change_email', user=current_user, token=token)
+            flash('An email with instructions to confirm your new email address has been sent to you.')
+            return redirect(url_for('main.index'))
+        else:
+            flash('Invalid email or password.')
+    return render_template('auth/change_email.html', form=form)
 
 
 @auth.route('/change-email/<token>')

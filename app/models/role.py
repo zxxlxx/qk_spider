@@ -15,7 +15,7 @@ class Role(db.Model, RoleMixin):
     users = db.relationship('User', backref='role', lazy='dynamic')
 
     @staticmethod
-    def insert_roles(self):
+    def insert_roles():
         roles = {
             'Guest': (Permission.GUEST, True),
             'User': (Permission.EDIT | Permission.GUEST, False),

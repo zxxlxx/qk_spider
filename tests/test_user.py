@@ -4,9 +4,9 @@
 from unittest import TestCase
 import time
 from app import create_app, db
-from app.models.user import User
-from app.models.role import Role
-from app.models.permission import Permission
+from app.models import User
+from app.models import Role
+from app.models import Permission
 
 
 class TestUser(TestCase):

@@ -68,10 +68,11 @@ class Zzc:
     @classmethod
     def update(cls, apply_id, json_data):
         """update a loan apply information"""
-        result = requests.post(CHEAT_LIST_BASE_URL + apply_id,
+        result = requests.put(CHEAT_LIST_BASE_URL + apply_id,
                                json=json_data,
                                auth=cls.auth,
-                               headers=cls.headers)
+                               headers=cls.headers,
+                               verify=False)
         return True if result.status_code == requests.codes.ok else False
 
     @classmethod
@@ -99,7 +100,7 @@ class Zzc:
         用户可以只调用该接口"""
         result = requests.get(CHEAT_LIST_BASE_URL + apply_id + "/rule_result",
                               auth=cls.auth,
-                              timout=10,
+                              timeout=10,
                               verify=False)
         return True if result.status_code == requests.codes.ok else False
 

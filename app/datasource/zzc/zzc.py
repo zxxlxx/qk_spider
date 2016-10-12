@@ -16,33 +16,61 @@ print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resol
 # TODO:unsolved reference config.py
 # 用户名
 NAME = "yecm@qkjr.com.cn"
+
 # 密码
 PASSWORD = "xfBJKD6x-vHuQZyrWfZ2"
+
+# api url
+NEZHA = "https://nezha.intellicredit.cn/api/v2/"
+
 # 反欺诈API入口
-CHEAT_LIST_BASE_URL = "https://nezha.intellicredit.cn/api/v2/applications/"
+CHEAT_LIST_BASE_URL = NEZHA + "applications/"
+
 # 黑名单API入口
-BACK_LIST_BASE_URL = "https://nezha.intellicredit.cn/api/v2/blacklist/"
+BACK_LIST_BASE_URL = NEZHA + "blacklist/"
 
 
 class Zzc:
     """get zhong zhi cheng anti fraud data"""
+    headers = {'Content-Type': 'application/json'}
+    auth = (NAME, PASSWORD)
 
     def __init__(self):
-        self.headers = {'Content-Type': 'application/json'}
+        pass
 
-    def show_by_institution(self, apply_id):
+    @classmethod
+    def show_by_institution(cls, apply_id):
         """return a apply insformation by specify institution """
         result = requests.get(CHEAT_LIST_BASE_URL + apply_id,
-                              auth=(NAME, PASSWORD),
-                              headers=self.headers,
+                              auth=cls.auth,
+                              headers=cls.headers,
                               timeout=1)
+
         if result.status_code == requests.codes.ok:
             page = result.json()
+            r = True
         else:
             page = ''
-        return page, result.status_code
+            r = False
+        return page, r
 
+    @classmethod
+    def create(cls, json_data):
+        """create a loan apply information"""
+        result = requests.post(CHEAT_LIST_BASE_URL,
+                               json=json_data,
+                               auth=cls.auth,
+                               headers=cls.headers)
+        return True if result.status_code == requests.codes.created else False
 
+    @classmethod
+    def update(cls, apply_id, json_data):
+        """update a loan apply information"""
+        result = requests.post(CHEAT_LIST_BASE_URL + apply_id,
+                               json=json_data,
+                               auth=cls.auth,
+                               headers=cls.headers)
+        return True if result.status_code == requests.codes.ok else False
 
 if __name__ == '__main__':
     pass

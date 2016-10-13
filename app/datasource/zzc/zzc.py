@@ -3,31 +3,30 @@
 import sys
 import os
 import requests
-import json
 from pathlib import Path
+import yaml
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
+basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+stream = open(basedir + '/config.yml', 'r', encoding='utf8')
+configuration = yaml.load(stream)
+config_zzc = configuration.get('zzc')
 
-
-# TODO:unsolved reference config.py
 # 用户名
-NAME = "yecm@qkjr.com.cn"
+NAME = config_zzc.get('name')
 
 # 密码
-PASSWORD = "xfBJKD6x-vHuQZyrWfZ2"
-
-# api url
-NEZHA = "https://nezha.intellicredit.cn/api/v2/"
+PASSWORD = config_zzc.get('password')
 
 # 反欺诈API入口
-CHEAT_LIST_BASE_URL = NEZHA + "applications/"
+CHEAT_LIST_BASE_URL = config_zzc.get('cheatListBaseUrl') + '/'
 
 # 黑名单API入口
-BACK_LIST_BASE_URL = NEZHA + "blacklist/"
+BACK_LIST_BASE_URL = config_zzc.get('backListBaseUrl')
 
 
 class Zzc:
@@ -44,8 +43,7 @@ class Zzc:
         result = requests.get(CHEAT_LIST_BASE_URL + apply_id,
                               auth=cls.auth,
                               headers=cls.headers,
-                              timeout=1,
-                              verify=False)
+                              timeout=1)
 
         if result.status_code == requests.codes.ok:
             page = result.json()
@@ -61,8 +59,7 @@ class Zzc:
         result = requests.post(CHEAT_LIST_BASE_URL,
                                json=json_data,
                                auth=cls.auth,
-                               headers=cls.headers,
-                               verify=False)
+                               headers=cls.headers)
         return True if result.status_code == requests.codes.created else False
 
     @classmethod
@@ -71,8 +68,7 @@ class Zzc:
         result = requests.put(CHEAT_LIST_BASE_URL + apply_id,
                                json=json_data,
                                auth=cls.auth,
-                               headers=cls.headers,
-                               verify=False)
+                               headers=cls.headers)
         return True if result.status_code == requests.codes.ok else False
 
     @classmethod
@@ -80,8 +76,7 @@ class Zzc:
         """删除一条已经上传的申请信息"""
         result = requests.delete(CHEAT_LIST_BASE_URL + apply_id,
                                  auth=cls.auth,
-                                 timeout=1,
-                                 verify=False)
+                                 timeout=1)
         return True if result.status_code == requests.codes.no_content else False
 
     @classmethod
@@ -89,8 +84,7 @@ class Zzc:
         """该请求获取当前的申请信息的反欺诈报告,包含规则引擎的结果以及黑名单的结果"""
         result = requests.get(CHEAT_LIST_BASE_URL + apply_id + '/report',
                               auth=cls.auth,
-                              timeout=30,
-                              verify=False)
+                              timeout=30)
         return True if result.status_code == requests.codes.ok else False
 
     @classmethod
@@ -100,8 +94,7 @@ class Zzc:
         用户可以只调用该接口"""
         result = requests.get(CHEAT_LIST_BASE_URL + apply_id + "/rule_result",
                               auth=cls.auth,
-                              timeout=10,
-                              verify=False)
+                              timeout=10)
         return True if result.status_code == requests.codes.ok else False
 
 if __name__ == '__main__':

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GBK"?>
+<conditions>
+	<condition queryType="25160">
+		<item>
+			<name>name</name>
+			<value>阎伟晨</value>
+		</item>
+		<item>
+			<name>documentNo</name>
+			<value>610102199407201510</value>
+		</item> 
+         <item>
+			<name>subreportIDs</name>
+			<value>10604</value>
+		</item> 
+		 <item>
+			<name>queryReasonID</name>
+			<value>101</value>
+		</item>  
+		<item>
+			<name>refID</name>			
+			<value>测试</value>
+		</item>
+	</condition>
+</conditions>
+
+
+

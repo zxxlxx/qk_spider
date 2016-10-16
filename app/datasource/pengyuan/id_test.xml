@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="GBK"?>
 <conditions>
-	<condition queryType="25160">
+	<!-- 每一个查询一个condition节点。本文档所有内容均区分大小写，请注意。 -->
+	<condition queryType="25205">
+		<!-- 查询行业景气指数 -->
 		<item>
-			<name>name</name>
-			<value>阎伟晨</value>
+			<name>industryCode</name>
+			<value>C311</value>
+		</item>
+	
+		<item>
+			<name>subreportIDs</name>
+			<value>22703</value>
 		</item>
 		<item>
-			<name>documentNo</name>
-			<value>610102199407201510</value>
-		</item> 
-         <item>
-			<name>subreportIDs</name>
-			<value>10604</value>
-		</item> 
-		 <item>
-			<name>queryReasonID</name>
-			<value>101</value>
-		</item>  
-		<item>
 			<name>refID</name>			
-			<value>测试</value>
+			<value>引用ID，查询者提交的用于识别本次查询的流水号，系统返回结果中会原样包含该流水号。可以为空。</value>
 		</item>
 	</condition>
 </conditions>

@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from suds.client import Client
-from suds import WebFault
 import logging
 import io
-import base64
-import zlib
 from lxml import etree
 
 import jpype
@@ -14,113 +11,107 @@ import os.path
 import pydevd
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
-jvm_path = jpype.getDefaultJVMPath()
-basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-jar_path = basedir + '/pengyuan.jar'
-jvmArg = "-Djava.class.path=" + jar_path
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-if jpype.isJVMStarted():
-    jpype.shutdownJVM()
-else:
-    jpype.startJVM(jvm_path, '-ea', jvmArg)
-#    jpype.startJVM(jvm_path, "-ea", jvmArg)
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('suds.client').setLevel(logging.DEBUG)
 
 
-#
-# basedir = os.path.abspath(os.path.dirname(__file__))
-# with io.open(basedir + '/id_test.xml', 'r', encoding='GBK') as c:
-#     condition = c.read()
-#
-# logging.basicConfig(level=logging.INFO)
-# logging.getLogger('suds.client').setLevel(logging.DEBUG)
-#
-# URL = "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
-#
-# USER_NAME = 'qkwsquery'
-# PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
-#
-# client = Client(URL)
-# # print(client)
-# client.set_options(port='WebServiceSingleQuery')
-# bz_result = str(client.service.queryReport(USER_NAME, PASSWORD, condition, 'xml'))
-# xml_data = etree.fromstring(bz_result)
-# data = bytes(xml_data.find('returnValue').text)
-# print(data)
-# z_result = base64.decodestring(data)
-# result = zlib.decompress(z_result)
-# print(result)
+class PengYuan:
+    '''
+    获取鹏元数据工具类
+    '''
 
-data = '''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'''
-# bdata = bytes(data, encoding='utf-8')
+    URL = "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
+    USER_NAME = 'qkwsquery'
+    PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
 
-# z_result = base64.b64decode(bdata)
-# print(z_result[0])
-# result = zlib.decompress(z_result)
+    def __init__(self):
+        self.jvm_path = jpype.getDefaultJVMPath()
+        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        jar_path = basedir + '/pengyuan.jar'
+        self.jvmArg = "-Djava.class.path=" + jar_path
+        self.client = Client(PengYuan.URL)
 
-ta = jpype.JPackage('cardpay').Base64
-b64 = ta()
-z_result = b64.decode(data)
-c = jpype.JPackage('cardpay').CompressStringUtil
-cs = c()
-xml = c.decompress(z_result)
-print(xml)
+    def start_jvm(self):
+        try:
+            if jpype.isJVMStarted():
+                jpype.shutdownJVM()
+            jpype.startJVM(self.jvm_path, '-ea', self.jvmArg)
+        except InterruptedError as e:
+            logging.debug("JVM启动失败{}", e)
+
+    def stop_jvm(self):
+        jpype.shutdownJVM()
+
+    def create_query_condition(self):
+        """
+        生成查询条件
+        :return:
+        """
+        with io.open(basedir + '/id_test.xml', 'r', encoding='GBK') as c:
+            condition = c.read()
+        return condition
+
+    def query(self, condition):
+        """
+        根据条件申请查询
+        :param condition: 查询条件
+        :return: 查询结果,返回查询到的值
+        """
+        self.client.set_options(port='WebServiceSingleQuery')
+        bz_result = self.client.service.queryReport(PengYuan.USER_NAME, PengYuan.PASSWORD, condition, 'xml')\
+            .encode('utf-8').strip()
+        result = self.__format_result(bz_result)
+        return result
+
+    def __to_xml(self, bz_result):
+        try:
+            xml_data = etree.fromstring(bz_result)
+        except ValueError as e:
+            logging.error("结果转换xml失败{}!", e)
+        return xml_data
+
+    def __get_result_code(self, xml_result):
+        code = xml_result.find('status')
+        return code
+
+    def __format_result(self, bz_result):
+        xml_result = self.__to_xml(bz_result)
+        if self.__get_result_code(xml_result) != 1:
+            err_code = xml_result.find('errorCode').text
+            err_message = xml_result.find('errorMessage').text
+            logging.error("查询异常!异常代码:{}, 错误信息:{}", err_code, err_message)
+            return
+        rv = self.__format_result_value(xml_result)
+        return rv
+
+    def __get_result_value(self, xml_data):
+        """
+        获取结果中的结果值
+        :param bz_result:
+        :return:
+        """
+        data = bytes(xml_data.find('returnValue').text)
+        rv = self.__format_result_value(data)
+        return rv
+
+    def __format_result_value(self, data):
+        """
+        对查询到结果结果进行解码
+        :return:
+        """
+        self.start_jvm()
+        ta = jpype.JPackage('cardpay').Base64
+        b64 = ta()
+        z_result = b64.decode(data)
+        cs = jpype.JPackage('cardpay').CompressStringUtil
+        rv = cs.decompress(z_result)
+        self.stop_jvm()
+        return rv
+
+if __name__ == '__main__':
+    py = PengYuan()
+    condition = py.create_query_condition()
+    result = py.query(condition)
+    print(result)

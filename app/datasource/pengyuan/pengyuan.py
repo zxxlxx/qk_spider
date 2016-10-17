@@ -10,7 +10,7 @@ import os.path
 
 import pydevd
 
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -23,6 +23,7 @@ class PengYuan:
     获取鹏元数据工具类
     '''
 
+
     URL = "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
     USER_NAME = 'qkwsquery'
     PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
@@ -33,6 +34,7 @@ class PengYuan:
         jar_path = basedir + '/pengyuan.jar'
         self.jvmArg = "-Djava.class.path=" + jar_path
         self.client = Client(PengYuan.URL)
+        pass
 
     def start_jvm(self):
         try:
@@ -50,9 +52,27 @@ class PengYuan:
         生成查询条件
         :return:
         """
-        with io.open(basedir + '/id_test.xml', 'r', encoding='GBK') as c:
-            condition = c.read()
-        return condition
+        # with io.open(basedir + '/id_test.xml', 'r', encoding='GBK') as c:
+        #     condition = c.read()
+        # return condition
+        query_template = '<?xml version="1.0" encoding="GBK"?>' \
+                         '<conditions>' \
+                         '<condition queryType="{}">' \
+                         '</condition>' \
+                         '</conditions>'.format(query_code).encode()
+        query_t = self.__to_xml(query_template)
+        for n, v in kwargs.items():
+            # conditions = query_t.Element('conditions')
+            # condition = query_t.SubElement(conditions, 'condition')
+            condition_reg = "//conditions/condition"
+            condition = query_t.xpath(condition_reg)[0]
+            item = etree.SubElement(condition, 'item')
+            name = etree.SubElement(item, 'name')
+            name.text = n
+            value = etree.SubElement(item, 'value')
+            value.text = v
+        return etree.tostring(query_t)
+
 
     def query(self, condition):
         """
@@ -60,6 +80,7 @@ class PengYuan:
         :param condition: 查询条件
         :return: 查询结果,返回查询到的值
         """
+
         self.client.set_options(port='WebServiceSingleQuery')
         bz_result = self.client.service.queryReport(PengYuan.USER_NAME, PengYuan.PASSWORD, condition, 'xml') \
             .encode('utf-8').strip()
@@ -74,9 +95,10 @@ class PengYuan:
         """
         try:
             xml_data = etree.fromstring(bz_result)
+            return xml_data
         except ValueError as e:
             logging.error("结果转换xml失败{}!", e)
-        return xml_data
+
 
     def __get_result_code(self, xml_result):
         """
@@ -171,38 +193,14 @@ class PengYuan:
                         999: "其他"
                         }
 
-        query_template = '''
-        <?xml version="1.0" encoding="GBK"?>
-        <conditions>
-            <condition queryType="25160">
-                <item>
-                    <name>name</name>
-                    <value>阎伟晨</value>
-                </item>
-                <item>
-                    <name>documentNo</name>
-                    <value>610102199407201510</value>
-                </item>
-                <item>
-                    <name>subreportIDs</name>
-                    <value>10604</value>
-                </item>
-                <item>
-                    <name>queryReasonID</name>
-                    <value>101</value>
-                </item>
-                <item>
-                    <name>refID</name>
-                    <value>测试</value>
-                </item>
-            </condition>
-        </conditions>
-        '''
-
-
 
 if __name__ == '__main__':
     py = PengYuan()
-    condition = py.create_query_condition()
+    conditions = {'subreportIDs': '10604',
+                  'queryReasonID': '101',
+                  'name': u'阎伟晨',
+                  'documentNo': '610102199407201510',
+                  'refID': u'测试'}
+    condition = py.create_query_condition('25160', **conditions)
     result = py.query(condition)
     print(result)

@@ -7,10 +7,10 @@ from lxml import etree
 
 import jpype
 import os.path
-
+import pickle
 import pydevd
 
-# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -52,9 +52,6 @@ class PengYuan:
         生成查询条件
         :return:
         """
-        # with io.open(basedir + '/id_test.xml', 'r', encoding='GBK') as c:
-        #     condition = c.read()
-        # return condition
         query_template = '<?xml version="1.0" encoding="GBK"?>' \
                          '<conditions>' \
                          '<condition queryType="{}">' \
@@ -62,8 +59,6 @@ class PengYuan:
                          '</conditions>'.format(query_code).encode()
         query_t = self.__to_xml(query_template)
         for n, v in kwargs.items():
-            # conditions = query_t.Element('conditions')
-            # condition = query_t.SubElement(conditions, 'condition')
             condition_reg = "//conditions/condition"
             condition = query_t.xpath(condition_reg)[0]
             item = etree.SubElement(condition, 'item')
@@ -73,14 +68,12 @@ class PengYuan:
             value.text = v
         return etree.tostring(query_t)
 
-
     def query(self, condition):
         """
         根据条件申请查询
         :param condition: 查询条件
         :return: 查询结果,返回查询到的值
         """
-
         self.client.set_options(port='WebServiceSingleQuery')
         bz_result = self.client.service.queryReport(PengYuan.USER_NAME, PengYuan.PASSWORD, condition, 'xml') \
             .encode('utf-8').strip()
@@ -167,7 +160,6 @@ class PengYuan:
         return rv
 
     def query_personal_id_risk(self, name, id, subreport_id, reason_id, ref_id=None):
-
         query_type = 25160
         sub_report = {10604: True, 10603: False, 14200: True}
         query_reason = {101: "货款审批",
@@ -193,14 +185,33 @@ class PengYuan:
                         999: "其他"
                         }
 
-
 if __name__ == '__main__':
     py = PengYuan()
+    query_type = '25160'
     conditions = {'subreportIDs': '10604',
                   'queryReasonID': '101',
                   'name': u'阎伟晨',
                   'documentNo': '610102199407201510',
                   'refID': u'测试'}
-    condition = py.create_query_condition('25160', **conditions)
+    condition = py.create_query_condition(query_type, **conditions)
     result = py.query(condition)
+
+    def create_file():
+        file_name = conditions.get('subreportIDs')
+        file_dir = basedir + '/result/' + query_type + '/'
+        if not os.path.exists(file_dir):
+            os.mkdir(file_dir)
+        file_path = file_dir + conditions.get('documentNo')
+        return file_path
+
+    if result is not None:
+        file_path = create_file()
+        file_in = file_path + '_in.xml'
+        file_out = file_path + '_out.xml'
+        with open(file_in, 'wb') as fi:
+            fi.write(condition.encode('utf-8'))
+
+        with open(file_out, 'wb') as fo:
+            fo.write(result.encode('utf-8'))
+
     print(result)

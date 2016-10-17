@@ -159,8 +159,28 @@ class PengYuan:
         rv = cs.decompress(z_result)
         return rv
 
-    def query_personal_id_risk(self, name, id, subreport_id, reason_id, ref_id=None):
+    def query_personal_id_risk(self, name, documentNo, subreportIDs, queryReasonID, refID=None):
+        """
+        个人身份认证信息/风险信息查询
+        :param name: 姓名
+        :param documentNo: 身份证号
+        :param subreportIDs: 子查询
+        :param queryReasonID: 查询原因
+        :param refID: 引用ID
+        :return: 查询结果
+        """
         query_type = 25160
+        conditions = {'name': name,
+                      'documentNo': documentNo,
+                      'subreportIDs': subreportIDs,
+                      'queryReasonID': queryReasonID,
+                      'refID': refID
+                      }
+        condition = self.create_query_condition(query_type, **conditions)
+        result = self.query(condition)
+        return result, condition, query_type
+
+    def test_query_personal_id_risk(self, name, documentNo):
         sub_report = {10604: True, 10603: False, 14200: True}
         query_reason = {101: "货款审批",
                         102: "货款贷后管理",
@@ -184,34 +204,30 @@ class PengYuan:
                         901: "了解个人信用",
                         999: "其他"
                         }
+        sr = '14200'
+        qr = '201'
+        result, condition, query_type = self.query_personal_id_risk(name, documentNo, sr, qr)
+        if result is not None:
+            self.create_file(result, condition, query_type, sr, qr)
+
+    def create_file(self, condition, result, query_type, *args):
+        file_dir = basedir + '/result/' + str(query_type) + '/'
+        if not os.path.exists(file_dir):
+            os.mkdirs(file_dir)
+        file_path = file_dir + str(condition.get('documentNo'))
+        for ar in args:
+            file_in = file_path + ar
+            file_out = file_path + ar
+        file_in += '_in.xml'
+        file_out += '_out.xml'
+
+        if result is not None:
+            with open(file_in, 'wb') as fi:
+                fi.write(condition.encode('utf-8'))
+
+            with open(file_out, 'wb') as fo:
+                fo.write(result.encode('utf-8'))
 
 if __name__ == '__main__':
     py = PengYuan()
-    query_type = '25160'
-    conditions = {'subreportIDs': '10604',
-                  'queryReasonID': '101',
-                  'name': u'阎伟晨',
-                  'documentNo': '610102199407201510',
-                  'refID': u'测试'}
-    condition = py.create_query_condition(query_type, **conditions)
-    result = py.query(condition)
-
-    def create_file():
-        file_name = conditions.get('subreportIDs')
-        file_dir = basedir + '/result/' + query_type + '/'
-        if not os.path.exists(file_dir):
-            os.mkdir(file_dir)
-        file_path = file_dir + conditions.get('documentNo')
-        return file_path
-
-    if result is not None:
-        file_path = create_file()
-        file_in = file_path + '_in.xml'
-        file_out = file_path + '_out.xml'
-        with open(file_in, 'wb') as fi:
-            fi.write(condition.encode('utf-8'))
-
-        with open(file_out, 'wb') as fo:
-            fo.write(result.encode('utf-8'))
-
-    print(result)
+    py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')

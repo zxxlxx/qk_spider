@@ -2,19 +2,15 @@
 import os
 from suds.client import Client
 import logging
-import io
 from lxml import etree
 
 import jpype
 import os.path
 import inspect
-import pickle
 import pydevd
 import pkgutil
 
-# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
-
-basedir = os.path.abspath(os.path.dirname(__file__))
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('suds.client').setLevel(logging.DEBUG)
@@ -31,11 +27,11 @@ class PengYuan:
     PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
 
     def __init__(self):
-        # self.jvm_path = jpype.getDefaultJVMPath()
-        # basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        # jar_path = basedir + '/pengyuan.jar'
-        # self.jvmArg = "-Djava.class.path=" + jar_path
-        # self.client = Client(PengYuan.URL)
+        self.jvm_path = jpype.getDefaultJVMPath()
+        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        jar_path = basedir + '/pengyuan.jar'
+        self.jvmArg = "-Djava.class.path=" + jar_path
+        self.client = Client(PengYuan.URL)
         pass
 
     def start_jvm(self):

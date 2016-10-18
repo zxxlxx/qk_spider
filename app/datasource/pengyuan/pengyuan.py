@@ -9,6 +9,7 @@ import jpype
 import os.path
 import pickle
 import pydevd
+import pkgutil
 
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
@@ -112,7 +113,8 @@ class PengYuan:
         if self.__get_result_code(xml_result) != 1:
             err_code = xml_result.find('errorCode').text
             err_message = xml_result.find('errorMessage').text
-            logging.error("查询异常!异常代码:{}, 错误信息:{}", err_code, err_message)
+            log = u"查询异常!异常代码:{}, 错误信息:{}".format(err_code, err_message)
+            logging.error(log)
             return
         rv = self.__get_result_value(xml_result)
         return rv
@@ -204,9 +206,10 @@ class PengYuan:
                         901: "了解个人信用",
                         999: "其他"
                         }
-        sr = '14200'
-        qr = '201'
+        sr = '10604'
+        qr = '101'
         result, condition, query_type = self.query_personal_id_risk(name, documentNo, sr, qr)
+
         if result is not None:
             self.create_file(result, condition, query_type, sr, qr)
 

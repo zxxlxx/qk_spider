@@ -5,6 +5,7 @@ import os
 import requests
 from pathlib import Path
 import yaml
+import pkgutil
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
@@ -13,6 +14,7 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 stream = open(basedir + '/config.yml', 'r', encoding='utf8')
+
 configuration = yaml.load(stream)
 config_zzc = configuration.get('zzc')
 

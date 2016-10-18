@@ -7,11 +7,12 @@ from lxml import etree
 
 import jpype
 import os.path
+import inspect
 import pickle
 import pydevd
 import pkgutil
 
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -30,11 +31,11 @@ class PengYuan:
     PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
 
     def __init__(self):
-        self.jvm_path = jpype.getDefaultJVMPath()
-        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        jar_path = basedir + '/pengyuan.jar'
-        self.jvmArg = "-Djava.class.path=" + jar_path
-        self.client = Client(PengYuan.URL)
+        # self.jvm_path = jpype.getDefaultJVMPath()
+        # basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        # jar_path = basedir + '/pengyuan.jar'
+        # self.jvmArg = "-Djava.class.path=" + jar_path
+        # self.client = Client(PengYuan.URL)
         pass
 
     def start_jvm(self):
@@ -172,15 +173,31 @@ class PengYuan:
         :return: 查询结果
         """
         query_type = 25160
-        conditions = {'name': name,
-                      'documentNo': documentNo,
-                      'subreportIDs': subreportIDs,
-                      'queryReasonID': queryReasonID,
-                      'refID': refID
-                      }
+        conditions = generate_condition()
         condition = self.create_query_condition(query_type, **conditions)
         result = self.query(condition)
         return result, condition, query_type
+
+    def query_card_pay_record(self, name, cardNos, beginDate, endDate,
+                              subreportIDs, queryReasonID, documentNo=None, refID=None):
+        """
+        卡多笔交易记录验请求xml规范
+        :param name:
+        :param cardNos:
+        :param beginDate:
+        :param endDate:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param documentNo:
+        :param refID:
+        :return:
+        """
+        query_type = 25199
+        conditions = generate_condition()
+        # TODO:这里有时间通过inspect写一个自动生成dict的注解
+        condition = self.create_query_condition(query_type, **conditions)
+        result = self.query(condition)
+        return result
 
     def test_query_personal_id_risk(self, name, documentNo):
         sub_report = {10604: True, 10603: False, 14200: True}
@@ -231,6 +248,19 @@ class PengYuan:
             with open(file_out, 'wb') as fo:
                 fo.write(result.encode('utf-8'))
 
+
+def generate_condition():
+    """
+    根据外层参数名,生成参数字典,当参数值为None时,不生成该项,保证参数名符合接口要求
+    :return: 生成的{参数:值}字典
+    """
+    cf = inspect.currentframe()
+    frame = inspect.getouterframes(cf)[1].frame
+    args, _, _, values = inspect.getargvalues(frame)
+    # print('function name "%s"' % inspect.getframeinfo(frame)[2])
+    return {i: values[i] for i in args if values[i] is not None}
+
 if __name__ == '__main__':
     py = PengYuan()
-    py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
+    # py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
+    # py.query_card_pay_record(u'孙立超', '6212263700008736284', '2016-01-01', '2016-10-17', '14506', '101')

@@ -21,7 +21,6 @@ class PengYuan:
     获取鹏元数据工具类
     '''
 
-
     URL = "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
     USER_NAME = 'qkwsquery'
     PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
@@ -47,9 +46,11 @@ class PengYuan:
 
     def create_query_condition(self, query_code, **kwargs):
         """
-        生成查询条件
+        生成查询条件,如果没有给定kwargs值, 该函数必须在query_内调用,根据外层函数参数自动生成查询条件
         :return:
         """
+        if not len(kwargs):
+            kwargs = generate_condition()
         query_template = '<?xml version="1.0" encoding="GBK"?>' \
                          '<conditions>' \
                          '<condition queryType="{}">' \
@@ -89,7 +90,6 @@ class PengYuan:
             return xml_data
         except ValueError as e:
             logging.error("结果转换xml失败{}!", e)
-
 
     def __get_result_code(self, xml_result):
         """
@@ -168,11 +168,7 @@ class PengYuan:
         :param refID: 引用ID
         :return: 查询结果
         """
-        query_type = 25160
-        conditions = generate_condition()
-        condition = self.create_query_condition(query_type, **conditions)
-        result = self.query(condition)
-        return result, condition, query_type
+        return self.query(self.create_query_condition(25160))
 
     def query_card_pay_record(self, name, cardNos, beginDate, endDate,
                               subreportIDs, queryReasonID, documentNo=None, refID=None):
@@ -188,12 +184,23 @@ class PengYuan:
         :param refID:
         :return:
         """
-        query_type = 25199
-        conditions = generate_condition()
-        # TODO:这里有时间通过inspect写一个自动生成dict的注解
-        condition = self.create_query_condition(query_type, **conditions)
-        result = self.query(condition)
-        return result
+        return self.query(self.create_query_condition(25199))
+
+    def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
+                                 mobile, subreportIDs, queryReasonID, refID=None):
+        """
+        查询个人银行账户核查信息
+        :param name:
+        :param documentNo:
+        :param accountNo:
+        :param openBankNo:
+        :param mobile:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.query(self.create_query_condition(25173))
 
     def test_query_personal_id_risk(self, name, documentNo):
         sub_report = {10604: True, 10603: False, 14200: True}
@@ -227,6 +234,15 @@ class PengYuan:
             self.create_file(result, condition, query_type, sr, qr)
 
     def create_file(self, condition, result, query_type, *args):
+        """
+        该函数废弃
+        :param condition:
+        :param result:
+        :param query_type:
+        :param args:
+        :return:
+        """
+        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         file_dir = basedir + '/result/' + str(query_type) + '/'
         if not os.path.exists(file_dir):
             os.mkdirs(file_dir)
@@ -251,12 +267,15 @@ def generate_condition():
     :return: 生成的{参数:值}字典
     """
     cf = inspect.currentframe()
-    frame = inspect.getouterframes(cf)[1].frame
+    frame = inspect.getouterframes(cf)[2][0]
     args, _, _, values = inspect.getargvalues(frame)
     # print('function name "%s"' % inspect.getframeinfo(frame)[2])
-    return {i: values[i] for i in args if values[i] is not None}
+    result = {i: values[i] for i in args if values[i] is not None}
+    result.pop('self')
+    return result
 
 if __name__ == '__main__':
     py = PengYuan()
-    # py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
+    py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
     # py.query_card_pay_record(u'孙立超', '6212263700008736284', '2016-01-01', '2016-10-17', '14506', '101')
+    # py.query_personal_bank_info(name=u'孙立超', documentNo='210114198701251232', accountNo='6212263700008736284', )

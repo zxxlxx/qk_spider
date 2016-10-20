@@ -2,12 +2,13 @@
 from abc import ABCMeta, abstractmethod
 
 
-class DataFormat(dict):
+class InnerResult(dict):
     """
     内部使用的数据格式
     """
-
-    pass
+    srouce = ''
+    received_time = None
+    data = {}
 
 
 class Query(metaclass=ABCMeta):

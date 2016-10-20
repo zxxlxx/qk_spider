@@ -9,6 +9,7 @@ import os.path
 import inspect
 import pydevd
 import pkgutil
+import xmltodict
 
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
@@ -24,6 +25,7 @@ class PengYuan:
     URL = "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
     USER_NAME = 'qkwsquery'
     PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
+    source = 'pengyuan'
 
     def __init__(self):
         self.jvm_path = jpype.getDefaultJVMPath()
@@ -233,6 +235,32 @@ class PengYuan:
         if result is not None:
             self.create_file(result, condition, query_type, sr, qr)
 
+    def format_result(self, xml_data):
+        """
+        处理查询结果,提取需要的信息
+        :param xml_data: xml格式的查询结果
+        :return:
+        """
+        # TODO: 先简单处理,之后在完善,未完成
+        xml_result = etree.fromstring(xml_data)
+        cisReport = xml_result.find('cisReports/cisReport')
+        hasSystemError = bool(cisReport.get('hasSystemError'))
+        isFrozen = bool(cisReport.get('isFrozen'))
+        if hasSystemError and isFrozen:
+            return
+
+        result = {}
+        for item in cisReport.items():
+            if item.tag == 'queryConditions':
+                continue
+            item_dict = {}
+            if item.get('treatResult') == '1':
+                item_dict1 = {}
+                for item1 in item.items():
+                    if item1.tag == 'item':
+                        pass
+
+
     def create_file(self, condition, result, query_type, *args):
         """
         该函数废弃
@@ -276,6 +304,6 @@ def generate_condition():
 
 if __name__ == '__main__':
     py = PengYuan()
-    py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
-    # py.query_card_pay_record(u'孙立超', '6212263700008736284', '2016-01-01', '2016-10-17', '14506', '101')
-    # py.query_personal_bank_info(name=u'孙立超', documentNo='210114198701251232', accountNo='6212263700008736284', )
+    # py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
+
+

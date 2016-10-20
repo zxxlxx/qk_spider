@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
+import logging
 from oauthlib import oauth2
 
 bootstrap = Bootstrap()
@@ -24,6 +25,11 @@ login_manager.login_view = 'auth'
 
 def create_app(config_name):
     app = Flask(__name__)
+
+    # TODO:先简单的创建日志文件
+    log_handler = logging.FileHandler('flask.log')
+    app.logger.addHandler(log_handler)
+
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 

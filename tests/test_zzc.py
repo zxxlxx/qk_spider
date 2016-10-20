@@ -19,28 +19,28 @@ class TestZzc(TestCase):
             "pid": "610527199005154925"
         }
     }
-
+    zzc = Zzc()
     def test_show_by_institution(self):
-        result = Zzc.show_by_institution(TestZzc.apply_id)
+        result = self.zzc.show_by_institution(TestZzc.apply_id)
         assert result[1]
 
     def test_create(self):
-        result = Zzc.create(self.data)
+        result = self.zzc.create(self.data)
         assert result
 
     def test_update(self):
-        result = Zzc.update(TestZzc.apply_id, self.data)
+        result = self.zzc.update(TestZzc.apply_id, self.data)
         assert result
 
     def test_delete(self):
-        result = Zzc.delete(TestZzc.apply_id)
+        result = self.zzc.delete(TestZzc.apply_id)
         assert result
 
     def test_anti_fraud_report(self):
-        result = Zzc.anti_fraud_report(TestZzc.apply_id)
+        result = self.zzc.anti_fraud_report(TestZzc.apply_id)
         assert result
 
     def test_rule_report(self):
-        result = Zzc.rule_report(TestZzc.apply_id)
+        result = self.zzc.rule_report(TestZzc.apply_id)
         assert result
 

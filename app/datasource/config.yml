@@ -9,3 +9,13 @@ zzc:
   cheatListBaseUrl: "https://nezha.intellicredit.cn/api/v2/applications"
   # 黑名单API入口
   backListBaseUrl: "https://nezha.intellicredit.cn/api/v2/blacklist"
+
+pengyuan:
+  # api 入口地址
+  url: "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
+  # 用户名
+  name: 'qkwsquery'
+  # 密码
+  password: 'qW+06PsdwM+y1fjeH7w3vw=='
+  # 数据源名称
+  source: 'pengyuan'

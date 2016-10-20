@@ -3,7 +3,7 @@ import os
 from suds.client import Client
 import logging
 from lxml import etree
-
+from ..configuration import config
 import jpype
 import os.path
 import inspect
@@ -22,17 +22,18 @@ class PengYuan:
     获取鹏元数据工具类
     '''
 
-    URL = "http://www.pycredit.com:9001/services/WebServiceSingleQuery?wsdl"
-    USER_NAME = 'qkwsquery'
-    PASSWORD = 'qW+06PsdwM+y1fjeH7w3vw=='
-    source = 'pengyuan'
+    py_config = config.get('pengyuan')
+    url = py_config.get('url')
+    user_name = py_config.get('user_name')
+    password = py_config.get('password')
+    source = py_config.get('source')
 
     def __init__(self):
         self.jvm_path = jpype.getDefaultJVMPath()
         basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         jar_path = basedir + '/pengyuan.jar'
         self.jvmArg = "-Djava.class.path=" + jar_path
-        self.client = Client(PengYuan.URL)
+        self.client = Client(PengYuan.url)
         pass
 
     def start_jvm(self):
@@ -76,7 +77,7 @@ class PengYuan:
         :return: 查询结果,返回查询到的值
         """
         self.client.set_options(port='WebServiceSingleQuery')
-        bz_result = self.client.service.queryReport(PengYuan.USER_NAME, PengYuan.PASSWORD, condition, 'xml') \
+        bz_result = self.client.service.queryReport(PengYuan.user_name, PengYuan.password, condition, 'xml') \
             .encode('utf-8').strip()
         result = self.__format_result(bz_result)
         return result

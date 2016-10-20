@@ -57,9 +57,9 @@ class PengYuan:
                          '</condition>' \
                          '</conditions>'.format(query_code).encode()
         query_t = self.__to_xml(query_template)
+        condition_reg = "//conditions/condition"
+        condition = query_t.xpath(condition_reg)[0]
         for n, v in kwargs.items():
-            condition_reg = "//conditions/condition"
-            condition = query_t.xpath(condition_reg)[0]
             item = etree.SubElement(condition, 'item')
             name = etree.SubElement(item, 'name')
             name.text = n

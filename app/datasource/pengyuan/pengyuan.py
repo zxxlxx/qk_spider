@@ -3,15 +3,22 @@ import os
 from suds.client import Client
 import logging
 from lxml import etree
+#
+# if __name__ == '__main__' and __package__ is None:
+#     from os import sys, path
+#     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
 from ..configuration import config
 import jpype
 import os.path
 import inspect
+import sys
 import pydevd
 import pkgutil
 import xmltodict
 
 # pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+
 
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('suds.client').setLevel(logging.DEBUG)

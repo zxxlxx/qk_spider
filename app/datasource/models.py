@@ -6,7 +6,7 @@ class InnerResult(dict):
     """
     内部使用的数据格式
     """
-    srouce = ''
+    source = ''
     received_time = None
     data = {}
 

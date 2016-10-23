@@ -11,7 +11,7 @@ except ImportError:
 
 from . import utils
 
-
+# TODO: 未完成
 def init_jvm(jvmpath=None):
     """Initializes the Java virtual machine (JVM).
     :param jvmpath: The path of the JVM. If left empty, inferred by :py:func:`jpype.getDefaultJVMPath`.

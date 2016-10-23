@@ -1,7 +1,5 @@
-from unittest import TestCase
-
-
 # -*- coding: utf-8 -*-
+from unittest import TestCase
 from app.datasource.pengyuan.pengyuan import PengYuan
 
 

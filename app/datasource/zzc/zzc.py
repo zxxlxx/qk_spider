@@ -4,7 +4,7 @@ import sys
 import os
 import requests
 from pathlib import Path
-from ..configuration import config
+from ..configuration import py_config
 import pkgutil
 
 PACKAGE_PARENT = '..'
@@ -16,7 +16,7 @@ print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resol
 
 class Zzc:
     """获取中智诚反欺诈数据"""
-    config_zzc = config.get('zzc')
+    config_zzc = py_config.get('zzc')
 
     # 用户名
     name = config_zzc.get('name')

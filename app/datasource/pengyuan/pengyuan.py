@@ -8,7 +8,7 @@ from lxml import etree
 #     from os import sys, path
 #     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from ..configuration import config
+from ..configuration import py_config
 import jpype
 import os.path
 import inspect
@@ -19,17 +19,12 @@ import xmltodict
 
 # pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger('suds.client').setLevel(logging.DEBUG)
-
-
 class PengYuan:
     '''
     获取鹏元数据工具类
     '''
 
-    py_config = config.get('pengyuan')
+    py_config = py_config.get('pengyuan')
     url = py_config.get('url')
     user_name = py_config.get('user_name')
     password = py_config.get('password')
@@ -38,7 +33,7 @@ class PengYuan:
     def __init__(self):
         self.jvm_path = jpype.getDefaultJVMPath()
         basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        jar_path = basedir + '/pengyuan.jar'
+        jar_path = basedir + '/spiderJar.jar'
         self.jvmArg = "-Djava.class.path=" + jar_path
         self.client = Client(PengYuan.url)
         pass
@@ -153,8 +148,8 @@ class PengYuan:
         :param data: resultValue原始字段内容
         :return: 解码后的内容
         """
-        ta = jpype.JPackage('cardpay').Base64
-        b64 = ta()
+        Base64 = jpype.JPackage('cardpay').pengyuan.Base64
+        b64 = Base64()
         z_result = b64.decode(data)
         return z_result
 
@@ -164,8 +159,8 @@ class PengYuan:
         :param z_result: 未解压缩的内容
         :return: 解压缩后的内容
         """
-        cs = jpype.JPackage('cardpay').CompressStringUtil
-        rv = cs.decompress(z_result)
+        Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
+        rv = Cs.decompress(z_result)
         return rv
 
     def query_personal_id_risk(self, name, documentNo, subreportIDs, queryReasonID, refID=None):

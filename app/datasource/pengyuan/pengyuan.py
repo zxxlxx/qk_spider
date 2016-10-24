@@ -8,7 +8,7 @@ from lxml import etree
 #     from os import sys, path
 #     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from ..configuration import py_config
+from ..configuration import config
 import jpype
 import os.path
 import inspect
@@ -24,7 +24,7 @@ class PengYuan:
     获取鹏元数据工具类
     '''
 
-    py_config = py_config.get('pengyuan')
+    py_config = config.get('pengyuan')
     url = py_config.get('url')
     user_name = py_config.get('user_name')
     password = py_config.get('password')

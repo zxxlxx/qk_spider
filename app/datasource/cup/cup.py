@@ -59,9 +59,7 @@ class ChinaUnionPay:
         upa.setApiLocation(self.api_location)
         # 设置银行卡卡号作参数，获取JSONObject类型的account score
 
-        # JSONObject = jpype.JClass('net.sf.json.JSONObject')
-        # json_object = JSONObject()
-        upa.getAuthCommonUPAScoreByAccountNo(bank_card_id, name, id_card, phone, self.distinguish_code)
-        # json = json_object.toString()
-        # print(json)
+        json_object = upa.getAuthCommonUPAScoreByAccountNo(bank_card_id, name, id_card, phone, self.distinguish_code)
+        json = json_object.toString()
+        print(json)
         self.stop_jvm()

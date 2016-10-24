@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
-import os
-from suds.client import Client
 import logging
-from lxml import etree
-#
-# if __name__ == '__main__' and __package__ is None:
-#     from os import sys, path
-#     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
-from ..configuration import config
-import jpype
+import os
 import os.path
-import inspect
-import sys
-import pydevd
-import pkgutil
-import xmltodict
+
+import jpype
+from lxml import etree
+from suds.client import Client
+
+from app.datasource.utils.tools import params_to_dict
+from ..configuration import config
+
 
 # pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
@@ -35,7 +29,7 @@ class PengYuan:
         basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         jar_path = basedir + '/spiderJar.jar'
         self.jvmArg = "-Djava.class.path=" + jar_path
-        self.client = Client(PengYuan.url)
+        # self.client = Client(PengYuan.url)
         pass
 
     def start_jvm(self):
@@ -55,7 +49,7 @@ class PengYuan:
         :return:
         """
         if not len(kwargs):
-            kwargs = generate_condition()
+            kwargs = params_to_dict(2)
         query_template = '<?xml version="1.0" encoding="GBK"?>' \
                          '<conditions>' \
                          '<condition queryType="{}">' \
@@ -263,19 +257,6 @@ class PengYuan:
             with open(file_out, 'wb') as fo:
                 fo.write(result.encode('utf-8'))
 
-
-def generate_condition():
-    """
-    根据外层参数名,生成参数字典,当参数值为None时,不生成该项,保证参数名符合接口要求
-    :return: 生成的{参数:值}字典
-    """
-    cf = inspect.currentframe()
-    frame = inspect.getouterframes(cf)[2][0]
-    args, _, _, values = inspect.getargvalues(frame)
-    # print('function name "%s"' % inspect.getframeinfo(frame)[2])
-    result = {i: values[i] for i in args if values[i] is not None}
-    result.pop('self')
-    return result
 
 if __name__ == '__main__':
     py = PengYuan()

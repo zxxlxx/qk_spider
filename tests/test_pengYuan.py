@@ -5,9 +5,17 @@ from app.datasource.pengyuan.pengyuan import PengYuan
 
 class TestPengYuan(TestCase):
 
-    def test_create_query_condition(self):
+    def test_create_query_condition(self, name='sunlc',
+                                    documentNo='2101141098701251234',
+                                    accountNo='637933021912',
+                                    openBankNo='1001',
+                                    mobile='168234214123',
+                                    subreportIDs='1234',
+                                    queryReasonID='fuck',
+                                    refID=None):
         py = PengYuan()
-        py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
+        result = py.create_query_condition("123")
+        assert result!=b'<conditions><condition queryType="123"><item><name>openBankNo</name><value>1001</value></item><item><name>mobile</name><value>168234214123</value></item><item><name>queryReasonID</name><value>fuck</value></item><item><name>documentNo</name><value>2101141098701251234</value></item><item><name>subreportIDs</name><value>1234</value></item><item><name>name</name><value>sunlc</value></item><item><name>accountNo</name><value>637933021912</value></item></condition></conditions>'
 
     def test_query_personal_id_risk(self, name, documentNo):
         sub_report = {10604: True, 10603: False, 14200: True}

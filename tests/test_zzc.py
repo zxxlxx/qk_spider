@@ -20,27 +20,31 @@ class TestZzc(TestCase):
         }
     }
     zzc = Zzc()
+
     def test_show_by_institution(self):
-        result = self.zzc.show_by_institution(TestZzc.apply_id)
+        result = self.zzc.af_show_by_institution(TestZzc.apply_id)
         assert result[1]
 
     def test_create(self):
-        result = self.zzc.create(self.data)
+        result = self.zzc.af_create(self.data)
         assert result
 
     def test_update(self):
-        result = self.zzc.update(TestZzc.apply_id, self.data)
+        result = self.zzc.af_update(TestZzc.apply_id, self.data)
         assert result
 
     def test_delete(self):
-        result = self.zzc.delete(TestZzc.apply_id)
+        result = self.zzc.af_delete(TestZzc.apply_id)
         assert result
 
     def test_anti_fraud_report(self):
-        result = self.zzc.anti_fraud_report(TestZzc.apply_id)
+        result = self.zzc.af_report(TestZzc.apply_id)
+        print(result)
         assert result
 
     def test_rule_report(self):
-        result = self.zzc.rule_report(TestZzc.apply_id)
+        result = self.zzc.af_rule_report(TestZzc.apply_id)
         assert result
 
+    def test_black_search(self):
+        result = self.zzc.black_search("孙立超", "210114198701251232", "15829551989")

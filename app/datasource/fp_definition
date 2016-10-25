@@ -1,0 +1,9 @@
+
+
+user_id: "用户登录ID"
+user_name: "用户登录名"
+user_name_cn: "用户中文名"
+loan_type: "贷款类型"
+loan_purpose: "贷款目的"
+mobile_phone: "移动电话号"
+personal_id: "身份证号"

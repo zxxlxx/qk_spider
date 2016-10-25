@@ -2,12 +2,14 @@
 
 import os
 import jpype
+
+from app.datasource.third import Third
 from app.util.logger import logger
 
 from ..configuration import config
 
 
-class ChinaUnionPay:
+class ChinaUnionPay(Third):
     """
     银联智策
     """
@@ -63,3 +65,7 @@ class ChinaUnionPay:
         json = json_object.toString()
         print(json)
         self.stop_jvm()
+
+    def query(self, *args, **kwargs):
+        pass
+

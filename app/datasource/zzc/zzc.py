@@ -4,6 +4,8 @@ import sys
 import os
 import requests
 from pathlib import Path
+
+from app.datasource.third import Third
 from ..utils.tools import params_to_dict
 from ..configuration import config
 import pkgutil
@@ -15,7 +17,7 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
 
 
-class Zzc:
+class Zzc(Third):
     """获取中智诚反欺诈数据"""
     config_zzc = config.get('zzc')
 
@@ -37,7 +39,7 @@ class Zzc:
     def __init__(self):
         pass
 
-    def af_show_by_institution(self, apply_id):
+    def af_show(self, apply_id):
         """return a apply insformation by specify institution """
         result = requests.get(Zzc.cheat_list_base_url + apply_id,
                               auth=self.auth,
@@ -51,7 +53,7 @@ class Zzc:
                                json=json_data,
                                auth=self.auth,
                                headers=self.headers)
-        return True if result.status_code == requests.codes.created else False
+        return self.pre_result(result, requests.codes.created)
 
     def af_update(self, apply_id, json_data):
         """update a loan apply information"""
@@ -66,7 +68,7 @@ class Zzc:
         result = requests.delete(Zzc.cheat_list_base_url + apply_id,
                                  auth=self.auth,
                                  timeout=1)
-        return True if result.status_code == requests.codes.no_content else False
+        return self.pre_result(result, requests.codes.no_content)
 
     def af_report(self, apply_id):
         """该请求获取当前的申请信息的反欺诈报告,包含规则引擎的结果以及黑名单的结果"""
@@ -86,7 +88,8 @@ class Zzc:
 
     def black_list(self):
         """
-        该方法返回您所在的机构上传到中智诚共享库的全部黑名单，包括但不限于您的个人账户上传的黑名单。关于机构、个人账号以及权限的说明，请访问 中智诚反欺诈云平台权限管理说明 文档
+        该方法返回您所在的机构上传到中智诚共享库的全部黑名单，包括但不限于您的个人账户上传的黑名单。
+        关于机构、个人账号以及权限的说明，请访问 中智诚反欺诈云平台权限管理说明 文档
         :return:
         """
         pass
@@ -152,19 +155,22 @@ class Zzc:
                                headers=self.headers)
         return self.pre_result(result)
 
-    def pre_result(self, result):
+    def pre_result(self, result, status=requests.codes.ok):
         """
         预处理操作结果
+        :param status:
         :param result:
         :return:
         """
-        if result.status_code == requests.codes.ok:
+        if result.status_code == status:
             page = result.json()
             r = True
         else:
             r = False
         return page, r
 
+    def query(self, *args, **kwargs):
+        application = self.af_create()
 
 
 if __name__ == '__main__':

@@ -21,8 +21,8 @@ class TestZzc(TestCase):
     }
     zzc = Zzc()
 
-    def test_show_by_institution(self):
-        result = self.zzc.af_show_by_institution(TestZzc.apply_id)
+    def test_show(self):
+        result = self.zzc.af_show(TestZzc.apply_id)
         assert result[1]
 
     def test_create(self):

@@ -11,10 +11,3 @@ class InnerResult(dict):
     data = {}
 
 
-class Query(metaclass=ABCMeta):
-
-    @abstractmethod
-    def query(self, *args, **kwargs):
-        pass
-
-

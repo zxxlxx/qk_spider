@@ -7,13 +7,14 @@ import jpype
 from lxml import etree
 from suds.client import Client
 
+from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
 
 # pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
-class PengYuan:
+class PengYuan(Third):
     '''
     获取鹏元数据工具类
     '''
@@ -66,7 +67,10 @@ class PengYuan:
             value.text = v
         return etree.tostring(query_t)
 
-    def query(self, condition):
+    def query(self, *args, **kwargs):
+        pass
+
+    def __query(self, condition):
         """
         根据条件申请查询
         :param condition: 查询条件
@@ -167,7 +171,7 @@ class PengYuan:
         :param refID: 引用ID
         :return: 查询结果
         """
-        return self.query(self.create_query_condition(25160))
+        return self.__query(self.create_query_condition(25160))
 
     def query_card_pay_record(self, name, cardNos, beginDate, endDate,
                               subreportIDs, queryReasonID, documentNo=None, refID=None):
@@ -183,7 +187,7 @@ class PengYuan:
         :param refID:
         :return:
         """
-        return self.query(self.create_query_condition(25199))
+        return self.__query(self.create_query_condition(25199))
 
     def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
                                  mobile, subreportIDs, queryReasonID, refID=None):
@@ -199,7 +203,7 @@ class PengYuan:
         :param refID:
         :return:
         """
-        return self.query(self.create_query_condition(25173))
+        return self.__query(self.create_query_condition(25173))
 
 
         if result is not None:

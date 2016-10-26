@@ -29,10 +29,10 @@ class Zzc(Third):
     password = config_zzc.get('password')
 
     # 反欺诈API入口
-    cheat_list_base_url = config_zzc.get('cheatListBaseUrl') + '/'
+    cheat_list_base_url = config_zzc.get('cheatListBaseUrl')
 
     # 黑名单API入口
-    back_list_base_url = config_zzc.get('backListBaseUrl') + '/'
+    back_list_base_url = config_zzc.get('backListBaseUrl')
 
     headers = {'Content-Type': 'application/json; charset=utf8'}
     auth = (name, password)
@@ -42,7 +42,7 @@ class Zzc(Third):
 
     def af_show(self, apply_id):
         """return a apply insformation by specify institution """
-        result = requests.get(Zzc.cheat_list_base_url + apply_id,
+        result = requests.get(Zzc.cheat_list_base_url + '/' + apply_id,
                               auth=self.auth,
                               headers=self.headers,
                               timeout=1)
@@ -57,24 +57,36 @@ class Zzc(Third):
                     "applicant": {{
                         "name": "{user_name_cn}",
                         "pid": "{personal_id}",
-                        "mobile":  "{mobile_num}"
+                        "mobile": "{mobile_num}"
                     }}
                     }}'''.format_map(SafeSub(kwargs))
-        return templete
+        j = json.loads(templete)
+
+        if j.get('loan_term') is None:
+            j['loan_term'] = 12
+
+        if j.get('loan_amount') is None:
+            j['loan_amount'] = 12000
+
+        if j.get('loan_type') == 'null':
+            j['loan_type'] = '房贷'
+
+        if j.get('loan_purpose') == 'null':
+            j['loan_purpose'] = '购房'
+        return j
 
     def af_create(self, *args, **kwargs):
         """create a loan apply information"""
-        json_request = self.__create_query_condition(args, **kwargs)
-        j = json.loads(json_request)
+        json_request = self.__create_query_condition(*args, **kwargs)
         result = requests.post(Zzc.cheat_list_base_url,
-                               json=j,
+                               json=json_request,
                                auth=self.auth,
                                headers=self.headers)
         return self.pre_result(result, requests.codes.created)
 
     def af_update(self, apply_id, json_data):
         """update a loan apply information"""
-        result = requests.put(Zzc.cheat_list_base_url + apply_id,
+        result = requests.put(Zzc.cheat_list_base_url + '/' + apply_id,
                               json=json_data,
                               auth=self.auth,
                               headers=self.headers)
@@ -82,23 +94,31 @@ class Zzc(Third):
 
     def af_delete(self, apply_id):
         """删除一条已经上传的申请信息"""
-        result = requests.delete(Zzc.cheat_list_base_url + apply_id,
+        result = requests.delete(Zzc.cheat_list_base_url + '/' + apply_id,
                                  auth=self.auth,
                                  timeout=1)
         return self.pre_result(result, requests.codes.no_content)
 
-    def af_report(self, apply_id):
+    def __af_report(self, apply_id):
         """该请求获取当前的申请信息的反欺诈报告,包含规则引擎的结果以及黑名单的结果"""
-        result = requests.get(Zzc.cheat_list_base_url + apply_id + '/report',
+        result = requests.get(Zzc.cheat_list_base_url + '/' + apply_id + '/report',
                               auth=self.auth,
                               timeout=30)
         return self.pre_result(result)
+
+    def af_report(self, *args, **kwargs):
+        create_result, r = self.af_create(*args, **kwargs)
+        if not r:
+            return
+        application_id = create_result.get('id')
+        result = self.__af_report(application_id)
+        return result
 
     def af_rule_report(self, apply_id):
         """该请求将当前的申请信息提交规则引擎并获取规则执行结果.和反欺诈报告相比,该接口不包含黑名单查询命中的
         记录的详细信息,但是规则中使用黑名单碰撞的部分仍然可能出现.该接口速度快于反欺诈报告,不需要黑名单命中记录详情的
         用户可以只调用该接口"""
-        result = requests.get(Zzc.cheat_list_base_url + apply_id + "/rule_result",
+        result = requests.get(Zzc.cheat_list_base_url + '/' + apply_id + "/rule_result",
                               auth=self.auth,
                               timeout=10)
         return self.pre_result(result)
@@ -166,7 +186,7 @@ class Zzc(Third):
         :return:
         """
         json_data = params_to_dict()
-        result = requests.post(Zzc.back_list_base_url + 'search',
+        result = requests.post(Zzc.back_list_base_url + '/search',
                                json=json_data,
                                auth=self.auth,
                                headers=self.headers)
@@ -187,8 +207,8 @@ class Zzc(Third):
         return page, r
 
     def query(self, *args, **kwargs):
-        application = self.af_create()
-
+        result = self.af_report(*args, **kwargs)
+        return result
 
 if __name__ == '__main__':
     pass

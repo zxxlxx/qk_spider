@@ -13,7 +13,7 @@ class TestZzc(TestCase):
         "loan_amount": 20000,
         "loan_purpose": "fangdai",
         "loan_type": "车货",
-        "mobile_num": "18710723119",
+        "mobile_num": "18710723118",
         "user_name_cn": "王兵",
         "personal_id": "610527199005154925"
     }
@@ -36,8 +36,7 @@ class TestZzc(TestCase):
         assert result
 
     def test_anti_fraud_report(self):
-        result = self.zzc.af_report(TestZzc.apply_id)
-        print(result)
+        result = self.zzc.af_report(**self.data)
         assert result
 
     def test_rule_report(self):

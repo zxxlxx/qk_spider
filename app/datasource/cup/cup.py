@@ -63,7 +63,6 @@ class ChinaUnionPay(Third):
 
         json_object = upa.getAuthCommonUPAScoreByAccountNo(bank_card_id, name, id_card, phone, self.distinguish_code)
         json = json_object.toString()
-        print(json)
         self.stop_jvm()
 
     def query(self, *args, **kwargs):

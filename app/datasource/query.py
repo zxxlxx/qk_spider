@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from app.datasource.cup.cup import ChinaUnionPay
 from app.datasource.pengyuan.pengyuan import PengYuan
 from app.datasource.zzc.zzc import Zzc
-
+from app.util.logger import logger
 
 class Query:
 
@@ -28,5 +28,9 @@ class Query:
     def query(self, *args, **kwargs):
 
         for finder in self.finders:
-            finder.query(args, kwargs)
+            try:
+                result = finder.query(*args, **kwargs)
+                print(result)
+            except Exception as e:
+                logger.error(repr(e))
 

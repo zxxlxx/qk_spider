@@ -50,50 +50,21 @@ class Zzc(Third):
 
     def __create_query_condition(self, *args, **kwargs):
         templete = r'''{{
-                    "memo": "Facilis et commodi dolore.",
-                    "applicant": {{
-                        "name": "{user_name_cn}",
-                        "pid": "{personal_id}",
-                        "mobile":  "{mobile_num}",
-                        "home_address":  "{home_address}",
-                        "home_phone":  "{home_phone}",
-                        "work_name":  "{work_name}",
-                        "address": "{contract_address}",
-                        "work_address": "{work_address}",
-                        "work_phone":  "{work_phone}",
-                        "email":  "{email}",
-                        "qq": "{qq}",
-                        "wechat": "{wechat_id}"
-                    }},
-                    "contacts": [
-                        {{
-                         "name": "",
-                         "relationship":"",
-                         "phone": "",
-                         "work_name": ""
-                        }}
-                    ],
                     "loan_amount": {loan_amount},
                     "loan_purpose": "{loan_purpose}",
                     "loan_term": {loan_term},
-                    "loan_type": "{loan_type}"
-                    }}'''.format_map(SafeSub(kwargs)).replace('\n', '').replace(' ', '')
+                    "loan_type": "{loan_type}",
+                    "applicant": {{
+                        "name": "{user_name_cn}",
+                        "pid": "{personal_id}",
+                        "mobile":  "{mobile_num}"
+                    }}
+                    }}'''.format_map(SafeSub(kwargs))
         return templete
 
     def af_create(self, *args, **kwargs):
         """create a loan apply information"""
         json_request = self.__create_query_condition(args, **kwargs)
-        data = {
-            "loan_term": 12,
-            "loan_amount": 20000,
-            "loan_purpose": "fangdai",
-            "loan_type": "车货",
-            "applicant": {
-                "mobile": "18710723119",
-                "name": "王兵",
-                "pid": "610527199005154925"
-            }
-        }
         j = json.loads(json_request)
         result = requests.post(Zzc.cheat_list_base_url,
                                json=j,

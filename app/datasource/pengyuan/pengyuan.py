@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import logging
 import os
 import os.path
@@ -13,6 +14,15 @@ from ..configuration import config
 
 
 # pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+params_mapping = {
+    'user_name_cn': 'name',
+    'personal_id': 'documentNo',
+    'query_reason_id': 'queryReasonID',
+    'begin_date': 'beginDate',
+    'end_date': 'endDate',
+    'open_bank_id': 'openBankNo',
+    'mobile_num': 'mobile',
+}
 
 class PengYuan(Third):
     '''
@@ -68,6 +78,9 @@ class PengYuan(Third):
         return etree.tostring(query_t)
 
     def query(self, *args, **kwargs):
+        kwargs = self.pre_query_params(*args, **kwargs)
+        print(kwargs)
+        # TODO: 这里再想一想
         pass
 
     def __query(self, condition):
@@ -160,6 +173,22 @@ class PengYuan(Third):
         Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
         rv = Cs.decompress(z_result)
         return rv
+
+    def pre_query_params(self, *args, **kwargs):
+        """
+        与标准变量名之间的转换
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        temp = copy.deepcopy(kwargs)
+        for arg in kwargs:
+            if params_mapping.get(arg) is not None:
+                temp.update({params_mapping.get(arg): temp.pop(arg)})
+            else:
+                temp.pop(arg)
+        return temp
+
 
     def query_personal_id_risk(self, name, documentNo, subreportIDs, queryReasonID, refID=None):
         """

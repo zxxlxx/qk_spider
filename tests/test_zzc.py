@@ -13,11 +13,9 @@ class TestZzc(TestCase):
         "loan_amount": 20000,
         "loan_purpose": "fangdai",
         "loan_type": "车货",
-        "applicant": {
-            "mobile": "18710723119",
-            "name": "王兵",
-            "pid": "610527199005154925"
-        }
+        "mobile_num": "18710723119",
+        "user_name_cn": "王兵",
+        "personal_id": "610527199005154925"
     }
     zzc = Zzc()
 
@@ -26,7 +24,7 @@ class TestZzc(TestCase):
         assert result[1]
 
     def test_create(self):
-        result = self.zzc.af_create(self.data)
+        result = self.zzc.af_create(**self.data)
         assert result
 
     def test_update(self):

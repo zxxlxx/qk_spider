@@ -5,6 +5,7 @@ import os
 import os.path
 
 import jpype
+import pydevd
 from lxml import etree
 from suds.client import Client
 
@@ -12,8 +13,7 @@ from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
-
-# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 params_mapping = {
     'user_name_cn': 'name',
     'personal_id': 'documentNo',
@@ -40,7 +40,7 @@ class PengYuan(Third):
         basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         jar_path = basedir + '/spiderJar.jar'
         self.jvmArg = "-Djava.class.path=" + jar_path
-        # self.client = Client(PengYuan.url)
+        self.client = Client(PengYuan.url)
         pass
 
     def start_jvm(self):

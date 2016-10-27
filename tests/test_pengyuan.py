@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
+
+import pydevd
+
+
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+import sys
+sys.path.append('../')
 from app.datasource.pengyuan.pengyuan import PengYuan
 
 
@@ -17,7 +24,7 @@ class TestPengYuan(TestCase):
         result = py.create_query_condition("123")
         assert result==b'<conditions><condition queryType="123"><item><name>name</name><value>sunlc</value></item></condition></conditions>'
 
-    def test_query_personal_id_risk(self, name, documentNo):
+    def test_query_personal_id_risk(self):
         sub_report = {10604: True, 10603: False, 14200: True}
         query_reason = {101: "货款审批",
                         102: "货款贷后管理",
@@ -43,4 +50,12 @@ class TestPengYuan(TestCase):
                         }
         sr = '10604'
         qr = '101'
-        result = self.query_personal_id_risk(name, documentNo, sr, qr)
+        py = PengYuan()
+        result = py.query_personal_id_risk(name='孙立超',
+                                           documentNo='210114198701251232',
+                                           subreportIDs='10604',
+                                           queryReasonID='101')
+
+if __name__ == '__main__':
+    tpy = TestPengYuan()
+    tpy.test_query_personal_id_risk()

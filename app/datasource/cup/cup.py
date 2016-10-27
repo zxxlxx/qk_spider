@@ -20,6 +20,7 @@ class ChinaUnionPay(Third):
     debug_mode = bool(cup_config.get('debugMode'))
     api_location = cup_config.get('apiLocation')
     distinguish_code = cup_config.get('distinguishCode')
+    source = 'cup'
 
     def __init__(self):
         self.jvm_path = jpype.getDefaultJVMPath()
@@ -65,6 +66,8 @@ class ChinaUnionPay(Third):
         json = json_object.toString()
         self.stop_jvm()
 
-    def query(self, *args, **kwargs):
-        pass
+    def query(self, result, *args, **kwargs):
+
+        result.put(({}, self.source))
+        return result
 

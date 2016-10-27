@@ -20,6 +20,6 @@ class SafeSub(dict):
     """
     用于处理format_map优雅地处理某个值
     """
-    def __missing__(self, key):
-         return "null" # 缺省就什么都不填写
 
+    def __missing__(self, key):
+        return "null"  # 缺省就什么都不填写

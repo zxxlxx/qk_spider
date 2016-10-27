@@ -36,6 +36,7 @@ class Zzc(Third):
 
     headers = {'Content-Type': 'application/json; charset=utf8'}
     auth = (name, password)
+    source = 'zzc'
 
     def __init__(self):
         pass
@@ -206,8 +207,10 @@ class Zzc(Third):
             r = False
         return page, r
 
-    def query(self, *args, **kwargs):
-        result = self.af_report(*args, **kwargs)
+    def query(self, result, *args, **kwargs):
+        page, r = self.af_report(*args, **kwargs)
+        if r:
+            result.put((page, self.source))
         return result
 
 if __name__ == '__main__':

@@ -77,11 +77,13 @@ class PengYuan(Third):
             value.text = v
         return etree.tostring(query_t)
 
-    def query(self, *args, **kwargs):
+    def query(self, result, *args, **kwargs):
         kwargs = self.pre_query_params(*args, **kwargs)
-        print(kwargs)
         # TODO: 这里再想一想
-        pass
+        # r = self.__query(kwargs)
+        r = {}
+        result.put((r, self.source))
+        return result
 
     def __query(self, condition):
         """

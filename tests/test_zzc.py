@@ -5,6 +5,8 @@ import requests
 import json
 from app.datasource.zzc.zzc import Zzc
 
+import pydevd
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 class TestZzc(TestCase):
     apply_id = 'AP201607179336771654'

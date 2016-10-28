@@ -5,7 +5,7 @@ import os
 import os.path
 
 import jpype
-import pydevd
+
 from lxml import etree
 from suds.client import Client
 
@@ -13,7 +13,9 @@ from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
+import pydevd
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+
 params_mapping = {
     'user_name_cn': 'name',
     'personal_id': 'documentNo',

@@ -2,9 +2,8 @@
 from unittest import TestCase
 
 import pydevd
-
-
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+
 import sys
 sys.path.append('../')
 from app.datasource.pengyuan.pengyuan import PengYuan

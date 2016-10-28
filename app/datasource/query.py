@@ -1,5 +1,12 @@
+# -*- coding: utf-8 -*-
 import json
-import queue
+import sys
+
+if sys.version[0] == '2':
+    import Queue as queue
+else:
+    import queue
+
 import threading
 from abc import ABCMeta, abstractmethod
 
@@ -9,6 +16,7 @@ from app.datasource.zzc.zzc import Zzc
 from app.util.logger import logger
 from multiprocessing.pool import ThreadPool
 from ..util.logger import logger
+
 
 class Query:
 

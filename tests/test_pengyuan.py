@@ -4,6 +4,7 @@ from unittest import TestCase
 import pydevd
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
+import queue
 import sys
 sys.path.append('../')
 from app.datasource.pengyuan.pengyuan import PengYuan
@@ -55,6 +56,16 @@ class TestPengYuan(TestCase):
                                            subreportIDs='10604',
                                             queryReasonID='101')
         print(result)
+
+    def test_query(self, result):
+        py = PengYuan()
+        result = py.query(result, user_name_cn=u'孙立超',
+                          mobile_num='15829551989',
+                          personal_id='210114198701251232',
+                          card_id='610527199005154925')
+        print(result)
+
 if __name__ == '__main__':
     tpy = TestPengYuan()
-    tpy.test_query_personal_id_risk()
+    result = queue.Queue()
+    tpy.test_query(result)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from flask_oauthlib.provider import OAuth2Provider
 from flask_bootstrap import Bootstrap

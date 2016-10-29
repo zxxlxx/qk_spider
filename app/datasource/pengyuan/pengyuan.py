@@ -90,8 +90,10 @@ class PengYuan(Third):
         for func in inspect.getmembers(self, predicate=inspect.ismethod):
             if func[0].startswith('query_'):
                 try:
-                    # TODO:这里需要获取函数参数名
-                   r = func[1](*args, **kwargs)
+                    # 获取函数参数名,只挑选需要的参数.
+                    params = inspect.signature(func[1]).parameters.keys()
+                    ps = {param: kwargs.get(param) for param in params if kwargs.get(param) is not None}
+                    r = func[1](*args, **ps)
                 except Exception as e:
                     continue
      #   r =self.query_personal_bank_info(*args, kwargs)

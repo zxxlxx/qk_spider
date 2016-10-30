@@ -4,9 +4,11 @@ import inspect
 import logging
 import os
 import os.path
+from datetime import timedelta, datetime
 from optparse import OptionParser
 
 import jpype
+import time
 
 from lxml import etree
 from suds.client import Client
@@ -15,13 +17,11 @@ from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
-import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
-
 params_mapping = {
     'user_name_cn': 'name',
     'personal_id': 'documentNo',
     'query_reason_id': 'queryReasonID',
+    'card_id': 'cardNos',
     'begin_date': 'beginDate',
     'end_date': 'endDate',
     'open_bank_id': 'openBankNo',
@@ -65,6 +65,16 @@ class PengYuan(Third):
         """
         if not len(kwargs):
             kwargs = params_to_dict(2)
+        result = self.__params_dict_condition(query_code, **kwargs)
+        return result
+
+    def __params_dict_condition(self, query_code, **kwargs):
+        """
+        将字典转换为xml的查询条件
+        :param query_code:
+        :param kwargs:
+        :return:
+        """
         query_template = '<?xml version="1.0" encoding="GBK"?>' \
                          '<conditions>' \
                          '<condition queryType="{}">' \
@@ -84,20 +94,22 @@ class PengYuan(Third):
 
     def query(self, result, *args, **kwargs):
         kwargs = self.pre_query_params(*args, **kwargs)
-        # TODO: 这里再想一想,不能直接调__query
+        # TODO:子报告如何处理
         kwargs['subreportIDs'] = '1001'
         kwargs['queryReasonID'] = '999'
+        res = []
         for func in inspect.getmembers(self, predicate=inspect.ismethod):
             if func[0].startswith('query_'):
                 try:
                     # 获取函数参数名,只挑选需要的参数.
-                    params = inspect.signature(func[1]).parameters.keys()
+                    f = func[1]
+                    params = inspect.signature(f).parameters.keys()
                     ps = {param: kwargs.get(param) for param in params if kwargs.get(param) is not None}
-                    r = func[1](*args, **ps)
+                    r = f(**ps)
+                    res.append(r)
                 except Exception as e:
                     continue
-     #   r =self.query_personal_bank_info(*args, kwargs)
-        result.put((r, self.source))
+        result.put((res, self.source))
         return result
 
     def __query(self, *args, **kwargs):
@@ -109,6 +121,7 @@ class PengYuan(Third):
         condition = self.create_query_condition('101')
         self.client.set_options(port='WebServiceSingleQuery')
         print('fuck:' + condition)
+        # TODO: 测试时不调用
         bz_result = ''# self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
         # bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'
         # print(bz_result)
@@ -210,7 +223,7 @@ class PengYuan(Third):
         return temp
 
 
-    def query_personal_id_risk(self, name, documentNo, subreportIDs, queryReasonID, refID=None):
+    def query_personal_id_risk(self, name, documentNo, subreportIDs='10603', queryReasonID='999', refID=None):
         """
         个人身份认证信息/风险信息查询
         :param name: 姓名
@@ -222,8 +235,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25160))
 
-    def query_card_pay_record(self, name, cardNos, beginDate, endDate,
-                              subreportIDs, queryReasonID, documentNo=None, refID=None):
+    def query_card_pay_record(self, name, cardNos, beginDate=None, endDate=None,
+                              subreportIDs='14506', queryReasonID='999', documentNo=None, refID=None):
         """
         卡多笔交易记录验请求xml规范
         :param name:
@@ -236,10 +249,19 @@ class PengYuan(Third):
         :param refID:
         :return:
         """
-        return self.__query(self.create_query_condition(25199))
+        kwargs = {}
+        if beginDate is None and endDate is None:
+            kwargs = params_to_dict(1)
+            current_date = datetime.now().strftime('%Y-%m-%d')
+            d_time = timedelta(days=300)
+            one_year_ago = (datetime.now() - d_time).strftime('%Y-%m-%d')
+            kwargs['beginDate'] = one_year_ago
+            kwargs['endDate'] = current_date
+
+        return self.__query(self.create_query_condition(25199, **kwargs))
 
     def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
-                                 mobile, subreportIDs, queryReasonID, refID=None):
+                                 mobile, subreportIDs='14506', queryReasonID='999', refID=None):
         """
         查询个人银行账户核查信息
         :param name:
@@ -253,7 +275,6 @@ class PengYuan(Third):
         :return:
         """
         return self.__query(self.create_query_condition(25173))
-
 
         if result is not None:
             self.create_file(result, condition, query_type, sr, qr)

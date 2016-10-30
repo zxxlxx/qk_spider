@@ -47,5 +47,8 @@ def create_app(config_name):
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
+    from .datasource import ds as ds_blueprint
+    app.register_blueprint(ds_blueprint, url_prefix='/ds')
+
     return app
 

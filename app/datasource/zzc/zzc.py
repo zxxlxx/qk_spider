@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import inspect
 import json
 import sys
 import os
@@ -9,7 +8,6 @@ from pathlib import Path
 from app.datasource.third import Third
 from ..utils.tools import params_to_dict, SafeSub
 from ..configuration import config
-import pkgutil
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))

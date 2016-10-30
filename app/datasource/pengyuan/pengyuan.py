@@ -260,6 +260,77 @@ class PengYuan(Third):
 
         return self.__query(self.create_query_condition(25199, **kwargs))
 
+    def query_career_capacity(self, name, documentNo, subreportIDs='13400', queryReasonID='999', refID=None):
+        """
+        职业资格查询接口文档
+        :param name:
+        :param documentNo:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25121))
+
+    def query_personal_enterprise_telephone(self, mobile, subreportIDs='13600',
+                                            queryReasonID='999', ownerName=None, refID=None):
+        """
+        个人和企业信息查询
+        :param mobile:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param ownerName:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25128))
+
+    def query_personal_revenue_assess(self, name, documentNo, corpName, positionName, subreportIDs,
+                                      queryReasonID='999', topDegree=None, graduateYear=None,
+                                      college=None, fullTime=None, refID=None):
+        """
+        个人收入测评
+        :param name:
+        :param documentNo:
+        :param corpName:
+        :param positionName:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param topDegree:
+        :param graduateYear:
+        :param college:
+        :param fullTime:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25180))
+
+    def query_airplane_info(self, name, documentNo, passport, month='12', subreportIDs='25175',
+                            queryReasonID='999', refID=None):
+        """
+        航空出行信息
+        :param name:
+        :param documentNo:
+        :param passport:
+        :param month:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25175))
+
+    def query_personal_enterprise_risk(self, name, subreportIDs='14200', queryReasonID='999', refID=None):
+        """
+        个人与企业风险汇总信息
+        :param name:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25136))
+
     def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
                                  mobile, subreportIDs='14506', queryReasonID='999', refID=None):
         """
@@ -276,8 +347,127 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25173))
 
-        if result is not None:
-            self.create_file(result, condition, query_type, sr, qr)
+    def query_open_bank_info(self, accountNo, subreportIDs='14154', queryReasonID='999', refID=None):
+        """
+        开户行信息查询
+        :param accountNo:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25193))
+
+    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='999', refID=None):
+        """
+        个人近两年查询记录
+        :param name:
+        :param documentNo:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25136))
+
+    def query_enterprise_last_one_year(self, corpName, subreportIDs='', queryReasonID='999', refID=None):
+        """
+        企业近一年查询记录,
+        :param corpName:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        # TODO:这个接口没有文档
+        return self.__query(self.create_query_condition(1234))
+
+    def query_enterprise_operation(self, corpName, registerNo, subreportIDs='22300', queryReasonID='999', refID=None):
+        """
+        企业经营指数
+        :param corpName: 被查询企业名称
+        :param registerNo: 被查询工商注册号
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25123))
+
+    def query_trade_company_reprot(self, corpName, queryMonth, subreportIDs='', queryReasonID='999', refID=None):
+        """
+        商户经营分析
+        :param corpName:
+        :param queryMonth:
+        :param subreportIDs:
+        :param queryReasonID:
+        :param refID:
+        :return:
+        """
+        # TODO:这个接口有问题
+        pass
+
+    def ids_verify(self):
+        """
+        IDS核身产品
+        :return:
+        """
+        # TODO:这个接口很复杂,先放下
+        pass
+
+    def query_risk_info(self):
+        """
+        风险信息监控接口
+        :return:
+        """
+        pass
+
+    def query_enterprise_info(self, corpName, orgCode, registerNo,
+                              subreportIDs='21301, 21611, 21612, 22101, 22102, 22103, 22014, 22015, 22302',
+                              queryReasonID='999', refID=None):
+        """
+        企业信息查询
+        :return:
+        """
+        return self.__query(self.create_query_condition(25123))
+
+    def query_car_info(self, name, documentNo, licenseNo, carType,
+                       queryReasonID='13812, 13814', subreportIDs='999', refID=None):
+        """
+        全国车辆信息核查
+        :param name:
+        :param documentNo:
+        :param licenseNo:
+        :param carType:
+        :param queryReasonID:
+        :param subreportIDs:
+        :param refID:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25200))
+
+    def query_mini_loan_rish_grade(self, name, documentNo, applyMoney, applyPeriod,
+                                   returnAmountBank, returnAmountLoan, contact, emersencyContact):
+        """
+        小额贷款风险评分
+        :param name:
+        :param documentNo:
+        :param applyMoney:
+        :param applyPeriod:
+        :param returnAmountBank:
+        :param returnAmountLoan:
+        :param contact:
+        :param emersencyContact:
+        :return:
+        """
+        return self.__query(self.create_query_condition(25184))
+
+    def query_car_and_house_property(self):
+        """
+        车辆售价和房产评估接口
+        :return:
+        """
+        pass
 
     def format_result(self, xml_data):
         """

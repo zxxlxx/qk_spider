@@ -9,8 +9,6 @@ from .query import Query
 @ds.route('/query', methods=['GET'])
 @login_required
 def query():
-    
     query = Query()
-    query.q
-
+    # query.query()
 

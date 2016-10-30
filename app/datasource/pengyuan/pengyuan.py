@@ -17,21 +17,21 @@ from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
-params_mapping = {
-    'user_name_cn': 'name',
-    'personal_id': 'documentNo',
-    'query_reason_id': 'queryReasonID',
-    'card_id': 'cardNos',
-    'begin_date': 'beginDate',
-    'end_date': 'endDate',
-    'open_bank_id': 'openBankNo',
-    'mobile_num': 'mobile',
-}
 
 class PengYuan(Third):
     '''
     获取鹏元数据工具类
     '''
+    params_mapping = {
+        'user_name_cn': 'name',
+        'personal_id': 'documentNo',
+        'query_reason_id': 'queryReasonID',
+        'card_id': 'cardNos',
+        'begin_date': 'beginDate',
+        'end_date': 'endDate',
+        'open_bank_id': 'openBankNo',
+        'mobile_num': 'mobile',
+}
 
     py_config = config.get('pengyuan')
     url = py_config.get('url')
@@ -57,16 +57,6 @@ class PengYuan(Third):
 
     def stop_jvm(self):
         jpype.shutdownJVM()
-
-    def create_query_condition(self, query_code, **kwargs):
-        """
-        生成查询条件,如果没有给定kwargs值, 该函数必须在query_内调用,根据外层函数参数自动生成查询条件
-        :return:
-        """
-        if not len(kwargs):
-            kwargs = params_to_dict(2)
-        result = self.__params_dict_condition(query_code, **kwargs)
-        return result
 
     def __params_dict_condition(self, query_code, **kwargs):
         """
@@ -206,22 +196,6 @@ class PengYuan(Third):
         Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
         rv = Cs.decompress(z_result)
         return rv
-
-    def pre_query_params(self, *args, **kwargs):
-        """
-        与标准变量名之间的转换
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        temp = copy.deepcopy(kwargs)
-        for arg in kwargs:
-            if params_mapping.get(arg) is not None:
-                temp.update({params_mapping.get(arg): temp.pop(arg)})
-            else:
-                temp.pop(arg)
-        return temp
-
 
     def query_personal_id_risk(self, name, documentNo, subreportIDs='10603', queryReasonID='999', refID=None):
         """

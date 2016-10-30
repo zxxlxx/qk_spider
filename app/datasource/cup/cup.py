@@ -39,13 +39,13 @@ class ChinaUnionPay(Third):
     def stop_jvm(self):
         jpype.shutdownJVM()
 
-    def get_data(self, bank_card_id, name, id_card, phone):
+    def __get_data(self, user_name_cn, personal_id, mobile_num, card_id):
         """
         获取银联数据
-        :param bank_card_id: 银行卡号
-        :param name: 名字
-        :param id_card: 证件号
-        :param phone: 电话号码
+        :param card_id: 银行卡号
+        :param user_name_cn: 名字
+        :param personal_id: 证件号
+        :param mobile_num: 电话号码
         :return: 查询到的数据
         """
         self.start_jvm()
@@ -62,12 +62,17 @@ class ChinaUnionPay(Third):
         upa.setApiLocation(self.api_location)
         # 设置银行卡卡号作参数，获取JSONObject类型的account score
 
-        json_object = upa.getAuthCommonUPAScoreByAccountNo(bank_card_id, name, id_card, phone, self.distinguish_code)
+        json_object = upa.getAuthCommonUPAScoreByAccountNo(card_id,
+                                                           user_name_cn,
+                                                           personal_id,
+                                                           mobile_num,
+                                                           self.distinguish_code)
         json = json_object.toString()
         self.stop_jvm()
+        return json
 
     def query(self, result, *args, **kwargs):
-
-        result.put(({}, self.source))
+        r = self.__get_data(**kwargs)
+        result.put((r, self.source))
         return result
 

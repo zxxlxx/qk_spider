@@ -61,6 +61,7 @@ class Zzc(Third):
                     }}'''.format_map(SafeSub(kwargs))
         j = json.loads(templete)
 
+        # TODO:必要的条件先写死
         if j.get('loan_term') is None:
             j['loan_term'] = 12
 

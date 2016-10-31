@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
+import xmltodict
+import json
+from lxml import etree
+import os
 
 import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+pydevd.settrace('heqiang.imwork.net', port=14975, stdoutToServer=True, stderrToServer=True)
 
 import queue
 import sys
@@ -55,7 +59,20 @@ class TestPengYuan(TestCase):
                                            documentNo='210114198701251232',
                                            subreportIDs='10604',
                                             queryReasonID='101')
-        print(result)
+        # 存储为临时文件
+        tempf = open("temp.xml", "w")
+        tempf.write(result.strip("\n"))
+        tempf.close()
+        document = etree.parse("temp.xml")
+        os.remove("temp.xml")
+        #选取节点
+        result_report = document.find('cisReport/policeCheck2Info')
+        if result_report is None:
+            return
+        selected = etree.tostring(result_report, encoding='UTF-8')
+        selected_dict = xmltodict.parse(selected, xml_attribs=False)
+        result_json = json.dumps(selected_dict, indent=2, ensure_ascii=False)
+        print(result_json)
 
     def test_query(self, result):
         py = PengYuan()

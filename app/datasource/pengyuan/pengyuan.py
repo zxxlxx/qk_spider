@@ -16,7 +16,7 @@ from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
 import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+pydevd.settrace('heqiang.imwork.net', port=44957, stdoutToServer=True, stderrToServer=True)
 
 params_mapping = {
     'user_name_cn': 'name',
@@ -312,8 +312,7 @@ class PengYuan(Third):
 
 
 if __name__ == '__main__':
-    # py = PengYuan()
-    # py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
-    pass
+    py = PengYuan()
+    py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
 
 

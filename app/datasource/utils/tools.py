@@ -1,7 +1,7 @@
 import inspect
 import json
 #此处引用相对路径有问题，名称转换暂时不能执行
-# from ..names import read_name
+from ..names import read_name
 
 def params_to_dict(outer=1):
     """
@@ -29,12 +29,12 @@ def convert(report_dict):
     return json_str
 
 
-# def find_name(name):
-#    name_dict = read_name()
-#    for n, v in name_dict.items():
-#        if v == name:
-#            return n
-#    return None
+def find_name(name):
+   name_dict = read_name()
+   for n, v in name_dict.items():
+       if v == name:
+           return n
+   return None
 
 
 def convert_dict(report_dict):
@@ -53,11 +53,11 @@ def convert_dict(report_dict):
         for name, value in report_dict.items():
             wrap = dict()
             child_value = dict()
-            # real_name = find_name(name)
-            # if real_name is not None:
-            #     wrap[real_name] = child_value
-            # else:
-            wrap[name] = child_value
+            real_name = find_name(name)
+            if real_name is not None:
+                wrap[real_name] = child_value
+            else:
+                wrap[name] = child_value
             result.append(wrap)
             child_value["name"] = name
             child_value["desc"] = name

@@ -59,6 +59,16 @@ class PengYuan(Third):
     def stop_jvm(self):
         jpype.shutdownJVM()
 
+    def create_query_condition(self, query_code, **kwargs):
+        """
+        生成查询条件,如果没有给定kwargs值, 该函数必须在query_内调用,根据外层函数参数自动生成查询条件
+        :return:
+        """
+        if not len(kwargs):
+            kwargs = params_to_dict(2)
+        result = self.__params_dict_condition(query_code, **kwargs)
+        return result
+
     def __params_dict_condition(self, query_code, **kwargs):
         """
         将字典转换为xml的查询条件
@@ -86,8 +96,8 @@ class PengYuan(Third):
     def query(self, result, *args, **kwargs):
         kwargs = self.pre_query_params(*args, **kwargs)
         # TODO:子报告如何处理
-        kwargs['subreportIDs'] = '1001'
-        kwargs['queryReasonID'] = '999'
+        # kwargs['subreportIDs'] = '1001'
+        # kwargs['queryReasonID'] = '999'
         res = []
         for func in inspect.getmembers(self, predicate=inspect.ismethod):
             if func[0].startswith('query_'):
@@ -103,15 +113,13 @@ class PengYuan(Third):
         result.put((res, self.source))
         return result
 
-    def __query(self, *args, **kwargs):
+    def __query(self, condition, *args, **kwargs):
         """
         根据条件申请查询
         :param condition: 查询条件
         :return: 查询结果,返回查询到的值
         """
-        condition = self.create_query_condition('101')
         self.client.set_options(port='WebServiceSingleQuery')
-        print('fuck:' + condition)
         # TODO: 测试时不调用
         bz_result = self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
         # bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'
@@ -198,7 +206,7 @@ class PengYuan(Third):
         rv = Cs.decompress(z_result)
         return rv
 
-    def query_personal_id_risk(self, name, documentNo, subreportIDs='10603', queryReasonID='999', refID=None):
+    def query_personal_id_risk(self, name, documentNo, subreportIDs='10603', queryReasonID='101', refID=None):
         """
         个人身份认证信息/风险信息查询
         :param name: 姓名
@@ -211,7 +219,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25160))
 
     def query_card_pay_record(self, name, cardNos, beginDate=None, endDate=None,
-                              subreportIDs='14506', queryReasonID='999', documentNo=None, refID=None):
+                              subreportIDs='14506', queryReasonID='101', documentNo=None, refID=None):
         """
         卡多笔交易记录验请求xml规范
         :param name:
@@ -235,7 +243,7 @@ class PengYuan(Third):
 
         return self.__query(self.create_query_condition(25199, **kwargs))
 
-    def query_career_capacity(self, name, documentNo, subreportIDs='13400', queryReasonID='999', refID=None):
+    def query_career_capacity(self, name, documentNo, subreportIDs='13400', queryReasonID='101', refID=None):
         """
         职业资格查询接口文档
         :param name:
@@ -248,7 +256,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25121))
 
     def query_personal_enterprise_telephone(self, mobile, subreportIDs='13600',
-                                            queryReasonID='999', ownerName=None, refID=None):
+                                            queryReasonID='101', ownerName=None, refID=None):
         """
         个人和企业信息查询
         :param mobile:
@@ -261,7 +269,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25128))
 
     def query_personal_revenue_assess(self, name, documentNo, corpName, positionName, subreportIDs,
-                                      queryReasonID='999', topDegree=None, graduateYear=None,
+                                      queryReasonID='101', topDegree=None, graduateYear=None,
                                       college=None, fullTime=None, refID=None):
         """
         个人收入测评
@@ -281,7 +289,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25180))
 
     def query_airplane_info(self, name, documentNo, passport, month='12', subreportIDs='25175',
-                            queryReasonID='999', refID=None):
+                            queryReasonID='101', refID=None):
         """
         航空出行信息
         :param name:
@@ -295,7 +303,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25175))
 
-    def query_personal_enterprise_risk(self, name, subreportIDs='14200', queryReasonID='999', refID=None):
+    def query_personal_enterprise_risk(self, name, subreportIDs='14200', queryReasonID='101', refID=None):
         """
         个人与企业风险汇总信息
         :param name:
@@ -307,7 +315,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25136))
 
     def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
-                                 mobile, subreportIDs='14506', queryReasonID='999', refID=None):
+                                 mobile, subreportIDs='14506', queryReasonID='101', refID=None):
         """
         查询个人银行账户核查信息
         :param name:
@@ -322,7 +330,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25173))
 
-    def query_open_bank_info(self, accountNo, subreportIDs='14154', queryReasonID='999', refID=None):
+    def query_open_bank_info(self, accountNo, subreportIDs='14154', queryReasonID='101', refID=None):
         """
         开户行信息查询
         :param accountNo:
@@ -333,7 +341,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25193))
 
-    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='999', refID=None):
+    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='101', refID=None):
         """
         个人近两年查询记录
         :param name:
@@ -345,7 +353,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25136))
 
-    def query_enterprise_last_one_year(self, corpName, subreportIDs='', queryReasonID='999', refID=None):
+    def query_enterprise_last_one_year(self, corpName, subreportIDs='', queryReasonID='101', refID=None):
         """
         企业近一年查询记录,
         :param corpName:
@@ -357,7 +365,7 @@ class PengYuan(Third):
         # TODO:这个接口没有文档
         return self.__query(self.create_query_condition(1234))
 
-    def query_enterprise_operation(self, corpName, registerNo, subreportIDs='22300', queryReasonID='999', refID=None):
+    def query_enterprise_operation(self, corpName, registerNo, subreportIDs='22300', queryReasonID='101', refID=None):
         """
         企业经营指数
         :param corpName: 被查询企业名称
@@ -369,7 +377,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25123))
 
-    def query_trade_company_reprot(self, corpName, queryMonth, subreportIDs='', queryReasonID='999', refID=None):
+    def query_trade_company_reprot(self, corpName, queryMonth, subreportIDs='', queryReasonID='101', refID=None):
         """
         商户经营分析
         :param corpName:
@@ -399,7 +407,7 @@ class PengYuan(Third):
 
     def query_enterprise_info(self, corpName, orgCode, registerNo,
                               subreportIDs='21301, 21611, 21612, 22101, 22102, 22103, 22014, 22015, 22302',
-                              queryReasonID='999', refID=None):
+                              queryReasonID='101', refID=None):
         """
         企业信息查询
         :return:
@@ -407,7 +415,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25123))
 
     def query_car_info(self, name, documentNo, licenseNo, carType,
-                       queryReasonID='13812, 13814', subreportIDs='999', refID=None):
+                       subreportIDs='13812, 13814', queryReasonID='101', refID=None):
         """
         全国车辆信息核查
         :param name:

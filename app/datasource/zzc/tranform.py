@@ -2,7 +2,7 @@
 import json
 import sys
 sys.path.append("..")
-from utils.tools import convert_dict
+from ..utils.tools import convert_dict
 
 
 test = """

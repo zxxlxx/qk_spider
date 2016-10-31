@@ -6,7 +6,7 @@ import sys
 import os
 import io
 sys.path.append("..")
-from utils.tools import convert_dict
+from ..utils.tools import convert_dict
 xmlStr = """
 <?xml version="1.0" encoding="GBK"?>
 <cisReports receiveTime="查询申请时间,格式YYYYMMDD HH24:mm:ss" queryCount="查询请求数量" queryUserID="查询操作员登录名" subOrgan="分支机构名称" unitName="查询单位名称" batNo="查询批次号">

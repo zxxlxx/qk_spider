@@ -212,7 +212,7 @@ class PengYuan(Third):
         rv = Cs.decompress(z_result)
         return rv
 
-    def query_personal_id_risk(self, name, documentNo, subreportIDs='10603', queryReasonID='101', refID=None):
+    def query_personal_id_risk(self, name, documentNo, subreportIDs='10604', queryReasonID='101', refID=None):
         """
         个人身份认证信息/风险信息查询
         :param name: 姓名

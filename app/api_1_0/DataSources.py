@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from flask import redirect, request
-from . import ds
+from flask import redirect, request, jsonify
+from app.datasource import ds
 from flask_login import current_user, login_user, login_required
-from .query import Query
+from app.datasource.query import Query
 from flask_restful import reqparse, Resource
-
-@ds.route('/query', methods=['GET'])
-@login_required
-def query():
-    query = Data()
-    # query.query()
+from app import api
 
 
-class Data(Resource):
+class DataSources(Resource):
     """
     Restful for query
     """
@@ -21,10 +16,11 @@ class Data(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('title', type=str, required=True,
                                    help='No task title provided', location='json')
-        self.reqparse.add_argument('description', type=str, default="", location = 'json')
-        super(Data, self).__init__()
+        self.reqparse.add_argument('description', type=str, default="", location='json')
+        super(DataSources, self).__init__()
 
     def get(self):
-        pass
+        return 'hello, world!'
 
-# .add_resource(Data, '/data', endpoint='data')
+api.add_resource(DataSources, '/data', endpoint='data')
+

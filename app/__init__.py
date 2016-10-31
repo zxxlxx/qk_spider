@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
+from flask_restful import Api
 import logging
 from oauthlib import oauth2
 
@@ -17,6 +18,7 @@ moment = Moment()
 db = SQLAlchemy()
 pagedown = PageDown()
 oauth = OAuth2Provider()
+api = Api()
 
 
 login_manager = LoginManager()
@@ -50,8 +52,9 @@ def create_app(config_name):
     from .datasource import ds as ds_blueprint
     app.register_blueprint(ds_blueprint, url_prefix='/ds')
 
-    from .api_1_0 import api as api_1_0_blueprint
-    app.register_blueprint(api_1_0_blueprint, url_prefix='api/v1.0')
+    from .api_1_0 import api_1_0 as api_1_0_blueprint
+    api.init_app(api_1_0_blueprint)
+    app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 
     return app
 

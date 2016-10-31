@@ -54,14 +54,14 @@ class TestPengYuan(TestCase):
         result = py.query_personal_id_risk(name=u'孙立超',
                                            documentNo='210114198701251232',
                                            subreportIDs='10604',
-                                            queryReasonID='101')
+                                           queryReasonID='101')
         print(result)
 
     def test_query(self, result):
         py = PengYuan()
-        result = py.query(result, user_name_cn=u'孙立超',
+        result = py.query(result, user_name_cn=u'阎伟晨',
                           mobile_num='15829551989',
-                          personal_id='210114198701251232',
+                          personal_id='610102199407201510',
                           card_id='610527199005154925')
         print(result)
 

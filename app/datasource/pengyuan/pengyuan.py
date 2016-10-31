@@ -19,6 +19,7 @@ from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 from ..utils.tools import convert_dict
 
+
 class PengYuan(Third):
     '''
     获取鹏元数据工具类
@@ -94,10 +95,15 @@ class PengYuan(Third):
         return result
 
     def query(self, result, *args, **kwargs):
+        """
+        查询接口
+        :param result:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         kwargs = self.pre_query_params(*args, **kwargs)
         # TODO:子报告如何处理
-        # kwargs['subreportIDs'] = '1001'
-        # kwargs['queryReasonID'] = '999'
         res = []
         for func in inspect.getmembers(self, predicate=inspect.ismethod):
             if func[0].startswith('query_'):

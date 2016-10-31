@@ -6,7 +6,7 @@ from flask_login import current_user, login_user, login_required
 from app.datasource.query import Query
 from flask_restful import reqparse, Resource
 from app import api
-
+from ..datasource.query import Query
 
 class DataSources(Resource):
     """
@@ -20,7 +20,9 @@ class DataSources(Resource):
         super(DataSources, self).__init__()
 
     def get(self):
-        return 'hello, world!'
+        query = Query()
+        result = self.query()
+        return {}
 
 api.add_resource(DataSources, '/data', endpoint='data')
 

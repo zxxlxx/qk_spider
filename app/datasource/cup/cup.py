@@ -7,7 +7,7 @@ from app.datasource.third import Third
 from app.util.logger import logger
 
 from ..configuration import config
-
+from ...util.jvm import stop_jvm, start_jvm
 
 class ChinaUnionPay(Third):
     """
@@ -23,21 +23,7 @@ class ChinaUnionPay(Third):
     source = 'cup'
 
     def __init__(self):
-        self.jvm_path = jpype.getDefaultJVMPath()
-        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        jar_path = basedir + '/spiderJar.jar'
-        self.jvmArg = "-Djava.class.path=" + jar_path
-
-    def start_jvm(self):
-        try:
-            if jpype.isJVMStarted():
-                jpype.shutdownJVM()
-            jpype.startJVM(self.jvm_path, '-ea', self.jvmArg)
-        except InterruptedError as e:
-            logger.debug("JVM启动失败{}", e)
-
-    def stop_jvm(self):
-        jpype.shutdownJVM()
+       pass
 
     def __get_data(self, user_name_cn, personal_id, mobile_num, card_id):
         """
@@ -48,7 +34,7 @@ class ChinaUnionPay(Third):
         :param mobile_num: 电话号码
         :return: 查询到的数据
         """
-        self.start_jvm()
+        start_jvm()
         Upa = jpype.JClass('upa.client.UPAClient')
         upa = Upa()
         upa.setDevelopmentId(self.development_id)
@@ -68,7 +54,7 @@ class ChinaUnionPay(Third):
                                                            mobile_num,
                                                            self.distinguish_code)
         json = json_object.toString()
-        self.stop_jvm()
+        stop_jvm()
         return json
 
     def query(self, result, *args, **kwargs):

@@ -18,12 +18,13 @@ from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 from ..utils.tools import convert_dict
+from ...util.jvm import start_jvm, stop_jvm
 
 
 class PengYuan(Third):
-    '''
-    获取鹏元数据工具类
-    '''
+    """
+     获取鹏元数据工具类
+    """
     params_mapping = {
         'user_name_cn': 'name',
         'personal_id': 'documentNo',
@@ -42,23 +43,7 @@ class PengYuan(Third):
     source = py_config.get('source')
 
     def __init__(self):
-        self.jvm_path = jpype.getDefaultJVMPath()
-        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        jar_path = basedir + '/spiderJar.jar'
-        self.jvmArg = "-Djava.class.path=" + jar_path
         self.client = Client(PengYuan.url)
-        pass
-
-    def start_jvm(self):
-        try:
-            if jpype.isJVMStarted():
-                jpype.shutdownJVM()
-            jpype.startJVM(self.jvm_path, '-ea', self.jvmArg)
-        except InterruptedError as e:
-            logging.debug("JVM启动失败{}", e)
-
-    def stop_jvm(self):
-        jpype.shutdownJVM()
 
     def create_query_condition(self, query_code, **kwargs):
         """
@@ -133,7 +118,8 @@ class PengYuan(Third):
         result = self.__format_result(bz_result)
         return result
 
-    def __to_xml(self, bz_result):
+    @staticmethod
+    def __to_xml(bz_result):
         """
         将查询的字符串转换为xml结点
         :param bz_result:
@@ -145,7 +131,8 @@ class PengYuan(Third):
         except ValueError as e:
             logging.error("结果转换xml失败{}!", e)
 
-    def __get_result_code(self, xml_result):
+    @staticmethod
+    def __get_result_code(xml_result):
         """
         获取结果中的结果代码
         :param xml_result:
@@ -185,13 +172,14 @@ class PengYuan(Third):
         对查询到结果结果进行解码
         :return:
         """
-        self.start_jvm()
+        start_jvm()
         z_result = self.__base64_decode(data)
         rv = self.__unzip(z_result)
-        self.stop_jvm()
+        stop_jvm()
         return rv
 
-    def __base64_decode(self, data):
+    @staticmethod
+    def __base64_decode(data):
         """
         鹏元元的base64解码
         :param data: resultValue原始字段内容
@@ -202,7 +190,8 @@ class PengYuan(Third):
         z_result = b64.decode(data)
         return z_result
 
-    def __unzip(self, z_result):
+    @staticmethod
+    def __unzip(z_result):
         """
         鹏元的解压缩
         :param z_result: 未解压缩的内容
@@ -458,7 +447,8 @@ class PengYuan(Third):
         """
         pass
 
-    def format_result(self, xml_data):
+    @staticmethod
+    def format_result(xml_data):
         """
         处理查询结果,提取需要的信息
         :param xml_data: xml格式的查询结果

@@ -3,10 +3,13 @@ from unittest import TestCase
 import pytest
 import requests
 import json
+import sys
+sys.path.append('../')
+
 from app.datasource.zzc.zzc import Zzc
 
 import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 class TestZzc(TestCase):
     apply_id = 'AP201607179336771654'
@@ -47,3 +50,9 @@ class TestZzc(TestCase):
 
     def test_black_search(self):
         result = self.zzc.black_search("孙立超", "210114198701251232", "15829551989")
+        print(result)
+
+
+if __name__ == '__main__':
+    tzc = TestZzc()
+    tzc.test_black_search()

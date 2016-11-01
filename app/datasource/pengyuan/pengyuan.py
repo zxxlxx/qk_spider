@@ -500,22 +500,6 @@ class PengYuan(Third):
             with open(file_out, 'wb') as fo:
                 fo.write(result.encode('utf-8'))
 
-    def format_result(x_data, path, header=None):
-        if header is None:
-            document = etree.XML(x_data)
-        else:
-            tempf = open("temp.xml", "w")
-            tempf.write(x_data.strip("\n"))
-            tempf.close()
-            document = etree.parse("temp.xml")
-            os.remove("temp.xml")
-        result_report = document.find(path)
-        if result_report is None:
-            return
-        selected = etree.tostring(result_report, encoding='UTF-8')
-        selected_dict = xmltodict.parse(selected, xml_attribs=False)
-
-        return convert_dict(selected_dict)
 
 if __name__ == '__main__':
     # py = PengYuan()

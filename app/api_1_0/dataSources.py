@@ -20,7 +20,6 @@ class DataSources(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('title', type=str, required=True,
                                    help='No task title provided', location='json')
-        self.reqparse.add_argument('description', type=str, default="", location='json')
         super(DataSources, self).__init__()
 
     def get(self):

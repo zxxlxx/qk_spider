@@ -19,7 +19,7 @@
       <paths name="spider">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/xian/project/python" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/xian/project/spider" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

@@ -4,6 +4,7 @@ import inspect
 import logging
 import os
 import os.path
+import threading
 from datetime import timedelta, datetime
 from optparse import OptionParser
 
@@ -16,6 +17,7 @@ from suds.client import Client
 
 from app.datasource.third import Third
 from app.datasource.utils.tools import params_to_dict
+from app.util.logger import logger
 from ..configuration import config
 from ..utils.tools import convert_dict
 from ...util.jvm import start_jvm, stop_jvm
@@ -89,7 +91,8 @@ class PengYuan(Third):
         """
         kwargs = self.pre_query_params(*args, **kwargs)
         # TODO:子报告如何处理
-        res = []
+        res = {}
+        threads = []
         for func in inspect.getmembers(self, predicate=inspect.ismethod):
             if func[0].startswith('query_'):
                 try:
@@ -97,12 +100,30 @@ class PengYuan(Third):
                     f = func[1]
                     params = inspect.signature(f).parameters.keys()
                     ps = {param: kwargs.get(param) for param in params if kwargs.get(param) is not None}
-                    r = f(**ps)
-                    res.append(r)
+                    thread = threading.Thread(target=self.__query_thread, args=(res, f), kwargs=ps)
+                    threads.append(thread)
+                    thread.start()
                 except Exception as e:
                     continue
+
+        for thread in threads:
+            thread.join(5)
+            if thread.isAlive():
+                logger.error("查询线程{}超时".format(thread))
+
         result.put((res, self.source))
         return result
+
+    def __query_thread(self, result, func, **kwargs):
+        """
+        用于实现线程的封装查询
+        :param result:
+        :param func:
+        :param kwargs:
+        :return:
+        """
+        r = func(**kwargs)
+        result.put(r)
 
     def __query(self, condition, *args, **kwargs):
         """

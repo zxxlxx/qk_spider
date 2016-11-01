@@ -22,7 +22,7 @@ class Query:
 
     # TODO 这里以后可以用迭代的方式完成
     def __init__(self, third=None):
-        data_sources = [Zzc()] #, PengYuan(), ChinaUnionPay()]
+        data_sources = [Zzc(), PengYuan(), ChinaUnionPay()]
         self.finders = set()
         for data_source in data_sources:
             self.add_third(data_source)
@@ -49,7 +49,7 @@ class Query:
                 logger.error(repr(e))
 
         for thread in threads:
-            thread.join(5)
+            thread.join(10)
             if thread.isAlive():
                 logger.error("查询线程{}超时".format(thread))
 

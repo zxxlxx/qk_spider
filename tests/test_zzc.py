@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import queue
 from unittest import TestCase
 import pytest
 import requests
@@ -52,6 +53,10 @@ class TestZzc(TestCase):
         result = self.zzc.black_search("孙立超", "210114198701251232", "15829551989")
         print(result)
 
+    def test_query(self):
+        result = queue.Queue
+        result = self.zzc.query(result, **self.data)
+        assert result
 
 if __name__ == '__main__':
     tzc = TestZzc()

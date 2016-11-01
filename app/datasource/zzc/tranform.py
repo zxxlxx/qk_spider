@@ -55,10 +55,11 @@ test = """
 
 
 def format_result(content):
-    result_dict = json.loads(content)
-    converted = convert_dict(result_dict)
+    # result_dict = json.loads(content)
+    converted = convert_dict(content)
     return json.dumps(converted, indent=2, ensure_ascii=False)
 
 
 if __name__ == '__main__':
     print(format_result(test))
+    

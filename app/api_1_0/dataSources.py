@@ -24,13 +24,9 @@ class DataSources(Resource):
         super(DataSources, self).__init__()
 
     def get(self):
-        if not request.is_json:
-            return bad_request('非json请求!')
-
-        json_args = request.json
-
+        args = request.args.to_dict()
         query = Query()
-        result = query.query(**json_args)
+        result = query.query(**args)
         return result
 
 api.add_resource(DataSources, '/data', endpoint='data')

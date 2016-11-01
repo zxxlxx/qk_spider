@@ -43,12 +43,16 @@ def convert_dict(report_dict):
     :param report_dict: 是字典或者字典的列表
     :return: 转换后产生的字典
     """
-    result = []
+    result = {}
     # 节点有多项
     if isinstance(report_dict, list):
         for obj in report_dict:
+            if isinstance(obj, str):
+                # TODO: 这里字符串翻译为指定定义
+                result.extend(report_dict)
+                break
             result.append(convert_dict(obj))
-    else:
+    elif isinstance(report_dict, dict):
         # 节点为字典
         for name, value in report_dict.items():
             wrap = dict()

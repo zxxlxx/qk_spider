@@ -54,7 +54,7 @@ class TestDataSources(TestCase):
             'card_id': '610527199005154925'
         }
         url = url_for('api.data')
-        response = self.client.get(url_for('api.data'), data=json.dumps(params), content_type=APPLICATION_JSON)
+        response = self.client.get(url_for('api.data'), query_string=params, content_type=APPLICATION_JSON)
         self.assertTrue(response.status_code == 200)
 
 if __name__ == '__main__':

@@ -1,14 +1,23 @@
+# -*- coding: utf-8 -*-
+import sys
+sys.path.append('../')
+import pydevd
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+
+import json
 from base64 import b64encode
 from unittest import TestCase
+import requests
+from flask import url_for
 
-
-# -*- coding: utf-8 -*-
 from app import create_app, db
+from app.api_1_0 import api
 from app.consts import APPLICATION_JSON
 from app.models import Role, User
 
 
 class TestDataSources(TestCase):
+
 
     def setUp(self):
         self.app = create_app('testing')
@@ -38,4 +47,18 @@ class TestDataSources(TestCase):
         pass
 
     def test_get(self):
-        pass
+        params = {
+            'user_name_cn': u'阎伟晨',
+            'mobile_num': '15829551989',
+            'personal_id': '610102199407201510',
+            'card_id': '610527199005154925'
+        }
+        url = url_for('api.data')
+        response = self.client.get(url_for('api.data'), data=json.dumps(params), content_type=APPLICATION_JSON)
+        self.assertTrue(response.status_code == 200)
+
+if __name__ == '__main__':
+    tds = TestDataSources()
+    tds.setUp()
+    tds.test_get()
+    tds.tearDown()

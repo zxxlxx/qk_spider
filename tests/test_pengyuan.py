@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
+
+import sys
+sys.path.append('../')
+import pydevd
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+
 from unittest import TestCase
 import xmltodict
 import json
 from lxml import etree
 import os
-
-import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 import queue
 import sys

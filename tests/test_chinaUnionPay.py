@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
+
+import sys
+sys.path.append('../')
+import pydevd
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+
+
 import queue
 from unittest import TestCase
 
-
-# -*- coding: utf-8 -*-
 from app.datasource.cup.cup import ChinaUnionPay
-
 
 class TestChinaUnionPay(TestCase):
 

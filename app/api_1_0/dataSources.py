@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
+import json
 
 from flask import redirect, request, jsonify
+
+from app.api_1_0.errors import bad_request
 from app.datasource import ds
 from flask_login import current_user, login_user, login_required
 from app.datasource.query import Query
 from flask_restful import reqparse, Resource
 from app import api
 from ..datasource.query import Query
+
 
 class DataSources(Resource):
     """
@@ -20,9 +24,14 @@ class DataSources(Resource):
         super(DataSources, self).__init__()
 
     def get(self):
+        if not request.is_json:
+            return bad_request('非json请求!')
+
+        json_args = request.json
+
         query = Query()
-        result = self.query()
-        return {}
+        result = query.query(**json_args)
+        return result
 
 api.add_resource(DataSources, '/data', endpoint='data')
 

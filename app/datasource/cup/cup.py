@@ -9,6 +9,7 @@ from app.util.logger import logger
 from ..configuration import config
 from ...util.jvm import stop_jvm, start_jvm
 
+
 class ChinaUnionPay(Third):
     """
     银联智策
@@ -58,7 +59,9 @@ class ChinaUnionPay(Third):
         return json
 
     def query(self, result, *args, **kwargs):
-        r = self.__get_data(**kwargs)
-        result.put((r, self.source))
-        return result
+        # r = self.__get_data(**kwargs)
+        # result.put((r, self.source))
+        # return result
+        pass
+
 

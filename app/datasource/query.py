@@ -22,8 +22,7 @@ class Query:
 
     # TODO 这里以后可以用迭代的方式完成
     def __init__(self, third=None):
-
-        data_sources = [PengYuan(), Zzc(), ChinaUnionPay()]
+        data_sources = [Zzc(), PengYuan(), ChinaUnionPay()]
         self.finders = set()
         for data_source in data_sources:
             self.add_third(data_source)

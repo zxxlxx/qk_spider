@@ -199,6 +199,7 @@ class Zzc(Third):
         :param result:
         :return:
         """
+        page = {}
         if result.status_code == status:
             page = result.json()
             r = True

@@ -16,7 +16,7 @@ class Third(metaclass=abc.ABCMeta):
     def source(self):
         return self.source
 
-    def pre_query_params(self, **kwargs):
+    def pre_query_params(self, *args, **kwargs):
         """
         与标准变量名之间的转换
         :param args:

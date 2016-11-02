@@ -117,7 +117,8 @@ class PengYuan(Third):
         while True:
             try:
                 data = res.get_nowait()
-                result_final.append(data)
+                if data:
+                    result_final.append(data)
             except queue.Empty:
                 break
         result.put((result_final, self.source))

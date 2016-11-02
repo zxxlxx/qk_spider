@@ -2,6 +2,8 @@
 import json
 import sys
 
+from app.util.jvm import start_jvm, stop_jvm
+
 if sys.version[0] == '2':
     import Queue as queue
 else:
@@ -22,6 +24,7 @@ class Query:
 
     # TODO 这里以后可以用迭代的方式完成
     def __init__(self, third=None):
+        # start_jvm()
         data_sources = [Zzc, PengYuan, ChinaUnionPay]
         self.finders = set()
         for data_source in data_sources:
@@ -34,6 +37,10 @@ class Query:
             self.finders.add(third)
 
         self.data_queue = queue.Queue()
+
+    def __del__(self):
+        # stop_jvm()
+        pass
 
     def add_third(self, third):
         self.finders.add(third)
@@ -64,7 +71,7 @@ class Query:
             except queue.Empty:
                 break
 
-        result_j = json.dumps(final_result)
+        result_j = final_result
         print(result_j)
         return result_j
 

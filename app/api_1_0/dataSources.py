@@ -32,7 +32,7 @@ class DataSources(Resource):
 
         query = Query()
         result = query.query(**args)
-        inner_result = InnerResult(condition=str(args), result=result, received_time=datetime.now())
+        inner_result = InnerResult(condition=str(args), result=repr(result), received_time=datetime.now())
         db.session.add(inner_result)
         db.session.commit()
         return result

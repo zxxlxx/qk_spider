@@ -20,6 +20,8 @@ def start_jvm():
         if jpype.isJVMStarted():
             jpype.shutdownJVM()
         jpype.startJVM(jvm_path, '-ea', jvmArg)
+        if not jpype.isThreadAttachedToJVM():
+            jpype.attachThreadToJVM()
     except InterruptedError as e:
         logging.debug("JVM启动失败{}", e)
 

@@ -4,6 +4,7 @@ import inspect
 import logging
 import os
 import os.path
+import queue
 import threading
 from datetime import timedelta, datetime
 from optparse import OptionParser
@@ -45,7 +46,9 @@ class PengYuan(Third):
     source = py_config.get('source')
 
     def __init__(self):
-        self.client = Client(PengYuan.url)
+        # self.client = Client(PengYuan.url)
+        pass
+
 
     def create_query_condition(self, query_code, **kwargs):
         """
@@ -91,7 +94,7 @@ class PengYuan(Third):
         """
         kwargs = self.pre_query_params(*args, **kwargs)
         # TODO:子报告如何处理
-        res = {}
+        res = queue.Queue()
         threads = []
         for func in inspect.getmembers(self, predicate=inspect.ismethod):
             if func[0].startswith('query_'):
@@ -111,7 +114,14 @@ class PengYuan(Third):
             if thread.isAlive():
                 logger.error("查询线程{}超时".format(thread))
 
-        result.put((res, self.source))
+        result_final = []
+        while True:
+            try:
+                data = res.get_nowait()
+                result_final.append(data)
+            except queue.Empty:
+                break
+        result.put((result_final, self.source))
         return result
 
     def __query_thread(self, result, func, **kwargs):
@@ -122,8 +132,11 @@ class PengYuan(Third):
         :param kwargs:
         :return:
         """
-        r = func(**kwargs)
-        result.put(r)
+        try:
+            r = func(**kwargs)
+            result.put(r)
+        except Exception as ex:
+            logger.error(ex)
 
     def __query(self, condition, *args, **kwargs):
         """
@@ -131,10 +144,10 @@ class PengYuan(Third):
         :param condition: 查询条件
         :return: 查询结果,返回查询到的值
         """
-        self.client.set_options(port='WebServiceSingleQuery')
+        # self.client.set_options(port='WebServiceSingleQuery')
         # TODO: 测试时不调用
-        bz_result = self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
-        # bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'
+        # bz_result = self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
+        bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'
         # print(bz_result)
         result = self.__format_result(bz_result)
         return result
@@ -193,11 +206,14 @@ class PengYuan(Third):
         对查询到结果结果进行解码
         :return:
         """
-        start_jvm()
-        z_result = self.__base64_decode(data)
-        rv = self.__unzip(z_result)
-        stop_jvm()
-        return rv
+        try:
+            start_jvm()
+            z_result = self.__base64_decode(data)
+            rv = self.__unzip(z_result)
+            stop_jvm()
+            return rv
+        except Exception as ex:
+            logger.error(ex)
 
     @staticmethod
     def __base64_decode(data):
@@ -206,10 +222,13 @@ class PengYuan(Third):
         :param data: resultValue原始字段内容
         :return: 解码后的内容
         """
-        Base64 = jpype.JPackage('cardpay').pengyuan.Base64
-        b64 = Base64()
-        z_result = b64.decode(data)
-        return z_result
+        try:
+            Base64 = jpype.JPackage('cardpay').pengyuan.Base64
+            b64 = Base64()
+            z_result = b64.decode(data)
+            return z_result
+        except Exception as ex:
+            logger.error(ex)
 
     @staticmethod
     def __unzip(z_result):
@@ -218,9 +237,12 @@ class PengYuan(Third):
         :param z_result: 未解压缩的内容
         :return: 解压缩后的内容
         """
-        Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
-        rv = Cs.decompress(z_result)
-        return rv
+        try:
+            Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
+            rv = Cs.decompress(z_result)
+            return rv
+        except Exception as ex:
+            logger.error(ex)
 
     def query_personal_id_risk(self, name, documentNo, subreportIDs='10604', queryReasonID='101', refID=None):
         """

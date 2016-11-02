@@ -294,7 +294,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25121))
 
-    def query_personal_enterprise_telephone(self, mobile, subreportIDs='13600',
+    def query_personal_enterprise_telephone(self, mobile, subreportIDs='21615',
                                             queryReasonID='101', ownerName=None, refID=None):
         """
         个人和企业信息查询
@@ -307,7 +307,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25128))
 
-    def query_personal_revenue_assess(self, name, documentNo, corpName, positionName, subreportIDs,
+    def query_personal_revenue_assess(self, name, documentNo, corpName, positionName, subreportIDs=14003,
                                       queryReasonID='101', topDegree=None, graduateYear=None,
                                       college=None, fullTime=None, refID=None):
         """
@@ -327,7 +327,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25180))
 
-    def query_airplane_info(self, name, documentNo, passport, month='12', subreportIDs='25175',
+    def query_airplane_info(self, name, documentNo, passport, month='12', subreportIDs='14100',
                             queryReasonID='101', refID=None):
         """
         航空出行信息

@@ -22,10 +22,13 @@ class Query:
 
     # TODO 这里以后可以用迭代的方式完成
     def __init__(self, third=None):
-        data_sources = [Zzc()]#, PengYuan(), ChinaUnionPay()]
+        data_sources = [Zzc, PengYuan, ChinaUnionPay]
         self.finders = set()
         for data_source in data_sources:
-            self.add_third(data_source)
+            try:
+                self.add_third(data_source())
+            except Exception as ex:
+                logger.error(repr(ex))
 
         if third:
             self.finders.add(third)

@@ -27,7 +27,7 @@ class DataSources(Resource):
     def get(self):
         args = request.args.to_dict()
         have_result = InnerResult.query.filter_by(condition=str(args)).first()
-        if have_result is not None:
+        if have_result is not None and have_result is not None:
             return have_result.result
 
         query = Query()

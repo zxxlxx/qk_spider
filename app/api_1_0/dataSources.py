@@ -27,12 +27,14 @@ class DataSources(Resource):
     def get(self):
         args = request.args.to_dict()
         have_result = InnerResult.query.filter_by(condition=str(args)).first()
-        if have_result is not None and have_result is not None:
-            return json.dumps(have_result.result)
+        # if have_result is not None and have_result is not None:
+        #     r = have_result.result
+        #     print("r :  " + r)
+        #     return json.dumps(have_result.result)
 
         query = Query()
         result = query.query(**args)
-        inner_result = InnerResult(condition=str(args), result=repr(result), received_time=datetime.now())
+        inner_result = InnerResult(condition=str(args), result=str(result), received_time=datetime.now())
         db.session.add(inner_result)
         db.session.commit()
         return result

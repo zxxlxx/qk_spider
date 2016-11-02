@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 
+from app.api_1_0.models import InnerResult
+
 COV = None
 
 if os.environ.get("FLASK_COVERAGE"):
@@ -20,15 +22,16 @@ if os.path.exists('.env'):
 from app import create_app, db
 from flask_script import Manager, Shell
 from app.models import User, Role, Permission
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import MigrateCommand, Migrate
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role, Permission=Permission)
+    return dict(app=app, db=db, User=User, Role=Role, Permission=Permission, InnerResult=InnerResult)
 
+migrate = Migrate(app, db)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command("db", MigrateCommand)
 

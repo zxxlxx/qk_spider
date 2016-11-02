@@ -24,9 +24,9 @@
       <map>
         <entry key="C:/workspace/project/java/rcs" value="2932986018452" />
         <entry key="C:/workspace/project/java/web/pccims" value="5891984535005" />
-        <entry key="$PROJECT_DIR$/../../../java/qkc" value="2947337031127" />
-        <entry key="$PROJECT_DIR$/../../../java/test/spring-framework" value="5881553022416" />
-        <entry key="$PROJECT_DIR$/../../../test/BQ" value="5888817947658" />
+        <entry key="$USER_HOME$/java/qkc" value="2947337031127" />
+        <entry key="$USER_HOME$/java/test/spring-framework" value="5881553022416" />
+        <entry key="$USER_HOME$/test/BQ" value="5888817947658" />
       </map>
     </option>
     <option name="externalProjectsViewState">
@@ -50,7 +50,7 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.5.2 virtualenv at E:\python\envs\spider" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.5.2 virtualenv at ~/.virtualenvs/spider" project-jdk-type="Python SDK" />
   <component name="masterDetails">
     <states>
       <state key="ProjectJDKs.UI">

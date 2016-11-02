@@ -2,6 +2,7 @@
 import json
 from datetime import time, datetime
 
+import pickle
 from flask import redirect, request, jsonify
 
 from app.api_1_0.errors import bad_request
@@ -27,14 +28,14 @@ class DataSources(Resource):
     def get(self):
         args = request.args.to_dict()
         have_result = InnerResult.query.filter_by(condition=str(args)).first()
-        # if have_result is not None and have_result is not None:
-        #     r = have_result.result
-        #     print("r :  " + r)
-        #     return json.dumps(have_result.result)
+        if have_result is not None and have_result is not None:
+            r = pickle.loads(have_result.result)
+            return r
 
         query = Query()
         result = query.query(**args)
-        inner_result = InnerResult(condition=str(args), result=str(result), received_time=datetime.now())
+
+        inner_result = InnerResult(condition=str(args), result=pickle.dumps(result), received_time=datetime.now())
         db.session.add(inner_result)
         db.session.commit()
         return result

@@ -13,7 +13,7 @@ class InnerResult(db.Model):
     __tablename__ = 'data'
     id = db.Column(db.Integer, primary_key=True)
     condition = db.Column(db.Text, unique=True)
-    result = db.Column(db.Text)
+    result = db.Column(db.Binary)
     received_time = db.Column(db.TIMESTAMP)
 
     def __repr__(self):

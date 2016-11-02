@@ -7,7 +7,7 @@ from app.datasource.third import Third
 from app.util.logger import logger
 
 from ..configuration import config
-from ...util.jvm import stop_jvm, start_jvm
+from ...util.jvm import start_jvm
 
 
 class ChinaUnionPay(Third):
@@ -55,7 +55,6 @@ class ChinaUnionPay(Third):
                                                            mobile_num,
                                                            self.distinguish_code)
         json = json_object.toString()
-        stop_jvm()
         return json
 
     def query(self, result, *args, **kwargs):

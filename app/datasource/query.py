@@ -2,7 +2,7 @@
 import json
 import sys
 
-from app.util.jvm import start_jvm, stop_jvm
+from app.util.jvm import start_jvm
 
 if sys.version[0] == '2':
     import Queue as queue
@@ -72,6 +72,6 @@ class Query:
                 break
 
         result_j = final_result
-        print(result_j)
+        print("结果" + repr(result_j))
         return result_j
 

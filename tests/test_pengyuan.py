@@ -82,7 +82,8 @@ class TestPengYuan(TestCase):
         result = py.query(result, user_name_cn=u'阎伟晨',
                           mobile_num='15829551989',
                           personal_id='610102199407201510',
-                          card_id='610527199005154925')
+                          card_id='610527199005154925',
+                          py_open_bank_id='610527199005154925')
         print(result)
 
 if __name__ == '__main__':

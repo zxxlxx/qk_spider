@@ -37,6 +37,7 @@ class PengYuan(Third):
         'end_date': 'endDate',
         'open_bank_id': 'openBankNo',
         'mobile_num': 'mobile',
+        'py_open_bank_id': 'cardNos'
 }
 
     py_config = config.get('pengyuan')

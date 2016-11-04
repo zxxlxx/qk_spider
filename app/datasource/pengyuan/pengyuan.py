@@ -327,7 +327,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25180))
 
-    def query_airplane_info(self, name, documentNo, passport, month='12', subreportIDs='14100',
+    def query_airplane_info(self, name, documentNo=None, passport=None, month='12', subreportIDs='14100',
                             queryReasonID='101', refID=None):
         """
         航空出行信息
@@ -353,8 +353,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25136))
 
-    def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
-                                 mobile, subreportIDs='14506', queryReasonID='101', refID=None):
+    def query_personal_bank_info(self, name, documentNo, accountNo, mobile,
+                                 openBankNo=None, subreportIDs='14506', queryReasonID='101', refID=None):
         """
         查询个人银行账户核查信息
         :param name:

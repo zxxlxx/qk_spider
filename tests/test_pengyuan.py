@@ -79,11 +79,12 @@ class TestPengYuan(TestCase):
 
     def test_query(self, result):
         py = PengYuan()
-        result = py.query(result, user_name_cn=u'阎伟晨',
-                          mobile_num='15829551989',
-                          personal_id='610102199407201510',
-                          card_id='610527199005154925',
-                          py_open_bank_id='610527199005154925')
+        result = py.query(result, user_name_cn=u'谭俊峰',
+                          mobile_num='18192349450',
+                          personal_id='430102197111062010',
+                          card_id='4340624220484768',
+                          py_open_bank_id='610527199005154925',
+                          license_no='430102197111062010')
         print(result)
 
 if __name__ == '__main__':

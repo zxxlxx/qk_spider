@@ -35,9 +35,11 @@ class PengYuan(Third):
         'card_id': 'cardNos',
         'begin_date': 'beginDate',
         'end_date': 'endDate',
-        'open_bank_id': 'openBankNo',
+        'card_id': 'accountNo',
         'mobile_num': 'mobile',
-        'py_open_bank_id': 'cardNos'
+        'py_open_bank_id': 'cardNos',
+        'license_no': 'licenseNo',
+        'car_type': 'carType'
 }
 
     py_config = config.get('pengyuan')
@@ -354,7 +356,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25136))
 
-    def query_personal_bank_info(self, name, documentNo, accountNo, mobile,
+    def query_personal_bank_info(self, name, documentNo, mobile, accountNo,
                                  openBankNo=None, subreportIDs='14506', queryReasonID='101', refID=None):
         """
         查询个人银行账户核查信息
@@ -455,7 +457,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25123))
 
     def query_car_info(self, name, documentNo, licenseNo, carType,
-                       subreportIDs='13812, 13814', queryReasonID='101', refID=None):
+                       subreportIDs='13812', queryReasonID='101', refID=None):
         """
         全国车辆信息核查
         :param name:

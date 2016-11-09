@@ -49,7 +49,7 @@ class Zzc(Third):
         return self.pre_result(result)
 
     def __create_query_condition(self, *args, **kwargs):
-        templete = r'''{{
+        template = r'''{{
                     "loan_amount": {loan_amount},
                     "loan_purpose": "{loan_purpose}",
                     "loan_term": {loan_term},
@@ -60,7 +60,7 @@ class Zzc(Third):
                         "mobile": "{mobile_num}"
                     }}
                     }}'''.format_map(SafeSub(kwargs))
-        j = json.loads(templete)
+        j = json.loads(template)
 
         # TODO:必要的条件先写死
         if j.get('loan_term') is None:

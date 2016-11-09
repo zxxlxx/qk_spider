@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 import inspect
+import json
 import logging
 import os
 import os.path
@@ -17,12 +18,14 @@ from lxml import etree
 from suds.client import Client
 
 from app.datasource.third import Third
-from app.datasource.utils.tools import params_to_dict
+from app.datasource.utils.tools import params_to_dict, SafeSub
 from app.util.logger import logger
 from ..configuration import config
 from ..utils.tools import convert_dict
 from ...util.jvm import start_jvm
 
+class FORMAT:
+    JSON = 1
 
 class PengYuan(Third):
     """
@@ -49,20 +52,25 @@ class PengYuan(Third):
     source = py_config.get('source')
 
     def __init__(self):
-        self.client = Client(PengYuan.url)
+        self.client = ''#Client(PengYuan.url)
         pass
 
-    def create_query_condition(self, query_code, **kwargs):
+    def create_query_condition(self, query_code, type=None, **kwargs):
         """
         生成查询条件,如果没有给定kwargs值, 该函数必须在query_内调用,根据外层函数参数自动生成查询条件
         :return:
         """
         if not len(kwargs):
             kwargs = params_to_dict(2)
-        result = self.__params_dict_condition(query_code, **kwargs)
+
+        if not type:
+            result = self.__params_dict_condition_xml(query_code, **kwargs)
+        elif type == FORMAT.JSON:
+            result = self.__params_dict_condition_json(query_code, **kwargs)
+
         return result
 
-    def __params_dict_condition(self, query_code, **kwargs):
+    def __params_dict_condition_xml(self, query_code, **kwargs):
         """
         将字典转换为xml的查询条件
         :param query_code:
@@ -85,6 +93,43 @@ class PengYuan(Third):
             value.text = v
         result = etree.tostring(query_t, encoding='unicode')
         return result
+
+    def __params_dict_condition_json(self, query_code, **kwargs):
+        """
+        将字典转换为json的查询条件
+        :param query_code:
+        :param kwargs:
+        :return:
+        """
+        kwargs['query_code'] = query_code
+        kwargs['page'] = '100'
+        kwargs['queryType'] = '4'
+
+        template = r'{{' \
+                         r'"conditions": {{' \
+                             r'"condition": {{' \
+                                 r'"interfaceId": "{query_code}",' \
+                                     r'"item": [{{' \
+                                         r'"name": "beginDate",' \
+                                         r'"value": "{beginDate}"}},' \
+                                         r'{{"name": "endDate",' \
+                                         r'"value": "{endDate}"}},' \
+                                         r'{{"name": "queryType",' \
+                                         r'"value": "{queryType}"}},' \
+                                         r'{{"name": "monitorStr",' \
+                                         r'"value": "{monitorStr}"}},' \
+                                         r'{{"name": "page",' \
+                                         r'"value": "{page}"}},' \
+                                         r'{{"name": "pageCount",' \
+                                         r'"value": "{pageCount}"}},' \
+                                         r'{{"name": "applyID",' \
+                                         r'"value": "{applyID}"}}' \
+                                     r']' \
+                                 r'}}' \
+                             r'}}' \
+                         r'}}'.format_map(SafeSub(kwargs))
+        j = json.loads(template)
+        return j
 
     def query(self, result, *args, **kwargs):
         """

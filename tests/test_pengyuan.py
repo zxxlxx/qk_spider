@@ -3,7 +3,7 @@
 import sys
 sys.path.append('../')
 import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 from unittest import TestCase
 import xmltodict
@@ -14,12 +14,12 @@ import os
 import queue
 import sys
 sys.path.append('../')
-from app.datasource.pengyuan.pengyuan import PengYuan
+from app.datasource.pengyuan.pengyuan import PengYuan, FORMAT
 
 
 class TestPengYuan(TestCase):
 
-    def test_create_query_condition(self, name='sunlc',
+    def test_create_query_condition_xml(self, name='sunlc',
                                     # documentNo='2101141098701251234',
                                     # accountNo='637933021912',
                                     # openBankNo='1001',
@@ -29,7 +29,12 @@ class TestPengYuan(TestCase):
                                     refID=None):
         py = PengYuan()
         result = py.create_query_condition("123")
-        assert result==b'<conditions><condition queryType="123"><item><name>name</name><value>sunlc</value></item></condition></conditions>'
+        assert result=='<conditions><condition queryType="123"><item><name>name</name><value>sunlc</value></item></condition></conditions>'
+
+    def test_create_query_condition_json(self, name='sunlc'):
+        py = PengYuan()
+        result = py.create_query_condition('123', type=FORMAT.JSON)
+        print(result)
 
     def test_query_personal_id_risk(self):
         sub_report = {10604: True, 10603: False, 14200: True}

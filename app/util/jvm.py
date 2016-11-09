@@ -25,7 +25,7 @@ def start_jvm():
         if not jpype.isThreadAttachedToJVM():
             jpype.attachThreadToJVM()
             # TODO:这里是个隐患,没有退出
-            time.sleep(0.1)
+            time.sleep(0.05)
     except InterruptedError as e:
         logging.debug("JVM启动失败{}", e)
 

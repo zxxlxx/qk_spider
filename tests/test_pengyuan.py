@@ -3,7 +3,7 @@
 import sys
 sys.path.append('../')
 import pydevd
-# pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
 
 from unittest import TestCase
 import xmltodict
@@ -33,7 +33,7 @@ class TestPengYuan(TestCase):
 
     def test_create_query_condition_json(self, name='sunlc'):
         py = PengYuan()
-        result = py.create_query_condition('123', type=FORMAT.JSON)
+        result = py.create_query_condition('123', query_type=FORMAT.JSON)
         print(result)
 
     def test_query_personal_id_risk(self):
@@ -90,6 +90,11 @@ class TestPengYuan(TestCase):
                           card_id='4340624220484768',
                           py_open_bank_id='610527199005154925',
                           license_no='430102197111062010')
+        print(result)
+
+    def test_query_airplane_info(self):
+        py = PengYuan()
+        result = py.query_airplane_info(name=u'孙立超', documentNo='210114198701251232')
         print(result)
 
 if __name__ == '__main__':

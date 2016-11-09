@@ -52,10 +52,11 @@ class PengYuan(Third):
     source = py_config.get('source')
 
     def __init__(self):
-        self.client = ''#Client(PengYuan.url)
+
+        self.client = Client(PengYuan.url)
         pass
 
-    def create_query_condition(self, query_code, type=None, **kwargs):
+    def create_query_condition(self, query_code, query_type=None, **kwargs):
         """
         生成查询条件,如果没有给定kwargs值, 该函数必须在query_内调用,根据外层函数参数自动生成查询条件
         :return:
@@ -63,9 +64,9 @@ class PengYuan(Third):
         if not len(kwargs):
             kwargs = params_to_dict(2)
 
-        if not type:
+        if not query_type:
             result = self.__params_dict_condition_xml(query_code, **kwargs)
-        elif type == FORMAT.JSON:
+        elif query_type == FORMAT.JSON:
             result = self.__params_dict_condition_json(query_code, **kwargs)
 
         return result
@@ -102,9 +103,6 @@ class PengYuan(Third):
         :return:
         """
         kwargs['query_code'] = query_code
-        kwargs['page'] = '100'
-        kwargs['queryType'] = '4'
-
         template = r'{{' \
                          r'"conditions": {{' \
                              r'"condition": {{' \
@@ -136,7 +134,7 @@ class PengYuan(Third):
         查询接口
         :param result:
         :param args:
-        :param kwargs:
+        :param kwargs: 查询的参数
         :return:
         """
         kwargs = self.pre_query_params(*args, **kwargs)
@@ -485,12 +483,42 @@ class PengYuan(Third):
         # TODO:这个接口很复杂,先放下
         pass
 
-    def query_risk_info(self):
+    def query_risk_info(self, beginDate, endDate, applyID,
+                        monitorStr, page=1, queryType=4, pageCount=100, queryReasonID='py020'):
         """
         风险信息监控接口
+        :param interfaceId: 查询接口id（必填），py020为个人和企业监控结果查询接口。
+        :param queryType:  查询类型（必填）：
+                                    1:查询符合条件内所有个人的监控信息结果
+                                    2:查询符合条件内所有企业的监控信息结果
+                                    3:查询符合条件内所有个人和企业的监控信息结果
+                                    4:查询符合条件内指定个人或企业的监控信息结果
+                            说明：符合条件是指处于监控中的名单，或过期及取消后还在缓存查询天数内的监控过的名单，
+                            如果20150101过期，缓存查询天数为10天，
+                            那么20150111还可以查询20140101到20150101这一个周期的历史监控信息，
+                            如果超过20150111就不在让查询历史，同样取消也是如此，如果20140101开始监控，20140501取消监控，
+                            那么20150111还可以查到20140101到20140501这段监控时间内的历史监控信息，
+                            如果超过20150111就不在让查询历史，并且只支持单个周期查询，不能跨周期查。
+        :param beginDate: 查询监控开始日期（选填） ,时间格式：yyyyMMdd , 监控开始时间为T+1，如20150423将个人或企业加入监控名单，
+        则20150424开始执行监控，20150425可以查询20150423的新增及变更的数据。
+        :param endDate: 查询监控结束日期时间（选填）, 格式：yyyyMMdd
+        :param monitorStr: 监控名单（查询类型为4时必填） 如：
+                            1,张三,4678979846133 (参数1)数据类型：1：个人 2：企业 ,
+                            (参数2)名称：姓名和企业名称（数据类型是个人时为姓名，数据类型是企业时为企业名称） ,
+                            (参数3)证件号码：身份证号码（数据类型是个人时才有值，数据类型是企业时该处为空）
+                          说明：参数之间用英文逗号分隔，多组参数之间用英文分号分隔, 如：
+                              1,张三,4678979846133;
+                              1,李四,4678979846133
+                          注意：
+                          1. 当查询类型为4时，此字段不能为空，
+                          2.当前查询类型为其它值时，此字段为空，
+                          则会查询所有的信息(如开始时间，结束时间不为空，则查询监控加入时间为该日期内的名单)
+        :param page: 页码（必填）
+        :param pageCount: 每页记录数（必填）, 说明：取值应当大于0小于等于100
+        :param applyID: 申请ID（必填），同一个申请ID最多可以调用该接口二十次。
         :return:
         """
-        pass
+        return self.__query(self.create_query_condition(queryReasonID, query_type=FORMAT.JSON))
 
     def query_enterprise_info(self, corpName, orgCode, registerNo,
                               subreportIDs='21301, 21611, 21612, 22101, 22102, 22103, 22014, 22015, 22302',

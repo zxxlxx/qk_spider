@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from unittest import mock
+
 sys.path.append('../')
 import pydevd
 pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
@@ -36,6 +38,8 @@ class TestPengYuan(TestCase):
         result = py.create_query_condition('123', query_type=FORMAT.JSON)
         print(result)
 
+    def test_create_query_condition(self):
+        mock
     def test_query_personal_id_risk(self):
         sub_report = {10604: True, 10603: False, 14200: True}
         query_reason = {101: u"货款审批",
@@ -82,22 +86,104 @@ class TestPengYuan(TestCase):
         result_json = json.dumps(selected_dict, indent=2, ensure_ascii=False)
         print(result_json)
 
+    def test_query_airplane_info(self):
+        py = PengYuan()
+        result = py.query_airplane_info(name=u'李大林', documentNo='511225198001093698')
+        print(result)
+
+    def test_query_card_pay_record(self):
+        py = PengYuan()
+        result = py.query_card_pay_record(name=u'谭俊峰', cardNos='4340624220484768')
+        print(result)
+
+    def test_query_career_capacity(self):
+        py = PengYuan()
+        result = py.query_career_capacity(name=u'张含', documentNo='360521840524002')
+        print(result)
+
+    def test_query_personal_enterprise_telephone(self):
+        py = PengYuan()
+        result = py.query_personal_enterprise_telephone(tel='031166005777')
+        print(result)
+
+    def test_query_personal_revenue_assess(self):
+        py = PengYuan()
+        result = py.query_personal_revenue_assess(name=u'谭俊峰', documentNo='4340624220484768',
+                                                  corpName=u'乾康(上海)金融信息服务股份有限公司')
+
+    def test_query_personal_bank_info(self):
+        py = PengYuan()
+        result = py.query_personal_bank_info(name=u'谭俊峰', documentNo='430102197111062010',
+                                             mobile='18192349450', accountNo='4340624220484768')
+        print(result)
+
+    def test_query_open_bank_info(self):
+        py = PengYuan()
+        result = py.query_open_bank_info(accountNo='4340624220484768')
+        print(result)
+
+    def test_query_enterprise_last_one_year(self):
+        py = PengYuan()
+        result = py.query_enterprise_last_one_year(corpName=u'鹏元征信有限公司')
+        print(result)
+
+    def test_query_personal_last_two_years_info(self):
+        py = PengYuan()
+        result = py.query_personal_last_two_years_info(name=u'谭俊峰', documentNo='430102197111062010')
+        print(result)
+
+    def test_query_enterprise_operation(self):
+        py = PengYuan()
+        result = py.query_enterprise_operation(corpName=u'温州市工业品商贸公司')
+
+    def test_query_trade_company_reprot(self):
+        py = PengYuan()
+        result = py.query_trade_company_reprot(corpName=u'北京京崇博五金工具有限公司')
+
+    def test_query_car_info(self):
+        py = PengYuan()
+        result = py.query_car_info(name=u'谭俊峰', documentNo='430102197111062010',
+                                   licenseNo='陕AKQ615', carType='02')
+        print(result)
+
+    def test_query_enterprise_info(self):
+        py = PengYuan()
+        result = py.query_enterprise_info(corpName=u'北京京崇博五金工具有限公司')
+        print(result)
+
+    def test_query_mini_loan_rish_grade(self):
+        py = PengYuan()
+        result = py.query_mini_loan_rish_grade(name=u'谭俊峰', documentNo='430102197111062010',
+                                               province=u'陕西', city=u'西安',
+                                               corpName=u'乾康(上海)金融信息服务股份有限公司', positionName=u'经理')
+        print(result)
+
     def test_query(self, result):
         py = PengYuan()
         result = py.query(result, user_name_cn=u'谭俊峰',
                           mobile_num='18192349450',
                           personal_id='430102197111062010',
                           card_id='4340624220484768',
-                          py_open_bank_id='610527199005154925',
+                          py_open_bank_id='4340624220484768',
                           license_no='430102197111062010')
         print(result)
 
-    def test_query_airplane_info(self):
-        py = PengYuan()
-        result = py.query_airplane_info(name=u'孙立超', documentNo='210114198701251232')
-        print(result)
 
 if __name__ == '__main__':
     tpy = TestPengYuan()
     result = queue.Queue()
-    tpy.test_query(result)
+    # tpy.test_query(result)
+    # tpy.test_query_airplane_info()
+    # tpy = tpy.test_query_card_pay_record()
+    # tpy.test_query_career_capacity()
+    # tpy.test_query_personal_enterprise_telephone()
+    # tpy.test_query_personal_revenue_assess()
+    # tpy.test_query_personal_bank_info()
+    # tpy.test_query_open_bank_info()
+    # tpy.test_query_enterprise_last_one_year()
+    # tpy.test_query_personal_last_two_years_info()
+    # tpy.test_query_car_info()
+    # tpy.test_query_enterprise_operation()
+    # tpy.test_query_trade_company_reprot()
+    # tpy.test_query_enterprise_info()
+    tpy.test_query_mini_loan_rish_grade()

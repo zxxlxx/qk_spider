@@ -60,7 +60,7 @@ class Query:
                 logger.error(repr(e))
 
         for thread in threads:
-            thread.join(10)
+            thread.join(20)
             if thread.isAlive():
                 logger.error("查询线程{}超时".format(thread))
 

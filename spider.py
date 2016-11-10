@@ -2,6 +2,7 @@
 import os
 
 from app.api_1_0.models import InnerResult
+from app.datasource.models import OriginData
 
 COV = None
 
@@ -29,7 +30,8 @@ manager = Manager(app)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role, Permission=Permission, InnerResult=InnerResult)
+    return dict(app=app, db=db, User=User, Role=Role, Permission=Permission,
+                InnerResult=InnerResult, OriginData=OriginData)
 
 migrate = Migrate(app, db)
 manager.add_command("shell", Shell(make_context=make_shell_context))

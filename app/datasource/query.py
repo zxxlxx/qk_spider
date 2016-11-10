@@ -26,6 +26,7 @@ class Query:
     def __init__(self, third=None):
         # start_jvm()
         data_sources = [Zzc, PengYuan, ChinaUnionPay]
+        # data_sources = [PengYuan]
         self.finders = set()
         for data_source in data_sources:
             try:

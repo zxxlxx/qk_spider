@@ -58,9 +58,9 @@ class ChinaUnionPay(Third):
         return json
 
     def query(self, result, *args, **kwargs):
-        r = self.__get_data(**kwargs)
-        result.put((r, self.source))
-        return result
+        # r = self.__get_data(**kwargs)
+        # result.put((r, self.source))
+        # return result
         pass
 
 

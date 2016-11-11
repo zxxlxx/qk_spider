@@ -2,6 +2,8 @@
 import json
 import sys
 
+import concurrent
+
 from app.util.jvm import start_jvm
 
 if sys.version[0] == '2':
@@ -21,48 +23,22 @@ from ..util.logger import logger
 
 
 class Query:
-
-    # TODO 这里以后可以用迭代的方式完成
-    def __init__(self, third=None):
-        # start_jvm()
-        data_sources = [Zzc, PengYuan, ChinaUnionPay]
-        # data_sources = [PengYuan]
-        self.finders = set()
-        for data_source in data_sources:
-            try:
-                self.add_third(data_source())
-            except Exception as ex:
-                logger.error(repr(ex))
-
-        if third:
-            self.finders.add(third)
-
-        self.data_queue = queue.Queue()
-
-    def __del__(self):
-        # stop_jvm()
-        pass
-
-    def add_third(self, third):
-        self.finders.add(third)
-
-    def remove(self, third):
-        self.finders.remove(third)
+    data_sources = [Zzc, PengYuan]  # , ChinaUnionPay]
+    data_queue = queue.Queue()
 
     def query(self, *args, **kwargs):
-        threads = []
-        for finder in self.finders:
-            try:
-                thread = threading.Thread(target=finder.query, args=(self.data_queue, args), kwargs=kwargs)
-                threads.append(thread)
-                thread.start()
-            except Exception as e:
-                logger.error(repr(e))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=len(self.data_sources) * 5) as executor:
 
-        for thread in threads:
-            thread.join(20)
-            if thread.isAlive():
-                logger.error("查询线程{}超时".format(thread))
+            future_func = {executor.submit(source().query, *args, **kwargs) for source in self.data_sources}
+            try:
+                for future in concurrent.futures.as_completed(future_func, 30):
+                    try:
+                        data = future.result()
+                        self.data_queue.put(data)
+                    except Exception as exc:
+                        logger.error('查询异常: %s' % exc)
+            except TimeoutError as te:
+                logger.error(te)
 
         final_result = {}
         while True:
@@ -75,4 +51,3 @@ class Query:
         result_j = final_result
         print("结果" + repr(result_j))
         return result_j
-

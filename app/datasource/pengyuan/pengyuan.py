@@ -10,6 +10,7 @@ import threading
 from datetime import timedelta, datetime
 from optparse import OptionParser
 
+import concurrent
 import jpype
 import time
 
@@ -30,8 +31,10 @@ from ..configuration import config
 from ..utils.tools import convert_dict
 from ...util.jvm import start_jvm
 
+
 class FORMAT:
     JSON = 1
+
 
 class PengYuan(Third):
     """
@@ -49,7 +52,7 @@ class PengYuan(Third):
         'py_open_bank_id': 'cardNos',
         'license_no': 'licenseNo',
         'car_type': 'carType'
-}
+    }
 
     py_config = config.get('pengyuan')
     url = py_config.get('url')
@@ -117,32 +120,32 @@ class PengYuan(Third):
         """
         kwargs['query_code'] = query_code
         template = r'{{' \
-                         r'"conditions": {{' \
-                             r'"condition": {{' \
-                                 r'"interfaceId": "{query_code}",' \
-                                     r'"item": [{{' \
-                                         r'"name": "beginDate",' \
-                                         r'"value": "{beginDate}"}},' \
-                                         r'{{"name": "endDate",' \
-                                         r'"value": "{endDate}"}},' \
-                                         r'{{"name": "queryType",' \
-                                         r'"value": "{queryType}"}},' \
-                                         r'{{"name": "monitorStr",' \
-                                         r'"value": "{monitorStr}"}},' \
-                                         r'{{"name": "page",' \
-                                         r'"value": "{page}"}},' \
-                                         r'{{"name": "pageCount",' \
-                                         r'"value": "{pageCount}"}},' \
-                                         r'{{"name": "applyID",' \
-                                         r'"value": "{applyID}"}}' \
-                                     r']' \
-                                 r'}}' \
-                             r'}}' \
-                         r'}}'.format_map(SafeSub(kwargs))
+                   r'"conditions": {{' \
+                   r'"condition": {{' \
+                   r'"interfaceId": "{query_code}",' \
+                   r'"item": [{{' \
+                   r'"name": "beginDate",' \
+                   r'"value": "{beginDate}"}},' \
+                   r'{{"name": "endDate",' \
+                   r'"value": "{endDate}"}},' \
+                   r'{{"name": "queryType",' \
+                   r'"value": "{queryType}"}},' \
+                   r'{{"name": "monitorStr",' \
+                   r'"value": "{monitorStr}"}},' \
+                   r'{{"name": "page",' \
+                   r'"value": "{page}"}},' \
+                   r'{{"name": "pageCount",' \
+                   r'"value": "{pageCount}"}},' \
+                   r'{{"name": "applyID",' \
+                   r'"value": "{applyID}"}}' \
+                   r']' \
+                   r'}}' \
+                   r'}}' \
+                   r'}}'.format_map(SafeSub(kwargs))
         j = json.loads(template)
         return j
 
-    def query(self, result, *args, **kwargs):
+    def query(self, *args, **kwargs):
         """
         查询接口
         :param result:
@@ -152,51 +155,37 @@ class PengYuan(Third):
         """
         kwargs = self.pre_query_params(*args, **kwargs)
         # TODO:子报告如何处理
-        res = queue.Queue()
+        result = queue.Queue()
         threads = []
-        for func in inspect.getmembers(self, predicate=inspect.ismethod):
-            if func[0].startswith('query_'):
-                try:
-                    # 获取函数参数名,只挑选需要的参数.
-                    f = func[1]
-                    params = inspect.signature(f).parameters.keys()
-                    ps = {param: kwargs.get(param) for param in params if kwargs.get(param) is not None}
-                    thread = threading.Thread(target=self.__query_thread, args=(res, f), kwargs=ps)
-                    threads.append(thread)
-                    thread.start()
-                except Exception as e:
-                    continue
 
-        for thread in threads:
-            thread.join(5)
-            if thread.isAlive():
-                logger.error("查询线程{}超时".format(thread))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=18) as executor:
+
+            func_params = {func[1]: {param: kwargs.get(param) for param
+                                     in inspect.signature(func[1]).parameters.keys()
+                                     if kwargs.get(param) is not None}
+                           for func in inspect.getmembers(self, predicate=inspect.ismethod)
+                           if func[0].startswith('query_')}
+
+            future_func = {executor.submit(func, **func_params[func]) for func in func_params.keys()}
+            try:
+                for future in concurrent.futures.as_completed(future_func, 15):
+                    try:
+                        data = future.result()
+                        result.put(data)
+                    except Exception as exc:
+                        logger.error(exc)
+            except TimeoutError as te:
+                logger.error(te)
 
         result_final = []
         while True:
             try:
-                data = res.get_nowait()
+                data = result.get_nowait()
                 if data:
                     result_final.append(data)
             except queue.Empty:
                 break
-        result.put((result_final, self.source))
-        print(result_final)
-        return result
-
-    def __query_thread(self, result, func, **kwargs):
-        """
-        用于实现线程的封装查询
-        :param result:
-        :param func:
-        :param kwargs:
-        :return:
-        """
-        try:
-            r = func(**kwargs)
-            result.put(r)
-        except Exception as ex:
-            logger.error(ex)
+        return result_final, self.source
 
     def __query(self, condition, *args, **kwargs):
         """
@@ -267,7 +256,7 @@ class PengYuan(Third):
         """
         data = xml_result.find('returnValue').text
         rv = self.__format_result_value(data)
-        rv = xmltodict.parse(rv,  dict_constructor=dict, xml_attribs=False)
+        rv = xmltodict.parse(rv, dict_constructor=dict, xml_attribs=False)
         return rv
 
     def __format_result_value(self, data):
@@ -448,7 +437,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25193))
 
-    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='101', refID=None):
+    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='101',
+                                           refID=None):
         """
         个人近两年查询记录
         :param name:
@@ -471,7 +461,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25123))
 
-    def query_enterprise_operation(self, corpName=None, registerNo=None, subreportIDs='22300', queryReasonID='101', refID=None):
+    def query_enterprise_operation(self, corpName=None, registerNo=None, subreportIDs='22300', queryReasonID='101',
+                                   refID=None):
         """
         企业经营指数
         :param corpName: 被查询企业名称
@@ -483,7 +474,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25123))
 
-    def query_trade_company_reprot(self, corpName, queryMonth='12', subreportIDs='22601', queryReasonID='101', refID=None):
+    def query_trade_company_reprot(self, corpName, queryMonth='12', subreportIDs='22601', queryReasonID='101',
+                                   refID=None):
         """
         商户经营分析
         :param corpName:
@@ -634,5 +626,3 @@ if __name__ == '__main__':
     # py = PengYuan()
     # py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
     pass
-
-

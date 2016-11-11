@@ -71,20 +71,6 @@ class TestPengYuan(TestCase):
                                            documentNo='210114198701251232',
                                            subreportIDs='10604',
                                             queryReasonID='101')
-        # 存储为临时文件
-        tempf = open("temp.xml", "w")
-        tempf.write(result.strip("\n"))
-        tempf.close()
-        document = etree.parse("temp.xml")
-        os.remove("temp.xml")
-        #选取节点
-        result_report = document.find('cisReport/policeCheck2Info')
-        if result_report is None:
-            return
-        selected = etree.tostring(result_report, encoding='UTF-8')
-        selected_dict = xmltodict.parse(selected, xml_attribs=False)
-        result_json = json.dumps(selected_dict, indent=2, ensure_ascii=False)
-        print(result_json)
 
     def test_query_airplane_info(self):
         py = PengYuan()
@@ -158,9 +144,9 @@ class TestPengYuan(TestCase):
                                                corpName=u'乾康(上海)金融信息服务股份有限公司', positionName=u'经理')
         print(result)
 
-    def test_query(self, result):
+    def test_query(self):
         py = PengYuan()
-        result = py.query(result, user_name_cn=u'谭俊峰',
+        result = py.query(user_name_cn=u'谭俊峰',
                           mobile_num='18192349450',
                           personal_id='430102197111062010',
                           card_id='4340624220484768',
@@ -172,7 +158,7 @@ class TestPengYuan(TestCase):
 if __name__ == '__main__':
     tpy = TestPengYuan()
     result = queue.Queue()
-    # tpy.test_query(result)
+    # tpy.test_query()
     tpy.test_query_airplane_info()
     tpy.test_query_card_pay_record()
     tpy.test_query_career_capacity()

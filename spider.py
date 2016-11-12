@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 
+from flask_jwt import JWT
+
 from app.api_1_0.models import InnerResult
 from app.datasource.models import OriginData
 
@@ -27,6 +29,20 @@ from flask_migrate import MigrateCommand, Migrate
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
+
+
+def authenticate(username, password):
+    user = User.query.filter_by(username=username).first()
+    if user and user.verify_password(password):
+        return user
+
+
+def identity(payload):
+    user_id = payload['identity']
+    user = User.query.filter_by(id=user_id).first()
+    return user
+
+jwt = JWT(app, authenticate, identity)
 
 
 def make_shell_context():

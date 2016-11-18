@@ -534,7 +534,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25123))
 
-    def query_car_info(self, name, documentNo, licenseNo, carType,
+    def query_car_info(self, name, documentNo, licenseNo, carType='02',
                        subreportIDs='13812', queryReasonID='101', refID=None):
         """
         全国车辆信息核查

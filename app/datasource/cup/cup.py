@@ -7,6 +7,7 @@ from app.datasource.third import Third
 from app.util.logger import logger
 
 from ..configuration import config
+from ...util.jvm import start_jvm
 
 
 class ChinaUnionPay(Third):
@@ -23,32 +24,18 @@ class ChinaUnionPay(Third):
     source = 'cup'
 
     def __init__(self):
-        self.jvm_path = jpype.getDefaultJVMPath()
-        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        jar_path = basedir + '/spiderJar.jar'
-        self.jvmArg = "-Djava.class.path=" + jar_path
+       pass
 
-    def start_jvm(self):
-        try:
-            if jpype.isJVMStarted():
-                jpype.shutdownJVM()
-            jpype.startJVM(self.jvm_path, '-ea', self.jvmArg)
-        except InterruptedError as e:
-            logger.debug("JVM启动失败{}", e)
-
-    def stop_jvm(self):
-        jpype.shutdownJVM()
-
-    def get_data(self, bank_card_id, name, id_card, phone):
+    def __get_data(self, user_name_cn, personal_id, mobile_num, card_id):
         """
         获取银联数据
-        :param bank_card_id: 银行卡号
-        :param name: 名字
-        :param id_card: 证件号
-        :param phone: 电话号码
+        :param card_id: 银行卡号
+        :param user_name_cn: 名字
+        :param personal_id: 证件号
+        :param mobile_num: 电话号码
         :return: 查询到的数据
         """
-        self.start_jvm()
+        start_jvm()
         Upa = jpype.JClass('upa.client.UPAClient')
         upa = Upa()
         upa.setDevelopmentId(self.development_id)
@@ -62,12 +49,18 @@ class ChinaUnionPay(Third):
         upa.setApiLocation(self.api_location)
         # 设置银行卡卡号作参数，获取JSONObject类型的account score
 
-        json_object = upa.getAuthCommonUPAScoreByAccountNo(bank_card_id, name, id_card, phone, self.distinguish_code)
+        json_object = upa.getAuthCommonUPAScoreByAccountNo(card_id,
+                                                           user_name_cn,
+                                                           personal_id,
+                                                           mobile_num,
+                                                           self.distinguish_code)
         json = json_object.toString()
-        self.stop_jvm()
+        return json
 
     def query(self, result, *args, **kwargs):
+        # r = self.__get_data(**kwargs)
+        # result.put((r, self.source))
+        # return result
+        pass
 
-        result.put(({}, self.source))
-        return result
 

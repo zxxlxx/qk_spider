@@ -4,48 +4,31 @@
 import logging
 import os
 import sys
+
+import time
+
 try:
     import jpype
 except ImportError:
     pass
 
-from . import utils
+jvm_path = jpype.getDefaultJVMPath()
+basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+jar_path = basedir + '/spiderJar.jar'
+jvmArg = "-Djava.class.path=" + jar_path
 
-# TODO: 未完成
-def init_jvm(jvmpath=None):
-    """Initializes the Java virtual machine (JVM).
-    :param jvmpath: The path of the JVM. If left empty, inferred by :py:func:`jpype.getDefaultJVMPath`.
-    """
 
-    if jpype.isJVMStarted():
-        logging.warning('JVM is already running. Do not init twice!')
-        return
+def start_jvm():
+    try:
+        if not jpype.isJVMStarted():
+            jpype.startJVM(jvm_path, '-ea', jvmArg)
+        if not jpype.isThreadAttachedToJVM():
+            jpype.attachThreadToJVM()
+            # TODO:这里是个隐患,没有退出
+            time.sleep(0.2)
+    except InterruptedError as e:
+        logging.debug("JVM启动失败{}", e)
 
-    folder_suffix = [
-        '{0}', '{0}{1}bin',
-        '{0}{1}jhannanum-0.8.4.jar',
-        '{0}{1}kkma-2.0.jar',
-        '{0}{1}komoran-2.4-e.jar',
-        '{0}{1}shineware-common-2.0.jar', '{0}{1}shineware-ds-1.0.jar',
-        '{0}{1}snakeyaml-1.12.jar', '{0}{1}scala-library-2.11.4.jar', '{0}{1}twitter-korean-text-2.4.3.jar', '{0}{1}twitter-text-1.10.1.jar',
-        '{0}{1}*']
 
-    javadir = '%s%sjava' % (utils.installpath, os.sep)
-
-    args = [javadir, os.sep]
-    classpath = os.pathsep.join(f.format(*args) for f in folder_suffix)
-
-    jvmpath = jvmpath or jpype.getDefaultJVMPath()
-
-    # NOTE: Temporary patch for Issue #76. Erase when possible.
-    if sys.platform=='darwin' \
-            and jvmpath.find('1.8.0') > 0 \
-            and jvmpath.endswith('libjvm.dylib'):
-        jvmpath = '%s/lib/jli/libjli.dylib' % jvmpath.split('/lib/')[0]
-
-    if jvmpath:
-        jpype.startJVM(jvmpath, '-Djava.class.path=%s' % classpath,
-                       '-Dfile.encoding=UTF8',
-                       '-ea', '-Xmx768m')
-    else:
-        raise ValueError("Please specify the JVM path.")
+def stop_jvm():
+    jpype.shutdownJVM()

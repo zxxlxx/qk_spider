@@ -15,6 +15,7 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[QKJR_SPIDER]'
     FLASKY_MAIL_SENDER = 'spider <noreply@qkjr.com.cn>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    JWT_AUTH_URL_RULE = '/api/v1.0/auth'
 
     @staticmethod
     def init_app(app):
@@ -33,6 +34,7 @@ class TestingConfig(Config):
                               'sqlite:///' + os.path.join(basedir, 'spider-test.sqlite')
     WTF_CSRF_ENABLED = False
 
+    SERVER_NAME = '127.0.0.1:5000'
 
 
 config = {

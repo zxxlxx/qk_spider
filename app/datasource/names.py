@@ -5,7 +5,7 @@ import os
 def read_name():
     basedir = os.path.abspath(os.path.dirname(__file__))
     name_dict = dict()
-    file = open(basedir +"/fp_definition", "r", encoding='utf8')
+    file = open(basedir + "/fp_definition.ini", "r", encoding='utf8')
     for line in file:
         line = line.strip()
         if line != "":

@@ -5,9 +5,9 @@
       <option name="ignoredPackages">
         <value>
           <list size="3">
-            <item index="0" class="java.lang.String" itemvalue="jpype" />
-            <item index="1" class="java.lang.String" itemvalue="suds" />
-            <item index="2" class="java.lang.String" itemvalue="JPype1" />
+            <item index="0" class="java.lang.String" itemvalue="adium-theme-ubuntu" />
+            <item index="1" class="java.lang.String" itemvalue="unity-lens-photos" />
+            <item index="2" class="java.lang.String" itemvalue="suds" />
           </list>
         </value>
       </option>

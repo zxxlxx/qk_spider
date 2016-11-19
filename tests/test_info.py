@@ -10,6 +10,8 @@ import json
 def convert_obj(obj, *complex_name):
     convert = {}
     for name, value in obj.__dict__.items():
+        if value is None:
+            continue
         if name[0] is not '_' and name is not 'person_id'\
                 and name is not 'bank_id' and name is not 'id':
             convert[name] = value

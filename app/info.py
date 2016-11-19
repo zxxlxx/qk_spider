@@ -16,10 +16,14 @@ class Person(db.Model):
     name = db.Column(db.String(64))
     # 身份证
     identity = db.Column(db.String(18), unique=True)
+    # 照片
+    photo = db.Column(db.Text)
+    # 身份证验证情况
+    identity_status = db.Column(db.String(50))
     # 出生日期
-    birth = db.Column(db.Date, nullable=True)
+    birth = db.Column(db.Date)
     # 教育程度
-    education = db.Column(db.Integer, nullable=True)
+    education = db.Column(db.Integer)
     # 性别
     sex = db.Column(db.String)
     # 住址
@@ -185,7 +189,7 @@ class PersonRisk(db.Model):
     # 催欠公告信息条数
     tax_debt = db.Column(db.SmallInteger)
     # 网贷逾期信息条数
-    load_expired = db.Column(db.SmallInteger)
+    loan_expired = db.Column(db.SmallInteger)
 
 
 class BankCard(db.Model):

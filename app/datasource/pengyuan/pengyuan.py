@@ -16,7 +16,7 @@ from app.datasource.utils.tools import params_to_dict
 from ..configuration import config
 
 import pydevd
-pydevd.settrace('heqiang.imwork.net', port=44957, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('heqiang.imwork.net', port=44957, stdoutToServer=True, stderrToServer=True)
 
 params_mapping = {
     'user_name_cn': 'name',
@@ -44,7 +44,7 @@ class PengYuan(Third):
         basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         jar_path = basedir + '/spiderJar.jar'
         self.jvmArg = "-Djava.class.path=" + jar_path
-        self.client = Client(PengYuan.url)
+        # self.client = Client(PengYuan.url)
         pass
 
     def start_jvm(self):
@@ -107,7 +107,7 @@ class PengYuan(Third):
         :return: 查询结果,返回查询到的值
         """
         condition = self.create_query_condition('101')
-        self.client.set_options(port='WebServiceSingleQuery')
+        # self.client.set_options(port='WebServiceSingleQuery')
         print('fuck:' + condition)
         bz_result = ''# self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
         # bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'

@@ -6,7 +6,7 @@ from lxml import etree
 import os
 
 import pydevd
-pydevd.settrace('heqiang.imwork.net', port=14975, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('heqiang.imwork.net', port=14975, stdoutToServer=True, stderrToServer=True)
 
 import queue
 import sys

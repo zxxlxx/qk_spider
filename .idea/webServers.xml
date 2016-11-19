@@ -3,11 +3,11 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="5bf0b476-80fb-4c91-8938-344887a3e0e9" name="spider" url="http://114.55.225.130">
-        <fileTransfer host="114.55.225.130" port="22" accessType="SFTP">
+        <fileTransfer host="114.55.225.130" port="58420" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
-          <option name="port" value="22" />
+          <option name="port" value="58420" />
         </fileTransfer>
       </webServer>
     </option>

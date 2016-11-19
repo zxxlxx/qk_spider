@@ -16,6 +16,7 @@ class TestChinaUnionPay(TestCase):
                            mobile_num='18192349450',
                            personal_id='430102197111062010',
                            card_id='4340624220484768')
+        print(result)
         assert result
 
 

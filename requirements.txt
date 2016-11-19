@@ -1,3 +1,5 @@
+grpcio
+grpcio-tools
 suds
 jpype1-0.6.1
 xmltodict

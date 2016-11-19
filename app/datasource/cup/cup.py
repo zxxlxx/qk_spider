@@ -15,11 +15,15 @@ class ChinaUnionPay(Third):
     source = 'cup'
 
     def query(self, *args, **kwargs):
-        result = cupGrpcClient.query(bakCardId=kwargs['card_id'],
-                                     phone=kwargs['mobile_num'],
-                                     name=kwargs['user_name_cn'],
-                                     IDCard=kwargs['personal_id'])
-        return result
+        try:
+            result = cupGrpcClient.query(bakCardId=kwargs['card_id'],
+                                         phone=kwargs['mobile_num'],
+                                         name=kwargs['user_name_cn'],
+                                         IDCard=kwargs['personal_id'])
+        except Exception as ex:
+            logger.error(ex)
+
+        return result, ChinaUnionPay.source
 
 
 

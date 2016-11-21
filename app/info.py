@@ -58,6 +58,8 @@ class Person(db.Model):
     vehicle = db.relationship('Vehicle', backref='person')
     # 经营企业
     company = db.relationship('Company', backref='person')
+    # 个人近两年被查询记录
+    person_queried = db.relationship('PersonQueried', backref='person')
 
 
 class Family(db.Model):
@@ -85,6 +87,21 @@ class Family(db.Model):
     age = db.Column(db.SmallInteger)
     # 宗教
     religion = db.Column(db.String(20))
+
+
+class PersonQueried(db.Model):
+    """
+    个人被查询情况
+    """
+    __tablename__ = 'person_Queried'
+    id = db.Column(db.Integer, primary_key=True)
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    # 查询单位
+    unit = db.Column(db.Text)
+    # 查询机构
+    unit_member = db.Column(db.Text)
+    # 查询时间
+    query_date = db.Column(db.Text)
 
 
 class Telephone(db.Model):
@@ -215,6 +232,67 @@ class BankCard(db.Model):
     open_date = db.Column(db.DateTime)
     # 账目流水
     records = db.relationship('MoneyRecord', backref='bank')
+
+
+class AirTraffic(db.Model):
+    """
+    航空出行
+    """
+    __tablename__ = 'air_traffic'
+    id = db.Column(db.Integer, primary_key=True)
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    # 最频繁飞行月份
+    most_month = db.Column(db.String(6))
+    # 最频繁飞行月份占比
+    most_month_percent = db.Column(db.String(6))
+    # 平均折扣区间
+    avg_discount_area = db.Column(db.Text)
+    # 商务舱所占百分比
+    business_cabin_percent = db.Column(db.String(6))
+    # 公务舱所占百分比
+    official_cabin_percent = db.Column(db.String(6))
+    # 经济舱所占百分比，如10
+    economy_cabin_percent = db.Column(db.String(6))
+    # 频繁出发城市前三，以分号隔开
+    from_city = db.Column(db.Text)
+    # 频繁出发城市前三所占百分百
+    from_city_percent = db.Column(db.Text)
+    # 频繁到达城市前三
+    dest_city = db.Column(db.Text)
+    # 频繁到达城市前三所占百分百
+    dest_city_percent = db.Column(db.Text)
+    # 乘坐最多的航空公司名称，可能为空
+    most_airline = db.Column(db.Text)
+    # 乘坐最多的航空公司占比，可能为空
+    most_airline_percent = db.Column(db.Text)
+    # 国内乘机次数所占百分比
+    domestic_percent = db.Column(db.String(6))
+    # 国际乘机次数所占百分比
+    inter_percent = db.Column(db.String(6))
+    # 免费乘机次数占比
+    free_percent = db.Column(db.String(6))
+    # 平均票价
+    avg_price = db.Column(db.Float)
+    # 平均延迟时间所在区间
+    avg_delay_area = db.Column(db.Text)
+    # 平均提前出票时间所在区间
+    avg_ticket_day_area = db.Column(db.Text)
+    # 最后乘机日期所在区间
+    last_flight_date_area = db.Column(db.Text)
+    # 飞行指数级别
+    fly_count_level = db.Column(db.String(10))
+    # 飞行次数名称
+    fly_count_name = db.Column(db.String(10))
+    # 飞行次数所在区间，可能为空
+    fly_count_area = db.Column(db.String(10))
+    # 飞行指数等级区间
+    grade_desc = db.Column(db.String(10))
+    # 舱级描述信息
+    cabin_desc = db.Column(db.String(20))
+    # 飞行指数
+    fly_score = db.Column(db.String(20))
+    # 舱级评分
+    cabin_score = db.Column(db.String(6))
 
 
 class MoneyRecord(db.Model):

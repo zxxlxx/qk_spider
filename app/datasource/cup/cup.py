@@ -15,6 +15,7 @@ class ChinaUnionPay(Third):
     source = 'cup'
 
     def query(self, *args, **kwargs):
+        result = None
         try:
             result = cupGrpcClient.query(bakCardId=kwargs['card_id'],
                                          phone=kwargs['mobile_num'],

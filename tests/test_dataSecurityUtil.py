@@ -2,6 +2,8 @@ import base64
 from unittest import TestCase
 
 # -*- coding: utf-8 -*-
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 from app.datasource.qianhai.dataSecurityUtil import DataSecurityUtil
 
 
@@ -9,7 +11,8 @@ class TestDataSecurityUtil(TestCase):
     key = 'SK803@!QLF-D25WEDA5E52DA'.encode()
 
     def test_digest(self):
-        self.fail()
+        result = DataSecurityUtil.digest('weblogic1'.encode())
+        assert result == 'af8f60dd67906ac8287ba38343ee5f6b821ce6d9'
 
     def test_sign_data(self):
         a = 'nimadeqianhaifuckqianhaiNMDCNMDQIANHAILAJIBITCHTHISisenoughlong'
@@ -27,7 +30,11 @@ class TestDataSecurityUtil(TestCase):
                                    'qL/kChTSerQSc0OrfgbR2zrvA='
 
     def test_getPublicKey(self):
-            self.fail()
+        public_key = DataSecurityUtil.get_public_key().public_key()
+        assert isinstance(public_key, rsa.RSAPublicKey)
+
+    def test_verify_data(self):
+        DataSecurityUtil.verify_data()
 
     def test_get_private_key(self):
         DataSecurityUtil.get_private_key()

@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    font-family: 'Microsoft YaHei';
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.naver {
+    width: 100%;
+    height: 70px;
+    border-bottom: 1px solid #ccc;
+}
+
+.logo {
+    margin: 10px 200px 0;
+}
+
+.logo img {
+    float: left;
+}
+
+.logoContent {
+    margin-left: 10px;
+    color: #333;
+    font-size: 15px;
+    float: left;
+}
+
+.logoContent span {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.logoContent p {
+    margin-top: 4px;
+}
+
+.personalInfo {
+    float: right;
+    margin-right: 200px;
+    height: 60px;
+}
+
+.personalInfo span, .personalInfo p {
+    display: inline-block;
+    line-height: 60px;
+    float: right;
+    margin-left: 10px;
+}

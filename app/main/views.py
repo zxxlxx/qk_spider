@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from flask import render_template, session, redirect, url_for
-from flask_login import current_app, current_user
+from flask_login import current_app, current_user, login_required
 from app.models import Permission
 from . import main
 
@@ -10,9 +10,10 @@ from . import main
 @main.route('/', methods=['GET', 'POST'])
 def index():
     if current_user.is_authenticated:
-        pass
+        return render_template('index.html')
 
-    return render_template('index.html')
+    return render_template('welcome.html')
+
 
 
 @main.route('/search')

@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="Sqlite (Xerial) - spider-test.sqlite" uuid="f32b8ace-d9e2-4219-8825-d9d73e100fd5">
-      <database-info product="SQLite" version="3.8.11" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native" />
-      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
-      <secret-storage>master_key</secret-storage>
-      <auth-required>false</auth-required>
-    </data-source>
-    <data-source name="Sqlite (Xerial) - spider-dev.sqlite" uuid="cf4e0563-ce39-416a-8a27-39ff6cab45f9">
-      <database-info product="SQLite" version="3.8.11" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native" />
-      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
-      <secret-storage>master_key</secret-storage>
-      <auth-required>false</auth-required>
-    </data-source>
+    <data-source name="Sqlite (Xerial) - spider-test.sqlite" uuid="f32b8ace-d9e2-4219-8825-d9d73e100fd5" />
+    <data-source name="Sqlite (Xerial) - spider-dev.sqlite" uuid="cf4e0563-ce39-416a-8a27-39ff6cab45f9" />
   </component>
 </project>

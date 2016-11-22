@@ -26,7 +26,7 @@ def convert_obj(obj, *complex_name):
 
 class TestPyTransform(TestCase):
     def setUp(self):
-        self.app = create_app('testing')
+        self.app = create_app('development')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
@@ -74,7 +74,7 @@ class TestPyTransform(TestCase):
 	</cisReport>
 </cisReports>
         """
-        process_person_id_risk('123456789012345678', xmlstr)
+        process_person_id_risk('123456789012345678', xmlstr, db.session)
         p = Person.query.filter_by(name="张三").first()
         d = convert_obj(p, 'person_risk')
         print(json.dumps(d, indent=2, ensure_ascii=False, sort_keys=True))

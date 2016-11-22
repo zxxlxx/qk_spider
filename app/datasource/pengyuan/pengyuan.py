@@ -31,7 +31,6 @@ from ..configuration import config
 from ..utils.tools import convert_dict
 from ...util.jvm import start_jvm
 
-
 class FORMAT:
     JSON = 1
 
@@ -256,7 +255,7 @@ class PengYuan(Third):
         """
         data = xml_result.find('returnValue').text
         rv = self.__format_result_value(data)
-        rv = xmltodict.parse(rv, dict_constructor=dict, xml_attribs=False)
+        # rv = xmltodict.parse(rv, dict_constructor=dict, xml_attribs=False)
         return rv
 
     def __format_result_value(self, data):
@@ -311,7 +310,10 @@ class PengYuan(Third):
         :param refID: 引用ID
         :return: 查询结果
         """
-        return self.__query(self.create_query_condition(25160))
+        report = self.__query(self.create_query_condition(25160))
+        from .transform import process_person_id_risk
+        process_person_id_risk(documentNo, report, self.db_session)
+        return report
 
     def query_card_pay_record(self, name, cardNos, beginDate=None, endDate=None,
                               subreportIDs='14501,14512', queryReasonID='101', documentNo=None, refID=None):

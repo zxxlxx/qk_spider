@@ -2,7 +2,6 @@
 from lxml import etree
 import sys
 import xmltodict
-from app import db, create_app
 from app.info import *
 from app.util.logger import logger
 from sqlalchemy.exc import StatementError
@@ -30,7 +29,6 @@ def __get_report_dict(report, path):
     :param path:  选取内容路径
     :return: 结果字典
     """
-    temp = __remove_xml_head(report)
     document = etree.XML(__remove_xml_head(report))
     result_report = document.find(path)
     if result_report is None:
@@ -39,44 +37,50 @@ def __get_report_dict(report, path):
     return xmltodict.parse(selected, xml_attribs=False)
 
 
-def create_person(name, identity):
+def create_person(name, identity, db_session):
     """
     创建个人
     :param name: 姓名
     :param identity: 身份证
+    :param db_session: 数据库会话
     :return: 无返回，在Person表新建记录
     """
     person = Person(name=name, identity=identity)
     # 存个人信息
     try:
-        db.session.add(person)
-        db.session.commit()
+        db_session.add(person)
+        db_session.commit()
     except StatementError as e:
         logger.error(e)
 
 
-def process_person_id_risk(identity, report):
+def process_person_id_risk(identity, report, db_session):
     """
     处理个人身份认证信息及风险信息
     :param identity：身份证
     :param report: 鹏元查询接口返回数据
+    :param db_session: 数据库会话
     :return: 无返回值，将结果存入Person
     """
     selected_dict = __get_report_dict(report, 'cisReport/policeCheck2Info/item')
     if selected_dict is None:
         return
     # 写入个人基本信息表
-    person = Person.query.filter_by(identity=identity).first()
-    person.identity = selected_dict['item']['documentNo']
+    person = db_session.query(Person).filter_by(identity=identity).first()
     person.name = selected_dict['item']['name']
     person.photo = selected_dict['item']['photo']
     person.identity_status = selected_dict['item']['result']
+    try:
+        db_session.add(person)
+        db_session.commit()
+    except StatementError as e:
+        logger.error(e)
 
     # 个人风险分析
     risk_dict = __get_report_dict(report, 'cisReport/personRiskStatInfo/stat')
     if risk_dict is None:
         return
-    person_risk = PersonRisk.query.filter_by(person_id=person.id).first()
+    person_risk = db_session.query(PersonRisk).filter_by(person_id=person.id).first()
     if person_risk is None:
         person_risk = PersonRisk(person=person)
     person_risk.judicial_case = risk_dict['stat']['alCount']
@@ -86,23 +90,24 @@ def process_person_id_risk(identity, report):
     person_risk.tax_debt = risk_dict['stat']['cqggCount']
     person_risk.loan_expired = risk_dict['stat']['wdyqCount']
     try:
-        db.session.add(person_risk)
-        db.session.commit()
+        db_session.add(person_risk)
+        db_session.commit()
     except StatementError as e:
         logger.error(e)
 
 
-def process_air_traffic(identity, report):
+def process_air_traffic(identity, report, db_session):
     """
     航空出行
     :param identity 被查询证件号
     :param report: 查询结果
+    :param db_session: 数据库会话
     :return: 无返回值
     """
     select_dict = __get_report_dict(report, 'cisReport/AirTktInfo/item')
     if select_dict is None:
         return
-    person = Person.query.filter_by(identity=identity).first()
+    person = db_session.query(Person).filter_by(identity=identity).first()
     air_info = AirTraffic.query.filter_by(person_id=person.id).first()
     if air_info is None:
         air_info = AirTraffic(person=person)
@@ -133,31 +138,32 @@ def process_air_traffic(identity, report):
     air_info.fly_score = select_dict['item']['flyScore']
     air_info.cabin_score = select_dict['item']['cabinScore']
     try:
-        db.session.add(air_info)
-        db.session.commit()
+        db_session.add(air_info)
+        db_session.commit()
     except StatementError as e:
         logger.error(e)
 
 
-def process_person_query_last_two_years(identity, report):
+def process_person_query_last_two_years(identity, report, db_session):
     """
     个人近两年查询记录
     :param identity 被查询证件号
     :param report: 查询结果
+    :param db_session: 数据库会话
     :return: 无返回值
     """
     select_dict = __get_report_dict(report, 'cisReport/historyQueryInfo')
     if select_dict is None:
         return
-    person = Person.query.filter_by(identity=identity).first()
+    person = db_session.query(Person).filter_by(identity=identity).first()
     for node in select_dict['historyQueryInfo']['item']:
         info = PersonQueried(person=person)
         info.unit = node['unit']
         info.unit_member = node['unitMember']
         info.query_date = node['queryDate']
         try:
-            db.session.add(info)
-            db.session.commit()
+            db_session.add(info)
+            db_session.commit()
         except StatementError as e:
             logger.error(e)
 

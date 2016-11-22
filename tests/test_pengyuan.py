@@ -17,7 +17,7 @@ import queue
 import sys
 sys.path.append('../')
 from app.datasource.pengyuan.pengyuan import PengYuan, FORMAT
-
+from app.datasource.pengyuan.transform import *
 
 class TestPengYuan(TestCase):
 
@@ -72,6 +72,7 @@ class TestPengYuan(TestCase):
                                            documentNo='210114198701251232',
                                            subreportIDs='10604',
                                             queryReasonID='101')
+
         print(result)
 
     def test_query_airplane_info(self):

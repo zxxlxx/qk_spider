@@ -9,25 +9,21 @@ from app.datasource.qianhai.dataSecurityUtil import DataSecurityUtil
 
 class TestDataSecurityUtil(TestCase):
     key = 'SK803@!QLF-D25WEDA5E52DA'
+    origin_message = '{"batchNo":"33adfsf323233","records":[{"reasonCode":"01",' \
+                     '"idNo":"362528198745421654","idType":"0","name":"唐唐","seqNo":"r231545334545"}]}'.encode()
 
     def test_digest(self):
         result = DataSecurityUtil.digest('weblogic1'.encode())
         assert result == 'af8f60dd67906ac8287ba38343ee5f6b821ce6d9'
 
     def test_sign_data(self):
-        a = 'nimadeqianhaifuckqianhaiNMDCNMDQIANHAILAJIBITCHTHISisenoughlong'
-        result = DataSecurityUtil.sign_data(a.encode())
-        assert result.decode() == 'r+r2IIlA3AMf2MdDItqhs42XxlMyQ347VMN1OdUO5B+4' \
-                                  '7CGYqAg9wI0+Xb708QcoHYqmcBg8hNvlcg+1sm6qDR0M8gV' \
-                                  'a9CR/FL+7+VX5yMhs8mzf9chyIQ7CS9tx1XWAqIsKkR+ZFm' \
-                                  'ALDx9wwysIOZzIP3oSgBAT7JH6763plbA='
+        encry = DataSecurityUtil.encrypt(TestDataSecurityUtil.origin_message, TestDataSecurityUtil.key)
+        result = DataSecurityUtil.sign_data(encry)
+        assert result == 'VwWMJsJeXlJXAiKHj6M9ZLZ09oPjiOELF/CYRI1tctQH' \
+                                  'jvugc4Td8PJjlmjFz4yZZXuN/cYUoRuQR7YRvpgaD' \
+                                  'M/MWQZxpL1O0jaTmTsEZxWcwrnpA+lZeh9GZh6WaMFG6c' \
+                                  'vwy2x6aEZML0z3vRQocuvbnlwU4u9eZvlugFBUP2o='
 
-        b = '6cV67bnedT6JYOO4lxJ9+p2p4J++wJVXGGAd87AEqG+STkFt9bbhGuz70I3HZrCIBJXVeidJ1E1k\r\nyALerm6I6A=='
-        result2 = DataSecurityUtil.sign_data(b.encode())
-        assert result2.decode() == 'x0Z/CC9AZYyfAkg9xuiIDKXm74LQfTW5LL4C1pUgsT8qkX9pp' \
-                                   'WaUW6+vDPugxCQhL17hecA/neYz0GjQt6ekcNDu/7T5W4Wbxc77N' \
-                                   '5Oa+DElCGBo+xxbaJFRby3GtiZNBwJoXR1pV5TH2B3nPe' \
-                                   'qL/kChTSerQSc0OrfgbR2zrvA='
 
     def test_get_public_key(self):
         public_key = DataSecurityUtil.get_public_key()
@@ -41,14 +37,18 @@ class TestDataSecurityUtil(TestCase):
         DataSecurityUtil.get_private_key()
 
     def test_encrypt(self):
-        message = "q3[945eorigjpeqtjg;oaitpq3tj;kjpq0ruq[345rijf".encode()
-        encry = DataSecurityUtil.encrypt(message, TestDataSecurityUtil.key)
-        assert encry == 'NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD'
+        encry = DataSecurityUtil.encrypt(TestDataSecurityUtil.origin_message, TestDataSecurityUtil.key)
+        assert encry == 'OHQMWgf3em8ngz2z3KIG+7jdAUksdWvBDHRfmifPF66qWqnR' \
+                        'ugeI/VgzgH1GC+2vFvFK/hHVayFDpoIB5ySok2N2tc10p+Ig' \
+                        'UGbGcr7P64JJ6EpRB7e6lBNThe/UTQHtpejMVprg2F/07jqx' \
+                        'yUdDAHH1w+aMOz69N/elrujlA1SiAWrDe9utHzmShKOEa+s+'
 
     def test_decrypt(self):
-        abc = "NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD".encode()
+        abc = 'OHQMWgf3em8ngz2z3KIG+7jdAUksdWvBDHRfmifPF66qWqnRugeI/VgzgH1GC+2vF' \
+              'vFK/hHVayFDpoIB5ySok2N2tc10p+IgUGbGcr7P64JJ6EpRB7e6lBNThe/UTQHtpe' \
+              'jMVprg2F/07jqxyUdDAHH1w+aMOz69N/elrujlA1SiAWrDe9utHzmShKOEa+s+'.encode()
         message = DataSecurityUtil.decrypt(abc, TestDataSecurityUtil.key)
-        assert message.decode() == 'q3[945eorigjpeqtjg;oaitpq3tj;kjpq0ruq[345rijf'
+        assert message.decode() == TestDataSecurityUtil.origin_message
 
 
 if __name__ == '__main__':

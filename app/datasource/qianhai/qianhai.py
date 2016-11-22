@@ -38,7 +38,7 @@ class QianHai(Third):
 
     @staticmethod
     def format_json_header():
-        transNo = datetime.now().strftime('qkjr_%Y%m%d%s')
+        transNo = datetime.now().strftime('%Y%m%d%s')
         transDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         header = r'"header":{{' \
@@ -59,7 +59,7 @@ class QianHai(Third):
     def format_json_enc_busi_data(*args, **kwargs):
         origin_bus_data = r'{{' \
                           r'"batchNo": "{batchNo}",' \
-                          r'"records":[' \
+                          r'"records":[{{' \
                           r'"idNo": "{personal_id}",' \
                           r'"idTpye": "0",' \
                           r'"name": "{user_name_cn}",' \
@@ -76,7 +76,7 @@ class QianHai(Third):
                           r'"yhdNo": "{yhd_id}",' \
                           r'"entityAuthCode": "{auth_code}",' \
                           r'"entityAuthDate": "{auth_date}",' \
-                          r'"seqNo": "{seq_no}"]' \
+                          r'"seqNo": "{seq_no}"}}]' \
                           r'}}'.format_map(SafeSub(kwargs))
         enc_busi_data = DataSecurityUtil.encrypt(origin_bus_data.encode(), QianHai.check_sum)
         return enc_busi_data
@@ -102,10 +102,7 @@ class QianHai(Third):
     def __format_json_xhd(self, *args, **kwargs):
         pass
 
-    def send_json_with_https(self, surl, json):
-        headers = self.headers
-        json_request = json
-        result = requests.post(surl,
-                               json=json_request,
-                               headers=QianHai.headers)
+    @staticmethod
+    def send_json_with_https(surl, json):
+        result = requests.post(surl, json=json, headers=QianHai.headers)
         return result

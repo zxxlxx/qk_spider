@@ -73,7 +73,7 @@ class DataSecurityUtil:
         data = data.encode()
         private_key, _ = DataSecurityUtil.get_private_key()
         sign = private_key.sign(data, asymmetric_padding.PKCS1v15(), hashes.SHA1())
-        result = base64.b64encode(sign)
+        result = base64.b64encode(sign).decode()
         return result
 
     @staticmethod
@@ -122,6 +122,7 @@ class DataSecurityUtil:
         """
 
         data = base64.b64decode(data)
+        key = key.encode()
         cipher = Cipher(algorithms.TripleDES(key), modes.ECB(), default_backend())
         decryptor = cipher.decryptor()
         origin = decryptor.update(data) + decryptor.finalize()

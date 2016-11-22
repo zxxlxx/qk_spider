@@ -1,9 +1,14 @@
 /*
-* Template Name: Unify - Responsive Bootstrap Template
-* Version: 1.9.2
-* Author: @htmlstream
-* Website: http://htmlstream.com
- */
+ * Template Name: Unify - Responsive Bootstrap Template
+ * Description: Business, Corporate, Portfolio, E-commerce, Blog and One Page Template.
+ * Version: 1.9.2
+ * Author: @htmlstream
+ * Website: http://htmlstream.com
+*/
+
+/*Import Global Compulsory CSS Files*/
+@import url(app.css);
+@import url(blocks.css);
 
 body {
   width: 100%;
@@ -57,9 +62,9 @@ a:hover {
   max-height: 100%;
 }
 
-/* Header
------------------------------------- */
-/* Containers */
+/*Header
+------------------------------------*/
+/*Containers*/
 @media (min-width: 768px) and (max-width: 991px) {
   .one-page-header .menu-container {
     width: 720px;
@@ -92,7 +97,7 @@ a:hover {
   }
 }
 
-/* Navbar Logo */
+/*Navbar Logo*/
 .one-page-header .navbar-brand {
   font-size: 31px;
   font-weight: 200;
@@ -112,7 +117,7 @@ a:hover {
   }
 }
 
-/* Navbar Toggle */
+/*Navbar Toggle*/
 .one-page-header .navbar-toggle {
   border: none;
   margin-right: 3px;
@@ -140,7 +145,7 @@ a:hover {
   margin-bottom: 0;
 }
 
-/* Navbar */
+/*Navbar*/
 .one-page-header {
   border-bottom: none;
   background: rgba(0,0,0,0.4);
@@ -158,7 +163,7 @@ a:hover {
 
 .one-page-header .navbar-nav > li > a:before {
   left: -3px;
-  top: 15px;
+  top: 17px;
   z-index: 2;
   color: #eee;
   font-size: 4px;
@@ -178,7 +183,7 @@ a:hover {
 }
 
 .one-page-header .navbar-nav > li > a:focus {
-  color: #72c02c;
+  color: #fff;
 }
 
 .one-page-header .navbar-nav > .active > a,
@@ -195,9 +200,9 @@ a:hover {
   color: #72c02c !important;
 }
 
-/* Responsive Navbar */
+/*Responsive Navbar*/
 @media (max-width: 991px) {
-  /* Responsive code for max-width: 991px */
+  /*Responsive code for max-width: 991px*/
   .one-page-header .navbar-header {
     float: none;
   }
@@ -241,7 +246,7 @@ a:hover {
   }
 
   .one-page-header.top-nav-collapse {
-    /*  Customize the look and feel of the collapsed top nav here  */
+    /* Customize the look and feel of the collapsed top nav here */
     padding: 7px 0;
   }
 }
@@ -252,7 +257,7 @@ a:hover {
   }
 }
 
-/* Navbar */
+/*Navbar*/
 @media (min-width: 992px) {
   .one-page-header.navbar .navbar-nav {
     float: right;
@@ -263,7 +268,7 @@ a:hover {
   }
 }
 
-/*  Top Log-Reg  */
+/* Top Log-Reg */
 .log-reg-block {
   float: right;
   list-style: none;
@@ -310,7 +315,7 @@ a:hover {
   }
 }
 
-/*  Dropdown Menu  */
+/* Dropdown Menu */
 .one-page-header .dropdown-menu,
 .one-page-header.top-nav-collapse .dropdown-menu {
   border: none;
@@ -398,7 +403,7 @@ a:hover {
   }
 }
 
-/*  Top Contacts Block  */
+/* Top Contacts Block */
 .top-contact-block {
   float: right;
   padding: 9px 0 0 20px;
@@ -443,14 +448,14 @@ a:hover {
 }
 @media (max-width: 480px) {
   .top-contact-block {
-/*     position: static;
+/*    position: static;
     padding: 8px 0 14px;
-    text-align: right; */
+    text-align: right;*/
     display: none;
   }
 }
 
-/*  Login Block Simple  */
+/* Login Block Simple */
 .log-reg-block-simple {
   float: right;
   padding: 10px 0 4px 20px;
@@ -485,7 +490,7 @@ a:hover {
   }
 }
 
-/*  Lang Block  */
+/* Lang Block */
 .lang-block {
   float: right;
   background: rgba(0,0,0,0.6);
@@ -522,9 +527,9 @@ a:hover {
 .mega-hover-list {
   display: none;
 }
-/* .lang-block:hover {
+/*.lang-block:hover {
   cursor: pointer;
-} */
+}*/
 .lang-block:hover .mega-hover-list {
   display: block;
 }
@@ -542,7 +547,7 @@ a:hover {
   }
 }
 
-/* Fixed Header */
+/*Fixed Header*/
 .one-page-header.top-nav-collapse {
   background: #fff;
   box-shadow: 0 0 3px #b5b5b5;
@@ -564,7 +569,7 @@ a:hover {
   color: #777 !important;
 }
 
-/* Navbar Toggle */
+/*Navbar Toggle*/
 .one-page-header.top-nav-collapse .navbar-toggle .icon-bar {
   background: #555;
 }
@@ -573,9 +578,9 @@ a:hover {
   background: #72c02c;
 }
 
-/* Intro Section
------------------------------------- */
-/* Intro Section */
+/*Intro Section
+------------------------------------*/
+/*Intro Section*/
 .intro-section {
   background: #222;
 }
@@ -586,9 +591,9 @@ a:hover {
   position: absolute;
 }
 
-/* About Section
------------------------------------- */
-/* About Section */
+/*About Section
+------------------------------------*/
+/*About Section*/
 .about-section {
   padding-top: 40px;
   padding-bottom: 0;
@@ -602,7 +607,7 @@ a:hover {
   padding-top: 100px;
 }
 
-/* Icon Lists */
+/*Icon Lists*/
 .content-boxes-v3 i.icon-custom {
   margin-right: 8px;
 }
@@ -614,7 +619,7 @@ a:hover {
   text-transform: uppercase;
 }
 
-/* Style for Cube Portfolio wrapper */
+/*Style for Cube Portfolio wrapper*/
 .cube-portfolio #filters-container {
   text-align: center;
 }
@@ -774,13 +779,8 @@ a:hover {
   padding-right: 0;
 }
 
-/* Spaces
------------------------------------- */
+/*Spaces
+------------------------------------*/
 .padding-top-60 {
   padding-top: 60px;
-}
-
-/*IE Google map fix*/
-#map {
-  width: 100%;
 }

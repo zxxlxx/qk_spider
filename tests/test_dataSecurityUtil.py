@@ -2,14 +2,17 @@ import base64
 from unittest import TestCase
 
 # -*- coding: utf-8 -*-
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 from app.datasource.qianhai.dataSecurityUtil import DataSecurityUtil
 
 
 class TestDataSecurityUtil(TestCase):
-    key = 'SK803@!QLF-D25WEDA5E52DA'.encode()
+    key = 'SK803@!QLF-D25WEDA5E52DA'
 
     def test_digest(self):
-        self.fail()
+        result = DataSecurityUtil.digest('weblogic1'.encode())
+        assert result == 'af8f60dd67906ac8287ba38343ee5f6b821ce6d9'
 
     def test_sign_data(self):
         a = 'nimadeqianhaifuckqianhaiNMDCNMDQIANHAILAJIBITCHTHISisenoughlong'
@@ -26,8 +29,13 @@ class TestDataSecurityUtil(TestCase):
                                    '5Oa+DElCGBo+xxbaJFRby3GtiZNBwJoXR1pV5TH2B3nPe' \
                                    'qL/kChTSerQSc0OrfgbR2zrvA='
 
-    def test_getPublicKey(self):
-            self.fail()
+    def test_get_public_key(self):
+        public_key = DataSecurityUtil.get_public_key()
+        assert isinstance(public_key, rsa.RSAPublicKey)
+
+    def test_verify_data(self):
+        # DataSecurityUtil.verify_data()
+        pass
 
     def test_get_private_key(self):
         DataSecurityUtil.get_private_key()
@@ -35,7 +43,7 @@ class TestDataSecurityUtil(TestCase):
     def test_encrypt(self):
         message = "q3[945eorigjpeqtjg;oaitpq3tj;kjpq0ruq[345rijf".encode()
         encry = DataSecurityUtil.encrypt(message, TestDataSecurityUtil.key)
-        assert encry.decode() == 'NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD'
+        assert encry == 'NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD'
 
     def test_decrypt(self):
         abc = "NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD".encode()
@@ -48,4 +56,3 @@ if __name__ == '__main__':
     busi_data = 'nimadeqianhaifuckqianhaiNMDCNMDQIANHAILAJIBITCHTHISisenoughlong'
     enc_busi_data = DataSecurityUtil.encrypt(busi_data.encode(), TestDataSecurityUtil.key)
     sig_value = DataSecurityUtil.sign_data(enc_busi_data).decode()
-    print(sig_value)

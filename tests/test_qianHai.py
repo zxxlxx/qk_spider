@@ -49,6 +49,11 @@ class TestQianHai(TestCase):
         message = '{' + header + ',' + busi_data + ',' + security_info + '}'
 
         result = QianHai.send_json_with_https(surl=TestQianHai.url, json_str=message)
+        js = json.loads(result.text)
+        busi_data_result = js.get('busiData')
+        security_info_result = js.get('securityInfo').get('signatureValue')
+        v = DataSecurityUtil.verify_data(busi_data_result.encode(), security_info_result)
+        final_result = DataSecurityUtil.decrypt(busi_data_result, QianHai.check_sum)
+        print(final_result.decode())
 
-        print(result)
 

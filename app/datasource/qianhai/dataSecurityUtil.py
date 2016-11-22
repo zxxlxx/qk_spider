@@ -4,6 +4,7 @@ import os
 
 import binascii
 from cryptography import x509
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import padding as primitives_padding
 from cryptography.hazmat.primitives import serialization
@@ -80,12 +81,15 @@ class DataSecurityUtil:
     def verify_data(data, sign_value):
         # TODO: 未测试
         public_key = DataSecurityUtil.get_public_key()
-        signature = base64.decode(sign_value)
-        result = public_key.verify(signature,
-                                   data,
-                                   asymmetric_padding.PKCS1v15(),
-                                   hashes.SHA1())
-        return result
+        signature = base64.b64decode(sign_value)
+        try:
+            public_key.verify(signature,
+                              data,
+                              asymmetric_padding.PKCS1v15(),
+                              hashes.SHA1())
+        except InvalidSignature as e:
+            return False
+        return True
 
     @staticmethod
     def digest(ori_byte):

@@ -1,7 +1,9 @@
-import datetime
+
 import json
 import sys
 import os
+from datetime import datetime
+
 import requests
 from pathlib import Path
 
@@ -26,46 +28,52 @@ class QianHai(Third):
     org_code = qh_config.get('orgCode')
     chnl_id = qh_config.get('chnlId')
     auth_code = qh_config.get('authCode')
+    source = 'qianhai'
 
     headers = {'Content-Type': 'application/json; charset=utf8'}
 
-    def __format_json_header(self):
-        transNo = datetime.now.strftime('YYYYMMddhhmmss')
-        transDate = datetime.now.strftime('%Y-%m-%d %h:%m:%s')
+    def query(self):
+        pass
 
-        header = r'header:{{' \
-                 r'"orgCode: "{orgCode}", ' \
-                 r'chnlId: "{chnlId}",' \
-                 r'transNo: "{transNo}",' \
-                 r'transDate: "{transDate}",' \
-                 r'authCode: "{authCode}",' \
-                 r'authDate: "{authDate}"}}'.format_map(orgCode=self.org_code,
-                                                        chnlId=self.chnl_id,
-                                                        transNo=self.transNo,
+    def __format_json_header(self):
+        transNo = datetime.now().strftime('qkjr_%Y%m%d%s')
+        transDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        header = r'"header":{{' \
+                 r'"orgCode": "{orgCode}", ' \
+                 r'"chnlId": "{chnlId}",' \
+                 r'"transNo": "{transNo}",' \
+                 r'"transDate": "{transDate}",' \
+                 r'"authCode": "{authCode}",' \
+                 r'"authDate": "{authDate}"}}'.format(orgCode=QianHai.org_code,
+                                                        chnlId=QianHai.chnl_id,
+                                                        transNo=transNo,
                                                         transDate=transDate,
-                                                        authCode=self.auth_code,
+                                                        authCode=QianHai.auth_code,
                                                         authDate=transDate)
         return header
 
-    def __format_json_encBusData(self, *args, **kwargs):
-        enc_bus_data = r'busiData:{{' \
-                       r'idNo: "{idNo},' \
-                       r'idTpye: "{idType},' \
-                       r'name: "{name}",' \
-                       r'mobileNo: "{mobileNo}",' \
-                       r'cardNo: "{cardNo}",' \
-                       r'reasonNo: "{reasonNo}",' \
-                       r'email: "{email}",' \
-                       r'weiboNo: "{weiboNo}",' \
-                       r'weixinNo: "{weixinNo}",' \
-                       r'qqNo: "{qqNo}",' \
-                       r'taobaoNo: "{taobaoNo}",' \
-                       r'jdNo: "{jdNo}",' \
-                       r'amazonNo: "{amazonNo}",' \
-                       r'yhdNo: "{yhdNo}",' \
-                       r'entityAuthCode: "{entityAuthCode}",' \
-                       r'entityAuthDate: "{entityAuthDate}",' \
-                       r'seqNo: "{seqNo}"'.format_map(SafeSub(kwargs))
+    def format_json_encBusData(self, *args, **kwargs):
+        enc_bus_data = r'"busiData":{{' \
+                       r'"batchNo": "{batchNo}",' \
+                       r'"records":[' \
+                       r'"idNo: "{idNo}",' \
+                       r'"idTpye: "{idType}",' \
+                       r'"name": "{name}",' \
+                       r'"mobileNo": "{mobileNo}",' \
+                       r'"cardNo": "{cardNo}",' \
+                       r'"reasonNo": "{reasonNo}",' \
+                       r'"email": "{email}",' \
+                       r'"weiboNo": "{weiboNo}",' \
+                       r'"weixinNo": "{weixinNo}",' \
+                       r'"qqNo": "{qqNo}",' \
+                       r'"taobaoNo": "{taobaoNo}",' \
+                       r'"jdNo": "{jdNo}",' \
+                       r'"amazonNo": "{amazonNo}",' \
+                       r'"yhdNo": "{yhdNo}",' \
+                       r'"entityAuthCode": "{entityAuthCode}",' \
+                       r'"entityAuthDate": "{entityAuthDate}",' \
+                       r'"seqNo": "{seqNo}"]'.format_map(SafeSub(kwargs))
         return enc_bus_data
 
     def __format_json_securityInfo(self, *args, **kwargs):

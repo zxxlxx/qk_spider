@@ -14,11 +14,14 @@ from cryptography.hazmat.backends import default_backend
 import jks
 import textwrap
 
+from ..configuration import config
+
 
 class DataSecurityUtil:
 
-    base = os.path.abspath(os.path.dirname(__file__))
-
+    base = os.path.abspath(os.path.dirname(__file__)) + '/credoo_stg'
+    qh_config = config.get('qianhai')
+    chnl_id = qh_config.get('chnlId')
     @staticmethod
     def get_pem(der_bytes, type):
         result = "-----BEGIN {type}-----\r\n" \
@@ -36,7 +39,7 @@ class DataSecurityUtil:
         :return:
         """
         if not file_path:
-            file_path = DataSecurityUtil.base + '/credoo_stg.cer'
+            file_path = DataSecurityUtil.base + '.cer'
 
         with open(file_path, 'rb') as f:
             cert = x509.load_der_x509_certificate(f.read(), default_backend())
@@ -44,14 +47,14 @@ class DataSecurityUtil:
         return public_key
 
     @staticmethod
-    def get_private_key(file_path=None):
+    def get_private_key(file_path=None, password='qhzx_stg'):
         """
         获取jks后缀的私钥
         :return:
         """
         if not file_path:
-            file_path = DataSecurityUtil.base + '/credoo_stg.jks'
-        ks = jks.KeyStore.load(file_path, 'qhzx_stg')
+            file_path = DataSecurityUtil.base + '.jks'
+        ks = jks.KeyStore.load(file_path, password)
         pk = ks.private_keys.get('signkey')
 
         if pk.algorithm_oid == jks.util.RSA_ENCRYPTION_OID:
@@ -103,7 +106,6 @@ class DataSecurityUtil:
         encryptor = cipher.encryptor()
         padder = primitives_padding.PKCS7(64).padder()
         padder_data = padder.update(origin) + padder.finalize()
-        print(len(padder_data))
         ct = encryptor.update(padder_data) + encryptor.finalize()
         result = base64.b64encode(ct)
         return result

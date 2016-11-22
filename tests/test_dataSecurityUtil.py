@@ -8,7 +8,7 @@ from app.datasource.qianhai.dataSecurityUtil import DataSecurityUtil
 
 
 class TestDataSecurityUtil(TestCase):
-    key = 'SK803@!QLF-D25WEDA5E52DA'.encode()
+    key = 'SK803@!QLF-D25WEDA5E52DA'
 
     def test_digest(self):
         result = DataSecurityUtil.digest('weblogic1'.encode())
@@ -29,7 +29,7 @@ class TestDataSecurityUtil(TestCase):
                                    '5Oa+DElCGBo+xxbaJFRby3GtiZNBwJoXR1pV5TH2B3nPe' \
                                    'qL/kChTSerQSc0OrfgbR2zrvA='
 
-    def test_getPublicKey(self):
+    def test_get_public_key(self):
         public_key = DataSecurityUtil.get_public_key()
         assert isinstance(public_key, rsa.RSAPublicKey)
 
@@ -43,7 +43,7 @@ class TestDataSecurityUtil(TestCase):
     def test_encrypt(self):
         message = "q3[945eorigjpeqtjg;oaitpq3tj;kjpq0ruq[345rijf".encode()
         encry = DataSecurityUtil.encrypt(message, TestDataSecurityUtil.key)
-        assert encry.decode() == 'NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD'
+        assert encry == 'NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD'
 
     def test_decrypt(self):
         abc = "NALzh0JM3QTkZj2QD9+zAxtwnlQHLXBo0UvkTOl+JIyAyBVeQKj6zH5jxpeTRRlD".encode()

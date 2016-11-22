@@ -70,6 +70,7 @@ class DataSecurityUtil:
 
     @staticmethod
     def sign_data(data):
+        data = data.encode()
         private_key, _ = DataSecurityUtil.get_private_key()
         sign = private_key.sign(data, asymmetric_padding.PKCS1v15(), hashes.SHA1())
         result = base64.b64encode(sign)
@@ -102,13 +103,14 @@ class DataSecurityUtil:
         :param key: 密钥
         :return: 加密后的BASE64编码
         """
+        key = key.encode()
         cipher = Cipher(algorithms.TripleDES(key), modes.ECB(), default_backend())
         encryptor = cipher.encryptor()
         padder = primitives_padding.PKCS7(64).padder()
         padder_data = padder.update(origin) + padder.finalize()
         ct = encryptor.update(padder_data) + encryptor.finalize()
         result = base64.b64encode(ct)
-        return result
+        return result.decode()
 
     @staticmethod
     def decrypt(data, key):

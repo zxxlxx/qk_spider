@@ -61,7 +61,7 @@ qianhai:
     authCode: CRT001A2
     userName: V_PA025_QHCS_DCS
     userPassword: weblogic1
-    checkNum: SK803@!QLF-D25WEDA5E52DA
+    checkSum: SK803@!QLF-D25WEDA5E52DA
     hxd:
         product_address: https://qhzx-dcs.pingan.com.cn
         test_address: https://test-qhzx.pingan.com.cn:5443

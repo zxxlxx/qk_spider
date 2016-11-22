@@ -3,16 +3,17 @@
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/tests/test_pengyuan.py" line="62" />
     <bookmark url="file://$PROJECT_DIR$/app/datasource/zzc/protos/data_sources.proto" line="11" />
-    <bookmark url="file://$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py" line="125" />
+    <bookmark url="file://$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py" line="129" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34a5d94e-48e6-4825-8788-73f98e9f3862" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/datasource/cup/cup.py" afterPath="$PROJECT_DIR$/app/datasource/cup/cup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py" afterPath="$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/datasource/config.yml" afterPath="$PROJECT_DIR$/app/datasource/config.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/datasource/fp_definition.ini" afterPath="$PROJECT_DIR$/app/datasource/fp_definition.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py" afterPath="$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/main/views.py" afterPath="$PROJECT_DIR$/app/main/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/datasource/qianhai/qianhai.py" afterPath="$PROJECT_DIR$/app/datasource/qianhai/qianhai.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_dataSecurityUtil.py" afterPath="$PROJECT_DIR$/tests/test_dataSecurityUtil.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_qianHai.py" afterPath="$PROJECT_DIR$/tests/test_qianHai.py" />
     </list>
     <ignored path="qk_spider.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,8 +30,10 @@
     <SUITE FILE_PATH="coverage/qk_spider$qk_spider.coverage" NAME="qk_spider Coverage Results" MODIFIED="1479723273824" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestDataSecurityUtil_test_digest.coverage" NAME="Unittest TestDataSecurityUtil.test_digest Coverage Results" MODIFIED="1479744761053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestPengYuan_test_create_query_condition.coverage" NAME="Unittest TestPengYuan.test_create_query_condition Coverage Results" MODIFIED="1477363317520" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestQianHai_test_format_json_securityInfo.coverage" NAME="Unittest TestQianHai.test_format_json_securityInfo Coverage Results" MODIFIED="1479800311278" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestPengYuan_test_query_airplane_info.coverage" NAME="Unittest TestPengYuan.test_query_airplane_info Coverage Results" MODIFIED="1478658353713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestDataSecurityUtil_test_get_private_key.coverage" NAME="Unittest TestDataSecurityUtil.test_get_private_key Coverage Results" MODIFIED="1479713244103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestQianHai_test__format_json_header.coverage" NAME="Unittest TestQianHai.test__format_json_header Coverage Results" MODIFIED="1479782418003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestCupGrpcClient_test_query.coverage" NAME="Unittest TestCupGrpcClient.test_query Coverage Results" MODIFIED="1479539189128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestDataSecurityUtil_test_getPublicKey.coverage" NAME="Unittest TestDataSecurityUtil.test_getPublicKey Coverage Results" MODIFIED="1479727479155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestQuery_test_query.coverage" NAME="Unittest TestQuery.test_query Coverage Results" MODIFIED="1478072419403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
@@ -38,9 +41,11 @@
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestZzc_test_create.coverage" NAME="Unittest TestZzc.test_create Coverage Results" MODIFIED="1477452411392" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$test_pengyuan.coverage" NAME="test_pengyuan Coverage Results" MODIFIED="1478761198584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$test_zccServicer.coverage" NAME="test_zccServicer Coverage Results" MODIFIED="1478598311710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestQianHai_test_format_json_encBusData.coverage" NAME="Unittest TestQianHai.test_format_json_encBusData Coverage Results" MODIFIED="1479801316131" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestZzc_test_show.coverage" NAME="Unittest TestZzc.test_show Coverage Results" MODIFIED="1477380349741" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestZzc_test_anti_fraud_report.coverage" NAME="Unittest TestZzc.test_anti_fraud_report Coverage Results" MODIFIED="1477459290617" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittests_in_test_cupGrpcServicer.coverage" NAME="Unittests in test_cupGrpcServicer Coverage Results" MODIFIED="1479538180962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/qk_spider$Unittests_in_TestDataSecurityUtil.coverage" NAME="Unittests in TestDataSecurityUtil Coverage Results" MODIFIED="1479777116644" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$test_jpype.coverage" NAME="test_jpype Coverage Results" MODIFIED="1477269879102" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$test_chinaUnionPay.coverage" NAME="test_chinaUnionPay Coverage Results" MODIFIED="1477819679133" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestChinaUnionPay_test_get_data.coverage" NAME="Unittest TestChinaUnionPay.test_get_data Coverage Results" MODIFIED="1479739589419" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
@@ -50,9 +55,11 @@
     <SUITE FILE_PATH="coverage/qk_spider$Unittests_in_test_dataSources.coverage" NAME="Unittests in test_dataSources Coverage Results" MODIFIED="1478828378902" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittests_in_test_pengyuan.coverage" NAME="Unittests in test_pengyuan Coverage Results" MODIFIED="1478919110094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestDataSecurityUtil_test_decrypt.coverage" NAME="Unittest TestDataSecurityUtil.test_decrypt Coverage Results" MODIFIED="1479720686193" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/qk_spider$Unittests_in_TestQianHai.coverage" NAME="Unittests in TestQianHai Coverage Results" MODIFIED="1479799936202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$test_dataSecurityUtil.coverage" NAME="test_dataSecurityUtil Coverage Results" MODIFIED="1479720701732" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestDataSources_test_get.coverage" NAME="Unittest TestDataSources.test_get Coverage Results" MODIFIED="1478826621185" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestDataSecurityUtil_test_sign_data.coverage" NAME="Unittest TestDataSecurityUtil.test_sign_data Coverage Results" MODIFIED="1479720898968" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/qk_spider$Unittest_TestQianHai_test_send_json_with_https.coverage" NAME="Unittest TestQianHai.test_send_json_with_https Coverage Results" MODIFIED="1479807091847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/qk_spider$test.coverage" NAME="test Coverage Results" MODIFIED="1477376514194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -75,8 +82,8 @@
       <file leaf-file-name="dataSecurityUtil.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="90" column="55" selection-start-line="90" selection-start-column="55" selection-end-line="90" selection-end-column="55" />
+            <state relative-caret-position="216">
+              <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
               <folding>
                 <element signature="e#24#37#0" expanded="true" />
               </folding>
@@ -84,44 +91,58 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/main/views.py">
+      <file leaf-file-name="test_qianHai.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/test_qianHai.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+            <state relative-caret-position="400">
+              <caret line="65" column="51" selection-start-line="65" selection-start-column="51" selection-end-line="65" selection-end-column="51" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_dataSecurityUtil.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/test_dataSecurityUtil.py">
+      <file leaf-file-name="pengyuan.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+            <state relative-caret-position="171">
+              <caret line="333" column="72" selection-start-line="333" selection-start-column="64" selection-end-line="333" selection-end-column="72" />
               <folding>
-                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#24#35#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config.py">
+      <file leaf-file-name="fp_definition.ini" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/datasource/fp_definition.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+            <state relative-caret-position="666">
+              <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="case.py" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/lib/python3.5/unittest/case.py">
+      <file leaf-file-name="qianhai.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/datasource/qianhai/qianhai.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="599" column="0" selection-start-line="599" selection-start-column="0" selection-end-line="599" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="436">
+              <caret line="111" column="0" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_dataSecurityUtil.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/test_dataSecurityUtil.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="810">
+              <caret line="45" column="20" selection-start-line="45" selection-start-column="20" selection-end-line="45" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -141,7 +162,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/consts.py" />
         <option value="$PROJECT_DIR$/tests/config.py" />
         <option value="$PROJECT_DIR$/app/datasource/third.py" />
         <option value="$PROJECT_DIR$/tests/test_zzc.py" />
@@ -179,19 +199,20 @@
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/tests/test_chinaUnionPay.py" />
         <option value="$PROJECT_DIR$/app/datasource/qianhai/qkconfig.py" />
-        <option value="$PROJECT_DIR$/tests/test_qianHai.py" />
         <option value="$PROJECT_DIR$/app/datasource/cup/cupGrpcClient.py" />
-        <option value="$PROJECT_DIR$/app/datasource/qianhai/qianhai.py" />
         <option value="$PROJECT_DIR$/app/datasource/qianhai/DataSecurityUtil.py" />
-        <option value="$PROJECT_DIR$/app/datasource/config.yml" />
         <option value="$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/sqlalchemy/dialects/sqlite/pysqlite.py" />
         <option value="$USER_HOME$/.virtualenvs/spider/lib/python3.5/base64.py" />
         <option value="$USER_HOME$/.virtualenvs/spider/lib/python3.5/codecs.py" />
         <option value="$PROJECT_DIR$/app/main/views.py" />
         <option value="$PROJECT_DIR$/app/datasource/cup/cup.py" />
         <option value="$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py" />
+        <option value="$PROJECT_DIR$/app/datasource/fp_definition.ini" />
+        <option value="$PROJECT_DIR$/app/datasource/config.yml" />
         <option value="$PROJECT_DIR$/tests/test_dataSecurityUtil.py" />
         <option value="$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py" />
+        <option value="$PROJECT_DIR$/app/datasource/qianhai/qianhai.py" />
+        <option value="$PROJECT_DIR$/tests/test_qianHai.py" />
       </list>
     </option>
   </component>
@@ -204,8 +225,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
     <option name="y" value="24" />
-    <option name="width" value="1215" />
-    <option name="height" value="776" />
+    <option name="width" value="1855" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -261,39 +282,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="qk_spider" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="qk_spider" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="qk_spider" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="qk_spider" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -333,7 +322,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="pengyuan" />
+              <option name="myItemId" value="zzc" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -369,8 +358,8 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittest TestDataSecurityUtil.test_digest">
-    <configuration default="false" name="Unittest TestDataSecurityUtil.test_sign_data" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Unittest TestQianHai.test_send_json_with_https">
+    <configuration default="false" name="Unittest TestQianHai.test__format_json_header" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -381,9 +370,9 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="qk_spider" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_dataSecurityUtil.py" />
-      <option name="CLASS_NAME" value="TestDataSecurityUtil" />
-      <option name="METHOD_NAME" value="test_sign_data" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_qianHai.py" />
+      <option name="CLASS_NAME" value="TestQianHai" />
+      <option name="METHOD_NAME" value="test__format_json_header" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_METHOD" />
       <option name="PATTERN" value="" />
@@ -393,7 +382,7 @@
       <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="Unittest TestDataSecurityUtil.test_getPublicKey" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="Unittest TestQianHai.test_format_json_encBusData" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -404,9 +393,9 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="qk_spider" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_dataSecurityUtil.py" />
-      <option name="CLASS_NAME" value="TestDataSecurityUtil" />
-      <option name="METHOD_NAME" value="test_getPublicKey" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_qianHai.py" />
+      <option name="CLASS_NAME" value="TestQianHai" />
+      <option name="METHOD_NAME" value="test_format_json_encBusData" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_METHOD" />
       <option name="PATTERN" value="" />
@@ -416,7 +405,7 @@
       <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="Unittest TestChinaUnionPay.test_get_data" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="Unittests in TestQianHai" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -427,9 +416,32 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="qk_spider" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_chinaUnionPay.py" />
-      <option name="CLASS_NAME" value="TestChinaUnionPay" />
-      <option name="METHOD_NAME" value="test_get_data" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_qianHai.py" />
+      <option name="CLASS_NAME" value="TestQianHai" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_CLASS" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PUREUNITTEST" value="true" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Unittest TestQianHai.test_format_json_securityInfo" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="qk_spider" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_qianHai.py" />
+      <option name="CLASS_NAME" value="TestQianHai" />
+      <option name="METHOD_NAME" value="test_format_json_securityInfo" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_METHOD" />
       <option name="PATTERN" value="" />
@@ -439,7 +451,7 @@
       <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="Unittest TestPengYuan.test_query_personal_id_risk" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="Unittest TestQianHai.test_send_json_with_https" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -450,32 +462,9 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="qk_spider" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_pengyuan.py" />
-      <option name="CLASS_NAME" value="TestPengYuan" />
-      <option name="METHOD_NAME" value="test_query_personal_id_risk" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_METHOD" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Unittest TestDataSecurityUtil.test_digest" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="qk_spider" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_dataSecurityUtil.py" />
-      <option name="CLASS_NAME" value="TestDataSecurityUtil" />
-      <option name="METHOD_NAME" value="test_digest" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_qianHai.py" />
+      <option name="CLASS_NAME" value="TestQianHai" />
+      <option name="METHOD_NAME" value="test_send_json_with_https" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_METHOD" />
       <option name="PATTERN" value="" />
@@ -742,19 +731,19 @@
     <list size="7">
       <item index="0" class="java.lang.String" itemvalue="Python.qk_spider" />
       <item index="1" class="java.lang.String" itemvalue="Python Remote Debug.spider" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestDataSecurityUtil.test_sign_data" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittest TestDataSecurityUtil.test_getPublicKey" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittest TestChinaUnionPay.test_get_data" />
-      <item index="5" class="java.lang.String" itemvalue="Python tests.Unittest TestPengYuan.test_query_personal_id_risk" />
-      <item index="6" class="java.lang.String" itemvalue="Python tests.Unittest TestDataSecurityUtil.test_digest" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test__format_json_header" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test_format_json_encBusData" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in TestQianHai" />
+      <item index="5" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test_format_json_securityInfo" />
+      <item index="6" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test_send_json_with_https" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittest TestDataSecurityUtil.test_digest" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittest TestPengYuan.test_query_personal_id_risk" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestChinaUnionPay.test_get_data" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittest TestDataSecurityUtil.test_getPublicKey" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittest TestDataSecurityUtil.test_sign_data" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test_send_json_with_https" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test_format_json_encBusData" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test_format_json_securityInfo" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests in TestQianHai" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittest TestQianHai.test__format_json_header" />
       </list>
     </recent_temporary>
   </component>
@@ -772,35 +761,35 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 06m 12s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 16h 44m 59s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 06m 56s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 16h 54m 22s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 08m 00s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 16h 59m 01s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 09m 01s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 12m 02s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 09m 53s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 12m 34s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 10m 51s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 14m 46s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 11m 44s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 22m 31s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 12m 06s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 26m 37s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestDataSecurityUtil_test_digest - 2016.11.22 at 00h 12m 46s.xml">
-      <configuration name="Unittest TestDataSecurityUtil.test_digest" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 28m 45s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittest_TestPengYuan_test_query_personal_id_risk - 2016.11.21 at 22h 49m 04s.xml">
-      <configuration name="Unittest TestPengYuan.test_query_personal_id_risk" configurationId="tests" />
+    <history-entry file="Unittest_TestQianHai_test_send_json_with_https - 2016.11.22 at 17h 58m 57s.xml">
+      <configuration name="Unittest TestQianHai.test_send_json_with_https" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -813,7 +802,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1215" height="776" extended-state="6" />
+    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286334" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -823,12 +812,12 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890856" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29934925" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1950385" sideWeight="0.49434572" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12603648" sideWeight="0.49434572" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30111206" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32743362" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32672232" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16375546" sideWeight="0.4878837" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1641791" sideWeight="0.5121163" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40117994" sideWeight="0.49806523" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40083507" sideWeight="0.49806523" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -975,24 +964,24 @@
           <option name="timeStamp" value="99" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/spider.py</url>
-          <line>34</line>
-          <option name="timeStamp" value="442" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/spider.py</url>
-          <line>40</line>
-          <option name="timeStamp" value="443" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py</url>
-          <line>179</line>
+          <line>178</line>
           <option name="timeStamp" value="529" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py</url>
-          <line>208</line>
+          <line>209</line>
           <option name="timeStamp" value="530" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app/datasource/qianhai/qianhai.py</url>
+          <line>110</line>
+          <option name="timeStamp" value="540" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests/test_qianHai.py</url>
+          <line>68</line>
+          <option name="timeStamp" value="541" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -1005,7 +994,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="535" />
+      <option name="time" value="542" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PyRemoteDebugConfigurationType">
@@ -1014,21 +1003,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/datasource/cup/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/datasource/third.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1052,13 +1026,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/requests/api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="34" column="4" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/datasource/qianhai/qkconfig.py" />
     <entry file="file://$PROJECT_DIR$/tests/test_dataSources.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -1077,39 +1044,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/lib/python3.5/datetime.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="1310" column="6" selection-start-line="1310" selection-start-column="6" selection-end-line="1310" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_qianHai.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/datasource/qianhai/qianhai.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="72" column="44" selection-start-line="72" selection-start-column="44" selection-end-line="72" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/datasource/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="63" column="38" selection-start-line="63" selection-start-column="14" selection-end-line="63" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/cryptography/hazmat/primitives/ciphers/algorithms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
           <caret line="58" column="8" selection-start-line="58" selection-start-column="8" selection-end-line="58" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1128,25 +1067,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/cryptography/hazmat/backends/openssl/ciphers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/cryptography/hazmat/primitives/ciphers/modes.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
           <caret line="79" column="6" selection-start-line="79" selection-start-column="6" selection-end-line="79" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/jks/jks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-69">
-          <caret line="228" column="8" selection-start-line="228" selection-start-column="8" selection-end-line="228" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -1311,30 +1235,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/datasource/zzc/zzc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1260">
-          <caret line="62" column="8" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/main/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-378">
-          <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/datasource/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1359,16 +1259,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="62" column="52" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="55" />
-          <folding>
-            <element signature="e#24#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/datasource/query.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
@@ -1377,38 +1267,146 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/main/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
+        <state relative-caret-position="432">
           <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/datetime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="536" column="8" selection-start-line="536" selection-start-column="8" selection-end-line="536" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.5/datetime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="937">
+          <caret line="1407" column="8" selection-start-line="1407" selection-start-column="8" selection-end-line="1407" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/datasource/pengyuan/pengyuan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="333" column="72" selection-start-line="333" selection-start-column="64" selection-end-line="333" selection-end-column="72" />
+          <folding>
+            <element signature="e#24#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/jks/jks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="263" column="0" selection-start-line="263" selection-start-column="0" selection-end-line="263" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/local/lib/python3.5/unittest/case.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
+        <state relative-caret-position="179">
           <caret line="599" column="0" selection-start-line="599" selection-start-column="0" selection-end-line="599" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/datasource/fp_definition.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/cryptography/hazmat/backends/openssl/ciphers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/datasource/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1134">
+          <caret line="63" column="10" selection-start-line="63" selection-start-column="10" selection-end-line="63" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/spider/lib/python3.5/site-packages/requests/api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-629">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/datasource/qianhai/dataSecurityUtil.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="90" column="55" selection-start-line="90" selection-start-column="55" selection-end-line="90" selection-end-column="55" />
+        <state relative-caret-position="216">
+          <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
           <folding>
             <element signature="e#24#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_qianHai.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="65" column="51" selection-start-line="65" selection-start-column="51" selection-end-line="65" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/datasource/zzc/zzc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="89" column="39" selection-start-line="89" selection-start-column="39" selection-end-line="89" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_dataSecurityUtil.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        <state relative-caret-position="810">
+          <caret line="45" column="20" selection-start-line="45" selection-start-column="20" selection-end-line="45" selection-end-column="20" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/datasource/qianhai/qianhai.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="111" column="0" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>

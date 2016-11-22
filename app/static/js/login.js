@@ -4,11 +4,11 @@
 $(function () {
     $(".image-block").backstretch(
         [
-            "assets/img/login/slider1.jpg",
-            "assets/img/login/slider2.jpg",
-            "assets/img/login/slider3.jpg",
-            "assets/img/login/slider4.jpg",
-            "assets/img/login/slider5.jpg",
+            "../static/img/login/slider1.jpg",
+            "../static/img/login/slider2.jpg",
+            "../static/img/login/slider3.jpg",
+            "../static/img/login/slider4.jpg",
+            "../static/img/login/slider5.jpg",
         ],
         {
             fade: 1000,

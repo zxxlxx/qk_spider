@@ -17,49 +17,116 @@
 {% endblock %}
 
 {% block every_content %}
-<div class="personalInfoSecond">
-    <img src="../../static/img/avatar.png">
-    <div class="personalInfoContentSecond">
-        <span>客户姓名：李嬷嬷</span>
-        <p>客户身份证号：12312312331222322</p>
+<div class="personalInfoSecond row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <img src="../../static/img/avatar.png">
+        <div class="personalInfoContentSecond">
+            <p style="margin-top: 80px;">客户姓名：李嬷嬷</p>
+            <p style="margin-top: 10px;">客户身份证号：12312312331222322</p>
+        </div>
     </div>
+    <div class="col-md-2"></div>
 
 </div>
-<div class="searchPart">
-    <div class="otherInfo">其他信息</div>
-    <a href="#" id="houseInfo">房产</a>、
-    <a href="#" id="carInfo">车产</a>
-    <div class="houseInfo">
-        <input type="text" placeholder="请输入房产信息">
-        <button id="serchHouseInfo">搜索</button>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="searchPart col-md-8">
+        <div class="row" style="margin-top: 40px">
+            <div class="otherInfo col-md-12">其他信息</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="houseInfo">
+                    <div class="pictureStyle">
+                        <img src="{{url_for('static', filename='img/house.png', _external=True)}}">
+                        <span>房产信息</span>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="请输入房产信息">
+                        <button id="searchHouseInfo">搜索</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="carInfo">
+                    <div class="pictureStyle">
+                        <img src="{{url_for('static', filename='img/car.png', _external=True)}}">
+                        <span>车辆信息</span>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="请输入车产信息">
+                        <button id="searchCarInfo">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="col-md-2"></div>
 </div>
-<div class="result">
-    <div class="searchResult row">
-        <div class="col-md-3"><p>基本信息</p></div>
 
-        <table>
-            <tr>
-                <td>姓名</td>
-                <td>123</td>
-            </tr>
-            <tr>
-                <td>helljjk</td>
-                <td>234234</td>
-            </tr>
-            <tr>
-                <td>23423</td>
-                <td>4234234</td>
-            </tr>
-            <tr>
-                <td>234234</td>
-                <td>234234</td>
-            </tr>
+<div class="result row">
+    <div class="col-md-2"></div>
+    <div class="col-md-7">
+        <div class="searchResult row">
+            <div class="row"><p>基本信息</p></div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-5 ">
+                            <div class="form-group">
+                                <div class="control-label col-md-2 col-sm-2 col-xs-5">姓名</div>
+                                <div class="col-md-10 col-sm-10 col-xs-7">
+                                    王嬷嬷
+                                </div>
+                            </div>
 
-        </table>
-
+                        </div>
+                        <div class="col-md-1 "></div>
+                        <div class="col-md-5 ">
+                            <div class="form-group">
+                                <div class="control-label col-md-2 col-sm-2 col-xs-5">姓名</div>
+                                <div class="col-md-10 col-sm-10 col-xs-7">
+                                    王嬷嬷
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="control-label col-md-2 col-sm-2 col-xs-5">姓名</div>
+                                <div class="col-md-10 col-sm-10 col-xs-7">
+                                    王嬷嬷
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="control-label col-md-2 col-sm-2 col-xs-5">姓名</div>
+                                <div class="col-md-10 col-sm-10 col-xs-7">
+                                    王嬷嬷
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <ul>
+            <li class="isNow">车辆信息</li>
+            <li>房产信息</li>
+            <li>车辆信息</li>
+        </ul>
 
     </div>
+    <div class="col-md-2"></div>
+
 </div>
 
 

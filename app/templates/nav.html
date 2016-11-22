@@ -17,18 +17,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="naver">
-    <div class="logo">
+<div class="naver row">
+    <div class="col-md-2"></div>
+    <div class="logo col-md-4">
         <img src="{{url_for('static', filename='img/nav_logo.png', _external=True)}}"/>
         <div class="logoContent">
             <span>乾康(上海)金融信息服务有限公司</span>
             <p>CardPay (shanghai) Finance Consult Co., LTD.</p>
         </div>
     </div>
-    <div class="personalInfo">
+    <div class="personalInfo col-md-4">
         <img src="{{url_for('static', filename='img/user.png', _external=True)}}"/>
         <span>张三</span>
     </div>
+    <div class="col-md-2"></div>
 </div>
 
 {% block  every_content%}{% endblock %}

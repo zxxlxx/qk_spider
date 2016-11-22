@@ -103,6 +103,7 @@ class QianHai(Third):
         pass
 
     @staticmethod
-    def send_json_with_https(surl, json):
-        result = requests.post(surl, json=json, headers=QianHai.headers)
+    def send_json_with_https(surl, json_str):
+        j = json.loads(json_str)
+        result = requests.post(surl, json=j, headers=QianHai.headers)
         return result

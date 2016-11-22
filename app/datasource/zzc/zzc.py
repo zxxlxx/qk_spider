@@ -49,7 +49,7 @@ class Zzc(Third):
         return self.pre_result(result)
 
     def __create_query_condition(self, *args, **kwargs):
-        templete = r'''{{
+        template = r'''{{
                     "loan_amount": {loan_amount},
                     "loan_purpose": "{loan_purpose}",
                     "loan_term": {loan_term},
@@ -60,7 +60,7 @@ class Zzc(Third):
                         "mobile": "{mobile_num}"
                     }}
                     }}'''.format_map(SafeSub(kwargs))
-        j = json.loads(templete)
+        j = json.loads(template)
 
         # TODO:必要的条件先写死
         if j.get('loan_term') is None:
@@ -208,15 +208,12 @@ class Zzc(Third):
             r = False
         return page, r
 
-    def query(self, result, *args, **kwargs):
+    def query(self,  *args, **kwargs):
         page, r = self.af_report(*args, **kwargs)
         # page = {'blacklist': {'tenant_count': 1, 'records': [{'name': '*****', 'pid': '610527199005154925', 'confirm_details': None, 'mobile': '*****', 'confirm_type': 'normal', 'loan_type': None, 'applied_at': None, 'confirmed_at': None}], 'count': 1}, 'rule_result': {'hitted_rules': [{'name': 'ZZC_BLK0001', 'description': '申请人证件号码与黑名单证件号码相同', 'rule_type': '黑名单比对', 'risk_level': 'H'}, {'name': 'ZZC_GRP0006', 'description': '不同申请人证件号码相同中文姓名不同', 'rule_type': '团伙比对', 'risk_level': 'H'}, {'name': 'ZZC_HIS0019', 'description': '同一申请人最近7天在本机构出现过', 'rule_type': '历史比对', 'risk_level': 'M'}, {'name': 'ZZC_HIS0010', 'description': '同一申请人最近7天到30天在本机构出现过', 'rule_type': '历史比对', 'risk_level': 'M'}, {'name': 'ZZC_HIS0012', 'description': '同一申请人最近60天到90天在本机构出现过', 'rule_type': '历史比对', 'risk_level': 'L'}], 'risk_level': 'high', 'executed_at': '2016-11-01T10:49:32+08:00', 'reason_code': ['BLK', 'GRP', 'HIS']}}
         # r = True
-        if r:
-            # fmt_result = format_result(page)
-            result.put((page, self.source))
 
-        return result
+        return page, self.source
 
 if __name__ == '__main__':
     pass

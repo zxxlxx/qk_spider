@@ -3,9 +3,12 @@ from flask import g
 from flask_security import AnonymousUser
 from flask_httpauth import HTTPBasicAuth
 
-from app import api
+from . import api
 from app.api_1_0.errors import unauthorized
+from .errors import forbidden
 from app.models import User
+
+from flask_jwt import JWT, jwt_required, current_identity
 
 auth = HTTPBasicAuth()
 
@@ -28,6 +31,7 @@ def verify_password(email_or_token, password):
 
 
 @api.route('/token')
+@jwt_required()
 def get_token():
     if g.current_user.is_anonymous() or g.token_used:
         return unauthorized('Invalid credentials')
@@ -38,3 +42,13 @@ def get_token():
 @auth.error_handler
 def auth_error():
     return unauthorized('Invalid credentials')
+
+
+@api.before_request
+@auth.login_required
+def before_request():
+    if not g.current_user.is_anonymous and not g.current_user.confirmed:
+        return forbidden('Unconfirmed account')
+
+
+

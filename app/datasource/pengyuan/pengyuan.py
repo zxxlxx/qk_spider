@@ -1,26 +1,38 @@
 # -*- coding: utf-8 -*-
 import copy
 import inspect
+import json
 import logging
 import os
 import os.path
-import threading
-from datetime import timedelta, datetime
-from optparse import OptionParser
+import queue
 
+from datetime import timedelta, datetime
+
+import concurrent
 import jpype
-import time
+
 
 import xmltodict
 from lxml import etree
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
 from suds.client import Client
 
+from app.datasource.models import OriginData
 from app.datasource.third import Third
-from app.datasource.utils.tools import params_to_dict
+from app.datasource.utils.tools import params_to_dict, SafeSub
 from app.util.logger import logger
+from config import DevelopmentConfig
 from ..configuration import config
 from ..utils.tools import convert_dict
-from ...util.jvm import start_jvm, stop_jvm
+from ...util.jvm import start_jvm
+
+
+class FORMAT:
+    JSON = 1
 
 
 class PengYuan(Third):
@@ -34,9 +46,12 @@ class PengYuan(Third):
         'card_id': 'cardNos',
         'begin_date': 'beginDate',
         'end_date': 'endDate',
-        'open_bank_id': 'openBankNo',
+        'card_id': 'accountNo',
         'mobile_num': 'mobile',
-}
+        'py_open_bank_id': 'cardNos',
+        'license_no': 'licenseNo',
+        'car_type': 'carType'
+    }
 
     py_config = config.get('pengyuan')
     url = py_config.get('url')
@@ -44,20 +59,34 @@ class PengYuan(Third):
     password = py_config.get('password')
     source = py_config.get('source')
 
-    def __init__(self):
-        self.client = Client(PengYuan.url)
+    db_path = DevelopmentConfig.SQLALCHEMY_DATABASE_URI
+    engine = create_engine(db_path, convert_unicode=True)
+    db_session = scoped_session(sessionmaker(autocommit=False,
+                                             autoflush=False,
+                                             bind=engine))
+    Base = declarative_base()
+    Base.query = db_session.query_property()
 
-    def create_query_condition(self, query_code, **kwargs):
+    def __init__(self):
+        self.Base.metadata.create_all(bind=self.engine)
+        # self.client = Client(PengYuan.url)
+
+    def create_query_condition(self, query_code, query_type=None, **kwargs):
         """
         生成查询条件,如果没有给定kwargs值, 该函数必须在query_内调用,根据外层函数参数自动生成查询条件
         :return:
         """
         if not len(kwargs):
             kwargs = params_to_dict(2)
-        result = self.__params_dict_condition(query_code, **kwargs)
+
+        if not query_type:
+            result = self.__params_dict_condition_xml(query_code, **kwargs)
+        elif query_type == FORMAT.JSON:
+            result = self.__params_dict_condition_json(query_code, **kwargs)
+
         return result
 
-    def __params_dict_condition(self, query_code, **kwargs):
+    def __params_dict_condition_xml(self, query_code, **kwargs):
         """
         将字典转换为xml的查询条件
         :param query_code:
@@ -81,49 +110,81 @@ class PengYuan(Third):
         result = etree.tostring(query_t, encoding='unicode')
         return result
 
-    def query(self, result, *args, **kwargs):
+    def __params_dict_condition_json(self, query_code, **kwargs):
+        """
+        将字典转换为json的查询条件
+        :param query_code:
+        :param kwargs:
+        :return:
+        """
+        kwargs['query_code'] = query_code
+        template = r'{{' \
+                   r'"conditions": {{' \
+                   r'"condition": {{' \
+                   r'"interfaceId": "{query_code}",' \
+                   r'"item": [{{' \
+                   r'"name": "beginDate",' \
+                   r'"value": "{beginDate}"}},' \
+                   r'{{"name": "endDate",' \
+                   r'"value": "{endDate}"}},' \
+                   r'{{"name": "queryType",' \
+                   r'"value": "{queryType}"}},' \
+                   r'{{"name": "monitorStr",' \
+                   r'"value": "{monitorStr}"}},' \
+                   r'{{"name": "page",' \
+                   r'"value": "{page}"}},' \
+                   r'{{"name": "pageCount",' \
+                   r'"value": "{pageCount}"}},' \
+                   r'{{"name": "applyID",' \
+                   r'"value": "{applyID}"}}' \
+                   r']' \
+                   r'}}' \
+                   r'}}' \
+                   r'}}'.format_map(SafeSub(kwargs))
+        j = json.loads(template)
+        return j
+
+    def query(self, *args, **kwargs):
         """
         查询接口
         :param result:
         :param args:
-        :param kwargs:
+        :param kwargs: 查询的参数
         :return:
         """
         kwargs = self.pre_query_params(*args, **kwargs)
         # TODO:子报告如何处理
-        res = {}
+        result = queue.Queue()
         threads = []
-        for func in inspect.getmembers(self, predicate=inspect.ismethod):
-            if func[0].startswith('query_'):
-                try:
-                    # 获取函数参数名,只挑选需要的参数.
-                    f = func[1]
-                    params = inspect.signature(f).parameters.keys()
-                    ps = {param: kwargs.get(param) for param in params if kwargs.get(param) is not None}
-                    thread = threading.Thread(target=self.__query_thread, args=(res, f), kwargs=ps)
-                    threads.append(thread)
-                    thread.start()
-                except Exception as e:
-                    continue
 
-        for thread in threads:
-            thread.join(5)
-            if thread.isAlive():
-                logger.error("查询线程{}超时".format(thread))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=18) as executor:
 
-        result.put((res, self.source))
-        return result
+            func_params = {func[1]: {param: kwargs.get(param) for param
+                                     in inspect.signature(func[1]).parameters.keys()
+                                     if kwargs.get(param) is not None}
+                           for func in inspect.getmembers(self, predicate=inspect.ismethod)
+                           if func[0].startswith('query_')}
 
-    def __query_thread(self, result, func, **kwargs):
-        """
-        用于实现线程的封装查询
-        :param result:
-        :param func:
-        :param kwargs:
-        :return:
-        """
-        r = func(**kwargs)
-        result.put(r)
+            future_func = {executor.submit(func, **func_params[func]) for func in func_params.keys()}
+            try:
+                for future in concurrent.futures.as_completed(future_func, 15):
+                    try:
+                        data = future.result()
+                        result.put(data)
+                    except Exception as exc:
+                        logger.error(exc)
+            except TimeoutError as te:
+                logger.error(te)
+
+        result_final = []
+        while True:
+            try:
+                data = result.get_nowait()
+                if data:
+                    result_final.append(data)
+            except queue.Empty:
+                break
+        return result_final, self.source
 
     def __query(self, condition, *args, **kwargs):
         """
@@ -131,10 +192,20 @@ class PengYuan(Third):
         :param condition: 查询条件
         :return: 查询结果,返回查询到的值
         """
-        self.client.set_options(port='WebServiceSingleQuery')
+        # self.client.set_options(port='WebServiceSingleQuery')
         # TODO: 测试时不调用
-        bz_result = self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
-        # bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'
+        # bz_result = self.client.service.queryReport(self.user_name, self.password, condition, 'xml') .encode('utf-8').strip()
+
+        bz_result = b'<result>\r\n\t<status>1</status>\r\n\t<returnValue>UEsDBBQACAAIADZxXEkAAAAAAAAAAAAAAAALAAAAcmVwb3J0cy54bWx9U09rE0EcPVfwOwxzaqF1d7ZJG8tkC8YqRayQ1A+w3UybJclMurMb\nG79Nkx4UC2pFYv+o+KeYEGi2SCKI1YMHESnqRQ9CcXZ2k9pkcQ+7M29n3vu995vBs2vFAigTm1uMJiG6oEJAqMmyFl1JwquXrkEwq58/h02L\np0mJ2Q4HYMlwFlgSaiqaQqo2jRKq/8QhcKnlLBhFkoRvNp8/rt1ptndqtbtPfzTee/vtav3k4Od2s3701mt/3L7XegYBd5du2CuG0D34/WCr\ncbx3cujVq13Pew3Bqkvsyk1O7PnLSbiav8UlEOIp5lJHVAuBTUxilcmi5av2KgIoMaMmZmIJeKZ0sdj/+ITDtS+5ViE7R7OnTBNInehzxWOh\ndJoYnFGfA6lIWgjIFyslwn1wSo2No5imiiAdmxhOmnC3IIpVx9XB5ZmcGKWMkhNkv15tHtePGu3uxqikGQPaevXJr0ar/qXd2f387oOf4qjk\nHgMQ5AyeqXCHFOdsm9lJuGwUOIHA4ldsdpvQHiAiGMFhajRr+Vrcx0awJfbK0Qimomu6/8KKHAaoGZSmP9zd+np4v/PJ67z6g5UeGqwpGwWX\n6K3vL6qPNrESzCS70qcfEsoy0y0SKk7Rf+W6G3snO/svv0VLaiJ/FEMXE9Mq0uJIm9Si5bEybB6XWMEySSpHzLw2T5fZ2cYEbZwcaFeKcSds\n8EBrNXFn/B5cJ5wbK2J7EPppANJkL6O+Y3yaQ6Sbf37L5baU0yexEo4kWsoxh+lYCb7ScCgssAGb0rq464ymLZ7POIYTaT44vVHmI851pHkh\nPSQj4f5lPDvj+l9QSwcINagM0moCAACJBAAAUEsBAhQAFAAIAAgANnFcSTWoDNJqAgAAiQQAAAsAAAAAAAAAAAAAAAAAAAAAAHJlcG9ydHMu\neG1sUEsFBgAAAAABAAEAOQAAAKMCAAAAAA==</returnValue>\r\n</result>'
+
+        # try:
+        #     # r = OriginData(request_time=datetime.now(), source='pengyuan',
+        #     #                source_request=condition, source_result=bz_result)
+        #     # self.db_session.add(r)
+        #     # self.db_session.commit()
+        #     # print('arrived at here')
+        # except Exception as ex:
+        #     print(ex)
         # print(bz_result)
         result = self.__format_result(bz_result)
         return result
@@ -186,6 +257,7 @@ class PengYuan(Third):
         """
         data = xml_result.find('returnValue').text
         rv = self.__format_result_value(data)
+        rv = xmltodict.parse(rv, dict_constructor=dict, xml_attribs=False)
         return rv
 
     def __format_result_value(self, data):
@@ -193,11 +265,13 @@ class PengYuan(Third):
         对查询到结果结果进行解码
         :return:
         """
-        start_jvm()
-        z_result = self.__base64_decode(data)
-        rv = self.__unzip(z_result)
-        stop_jvm()
-        return rv
+        try:
+            start_jvm()
+            z_result = self.__base64_decode(data)
+            rv = self.__unzip(z_result)
+            return rv
+        except Exception as ex:
+            logger.error(ex)
 
     @staticmethod
     def __base64_decode(data):
@@ -206,10 +280,13 @@ class PengYuan(Third):
         :param data: resultValue原始字段内容
         :return: 解码后的内容
         """
-        Base64 = jpype.JPackage('cardpay').pengyuan.Base64
-        b64 = Base64()
-        z_result = b64.decode(data)
-        return z_result
+        try:
+            Base64 = jpype.JPackage('cardpay').pengyuan.Base64
+            b64 = Base64()
+            z_result = b64.decode(data)
+            return z_result
+        except Exception as ex:
+            logger.error(ex)
 
     @staticmethod
     def __unzip(z_result):
@@ -218,9 +295,12 @@ class PengYuan(Third):
         :param z_result: 未解压缩的内容
         :return: 解压缩后的内容
         """
-        Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
-        rv = Cs.decompress(z_result)
-        return rv
+        try:
+            Cs = jpype.JPackage('cardpay').pengyuan.CompressStringUtil
+            rv = Cs.decompress(z_result)
+            return rv
+        except Exception as ex:
+            logger.error(ex)
 
     def query_personal_id_risk(self, name, documentNo, subreportIDs='10604', queryReasonID='101', refID=None):
         """
@@ -235,7 +315,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25160))
 
     def query_card_pay_record(self, name, cardNos, beginDate=None, endDate=None,
-                              subreportIDs='14506', queryReasonID='101', documentNo=None, refID=None):
+                              subreportIDs='14501,14512', queryReasonID='101', documentNo=None, refID=None):
         """
         卡多笔交易记录验请求xml规范
         :param name:
@@ -251,13 +331,13 @@ class PengYuan(Third):
         kwargs = {}
         if beginDate is None and endDate is None:
             kwargs = params_to_dict(1)
-            current_date = datetime.now().strftime('%Y-%m-%d')
+            current_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
             d_time = timedelta(days=300)
             one_year_ago = (datetime.now() - d_time).strftime('%Y-%m-%d')
             kwargs['beginDate'] = one_year_ago
             kwargs['endDate'] = current_date
 
-        return self.__query(self.create_query_condition(25199, **kwargs))
+        return self.__query(self.create_query_condition(25197, **kwargs))
 
     def query_career_capacity(self, name, documentNo, subreportIDs='13400', queryReasonID='101', refID=None):
         """
@@ -271,7 +351,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25121))
 
-    def query_personal_enterprise_telephone(self, mobile, subreportIDs='13600',
+    def query_personal_enterprise_telephone(self, tel, subreportIDs='21603',
                                             queryReasonID='101', ownerName=None, refID=None):
         """
         个人和企业信息查询
@@ -282,9 +362,9 @@ class PengYuan(Third):
         :param refID:
         :return:
         """
-        return self.__query(self.create_query_condition(25128))
+        return self.__query(self.create_query_condition(25129))
 
-    def query_personal_revenue_assess(self, name, documentNo, corpName, positionName, subreportIDs,
+    def query_personal_revenue_assess(self, name, documentNo, corpName, positionName=None, subreportIDs='14003',
                                       queryReasonID='101', topDegree=None, graduateYear=None,
                                       college=None, fullTime=None, refID=None):
         """
@@ -302,9 +382,10 @@ class PengYuan(Third):
         :param refID:
         :return:
         """
+        # TODO: 没有开通
         return self.__query(self.create_query_condition(25180))
 
-    def query_airplane_info(self, name, documentNo, passport, month='12', subreportIDs='25175',
+    def query_airplane_info(self, name, documentNo=None, passport=None, month='12', subreportIDs='14100',
                             queryReasonID='101', refID=None):
         """
         航空出行信息
@@ -330,8 +411,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25136))
 
-    def query_personal_bank_info(self, name, documentNo, accountNo, openBankNo,
-                                 mobile, subreportIDs='14506', queryReasonID='101', refID=None):
+    def query_personal_bank_info(self, name, documentNo, mobile, accountNo,
+                                 openBankNo=None, subreportIDs='14506', queryReasonID='101', refID=None):
         """
         查询个人银行账户核查信息
         :param name:
@@ -346,7 +427,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25173))
 
-    def query_open_bank_info(self, accountNo, subreportIDs='14154', queryReasonID='101', refID=None):
+    def query_open_bank_info(self, accountNo, subreportIDs='14514', queryReasonID='101', refID=None):
         """
         开户行信息查询
         :param accountNo:
@@ -357,7 +438,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25193))
 
-    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='101', refID=None):
+    def query_personal_last_two_years_info(self, name, documentNo, subreportIDs='19901', queryReasonID='101',
+                                           refID=None):
         """
         个人近两年查询记录
         :param name:
@@ -369,7 +451,7 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25136))
 
-    def query_enterprise_last_one_year(self, corpName, subreportIDs='', queryReasonID='101', refID=None):
+    def query_enterprise_last_one_year(self, corpName, subreportIDs='20901', queryReasonID='101', refID=None):
         """
         企业近一年查询记录,
         :param corpName:
@@ -378,10 +460,10 @@ class PengYuan(Third):
         :param refID:
         :return:
         """
-        # TODO:这个接口没有文档
-        return self.__query(self.create_query_condition(1234))
+        return self.__query(self.create_query_condition(25123))
 
-    def query_enterprise_operation(self, corpName, registerNo, subreportIDs='22300', queryReasonID='101', refID=None):
+    def query_enterprise_operation(self, corpName=None, registerNo=None, subreportIDs='22300', queryReasonID='101',
+                                   refID=None):
         """
         企业经营指数
         :param corpName: 被查询企业名称
@@ -393,7 +475,8 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25123))
 
-    def query_trade_company_reprot(self, corpName, queryMonth, subreportIDs='', queryReasonID='101', refID=None):
+    def query_trade_company_reprot(self, corpName, queryMonth='12', subreportIDs='22601', queryReasonID='101',
+                                   refID=None):
         """
         商户经营分析
         :param corpName:
@@ -403,26 +486,48 @@ class PengYuan(Third):
         :param refID:
         :return:
         """
-        # TODO:这个接口有问题
-        pass
+        return self.__query(self.create_query_condition(25179))
 
-    def ids_verify(self):
-        """
-        IDS核身产品
-        :return:
-        """
-        # TODO:这个接口很复杂,先放下
-        pass
-
-    def query_risk_info(self):
+    def query_risk_info(self, beginDate, endDate, applyID,
+                        monitorStr, page=1, queryType=4, pageCount=100, queryReasonID='py020'):
         """
         风险信息监控接口
+        :param interfaceId: 查询接口id（必填），py020为个人和企业监控结果查询接口。
+        :param queryType:  查询类型（必填）：
+                                    1:查询符合条件内所有个人的监控信息结果
+                                    2:查询符合条件内所有企业的监控信息结果
+                                    3:查询符合条件内所有个人和企业的监控信息结果
+                                    4:查询符合条件内指定个人或企业的监控信息结果
+                            说明：符合条件是指处于监控中的名单，或过期及取消后还在缓存查询天数内的监控过的名单，
+                            如果20150101过期，缓存查询天数为10天，
+                            那么20150111还可以查询20140101到20150101这一个周期的历史监控信息，
+                            如果超过20150111就不在让查询历史，同样取消也是如此，如果20140101开始监控，20140501取消监控，
+                            那么20150111还可以查到20140101到20140501这段监控时间内的历史监控信息，
+                            如果超过20150111就不在让查询历史，并且只支持单个周期查询，不能跨周期查。
+        :param beginDate: 查询监控开始日期（选填） ,时间格式：yyyyMMdd , 监控开始时间为T+1，如20150423将个人或企业加入监控名单，
+        则20150424开始执行监控，20150425可以查询20150423的新增及变更的数据。
+        :param endDate: 查询监控结束日期时间（选填）, 格式：yyyyMMdd
+        :param monitorStr: 监控名单（查询类型为4时必填） 如：
+                            1,张三,4678979846133 (参数1)数据类型：1：个人 2：企业 ,
+                            (参数2)名称：姓名和企业名称（数据类型是个人时为姓名，数据类型是企业时为企业名称） ,
+                            (参数3)证件号码：身份证号码（数据类型是个人时才有值，数据类型是企业时该处为空）
+                          说明：参数之间用英文逗号分隔，多组参数之间用英文分号分隔, 如：
+                              1,张三,4678979846133;
+                              1,李四,4678979846133
+                          注意：
+                          1. 当查询类型为4时，此字段不能为空，
+                          2.当前查询类型为其它值时，此字段为空，
+                          则会查询所有的信息(如开始时间，结束时间不为空，则查询监控加入时间为该日期内的名单)
+        :param page: 页码（必填）
+        :param pageCount: 每页记录数（必填）, 说明：取值应当大于0小于等于100
+        :param applyID: 申请ID（必填），同一个申请ID最多可以调用该接口二十次。
         :return:
         """
-        pass
+        # TODO:没有这个接口了
+        return self.__query(self.create_query_condition(queryReasonID, query_type=FORMAT.JSON))
 
-    def query_enterprise_info(self, corpName, orgCode, registerNo,
-                              subreportIDs='21301, 21611, 21612, 22101, 22102, 22103, 22014, 22015, 22302',
+    def query_enterprise_info(self, corpName=None, orgCode=None, registerNo=None,
+                              subreportIDs='95004',
                               queryReasonID='101', refID=None):
         """
         企业信息查询
@@ -431,7 +536,7 @@ class PengYuan(Third):
         return self.__query(self.create_query_condition(25123))
 
     def query_car_info(self, name, documentNo, licenseNo, carType,
-                       subreportIDs='13812, 13814', queryReasonID='101', refID=None):
+                       subreportIDs='13812', queryReasonID='101', refID=None):
         """
         全国车辆信息核查
         :param name:
@@ -445,8 +550,11 @@ class PengYuan(Third):
         """
         return self.__query(self.create_query_condition(25200))
 
-    def query_mini_loan_rish_grade(self, name, documentNo, applyMoney, applyPeriod,
-                                   returnAmountBank, returnAmountLoan, contact, emersencyContact):
+    def query_mini_loan_rish_grade(self, name, documentNo, province, city, corpName, positionName,
+                                   applyMoney='10000', applyPeriod='12',
+                                   returnAmountBank=None, returnAmountLoan=None,
+                                   contact=None, emersencyContact=None, subreportIDs='91203',
+                                   queryReasonID='101', refID=None):
         """
         小额贷款风险评分
         :param name:
@@ -460,13 +568,6 @@ class PengYuan(Third):
         :return:
         """
         return self.__query(self.create_query_condition(25184))
-
-    def query_car_and_house_property(self):
-        """
-        车辆售价和房产评估接口
-        :return:
-        """
-        pass
 
     @staticmethod
     def format_result(xml_data):
@@ -526,5 +627,3 @@ if __name__ == '__main__':
     # py = PengYuan()
     # py.test_query_personal_id_risk(name=u'阎伟晨', documentNo='610102199407201510')
     pass
-
-

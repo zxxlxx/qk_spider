@@ -417,6 +417,18 @@ $(function () {
     });
 
 
+    $(".fa-weixin").hover(function () {
+            var screen_width = $(window).width()
+            var container_width = $('.container').width()
+            var num = (screen_width - container_width) / 2
+            $("#chat").show()
+            $("#chat").css("right", (num - 70) + 'px')
+        },
+        function () {
+            $("#chat").hide();
+        });
+
+
     $('#new-search').click(function () {
         var key = $("#newInput").val();
         var type = $("#sType").val();

@@ -17,21 +17,32 @@
     <link rel="stylesheet" href="/static/material/theme/chacha/cms/v2/css/font-awesome.min.css"
 
           type="text/css"/>
+    <!--<link rel="stylesheet" href="/static/material/theme/chacha/cms/v2/css/bgStyle.css"-->
+    <!--type="text/css"/>-->
     <link rel="stylesheet" href="/static/material/theme/chacha/cms/v2/css/icon.css"
           type="text/css"/>
     <link rel="stylesheet" href="/static/material/theme/chacha/cms/v2/css/font.css"
           type="text/css"/>
     <link rel="stylesheet" href="/static/material/theme/chacha/cms/v2/css/app.css-v=120.css"
           type="text/css"/>
+
     <!--[if lt IE 9]>
-    <script src="../mos.meituan.com/media/lib/html5shiv.js" ></script>
-    <script src="../mos.meituan.com/media/lib/respond.js" ></script>
+    <script src="../mos.meituan.com/media/lib/html5shiv.js"></script>
+    <script src="../mos.meituan.com/media/lib/respond.js"></script>
     <![endif]-->
     <script type="text/javascript" src="/static/material/js/siteconfig.js"
     ></script>
     <script src="/static/material/theme/chacha/cms/v2/js/jquery.min.js"
     ></script>
+    <script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/parallax.min.js"></script>
+
+    <!-- 加载前 动画 -->
+    <script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/royal_preloader.min.js"></script>
+
+
     <script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/jquery.scrollTo.min.js"
+    ></script>
+    <script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/index.js"
     ></script>
     <link rel="stylesheet" href="/static/material/theme/chacha/cms/v2/css/toastr.css"
     />
@@ -42,6 +53,13 @@
             type="text/javascript"></script>
     <script src="/static/material/theme/chacha/cms/v2/js/custom.js-time=20160927.js"
     ></script>
+    <script type="text/javascript">
+        Royal_Preloader.config({
+            mode: 'number',
+            showProgress: false,
+            background: '#1d1d1d'
+        });
+    </script>
     <script type='text/javascript'>
         var _vds = _vds || [];
         window._vds = _vds;
@@ -66,7 +84,7 @@
             <a href="index.htm" class="navbar-brand"> <img
                     src="/static/material/theme/chacha/cms/v2/images/logo4.png"
 
-                    class="m-r-sm" alt="企查查"> </a> <a class="btn btn-link visible-xs" href="user_login.htm"
+                    class="m-r-sm" alt="快信"> </a> <a class="btn btn-link visible-xs" href="user_login.htm"
             > <i
                     class="fa fa-user"></i> </a></div>
         <ul class="nav navbar-nav collapse navbar-collapse" id="bs-navbar">
@@ -129,64 +147,77 @@
         </ul>
     </div>
 </header>
-<section id="search">
-    <div class="intro">
-        <div class="row">
-            <div class="container">
-                <div class="col-md-12"><h1 class="text-center heading m-b-lg text-white">
-                    查企业，就上企查查！
-                </h1>
-                    <div class="col-md-9 col-md-offset-1">
-                        <div class="search-nav hidden-xs">
-                            <ul>
-                                <li class="search-type active">全部</li>
-                                <li> |</li>
-                                <li class="search-type">企业名</li>
-                                <li> |</li>
-                                <li class="search-type">法人/股东</li>
-                                <li> |</li>
-                                <li class="search-type">高管</li>
-                                <li> |</li>
-                                <li class="search-type">品牌/产品</li>
-                                <li> |</li>
-                                <li class="search-type">联系方式</li>
-                                <li> |</li>
-                                <li class="search-type"> 经营范围</li>
-                            </ul>
-                        </div>
-                        <div class="clearfix"></div>
-                        <form action="http://www.qichacha.com/search">
-                            <div class="input-group"><input type="text" value="" id="searchkey" autocomplete="off"
-                                                            placeholder="请输入企业名称、人名，产品名等，多关键词用空格隔开，如“小米 雷军”" name="key"
-                                                            class="form-control input-lg" required="required"
-                                                            onkeydown="searchKeydown(event,1);"> <input type="hidden"
-                                                                                                        id="index"
-                                                                                                        name="index"
-                                                                                                        value="0"/>
-                                <span class="input-group-btn"> <input type="submit"
-                                                                      class="button btn btn-success btn-lg" value="查一下"> </span>
+<div class="jumbotron jumbotron-main" id="home"
+     style="background: #3498db;">
+    <div id="particles-js"></div><!-- /.particles div -->
+    <!-- 更换自己需要的上浮显示内容 -->
+    <div class="container center-vertically-holder">
+        <section id="search">
+            <div class="intro">
+                <div class="row">
+                    <div class="container">
+                        <div class="col-md-12"><h1 class="text-center heading m-b-lg text-white"
+                                                   style="color: white;margin-right: 8.3333%">
+                            查企业，就上快信!
+                        </h1>
+                            <div class="col-md-9 col-md-offset-1">
+                                <div class="search-nav hidden-xs">
+                                    <ul>
+                                        <li class="search-type active">全部</li>
+                                        <li> |</li>
+                                        <li class="search-type">企业名</li>
+                                        <li> |</li>
+                                        <li class="search-type">法人/股东</li>
+                                        <li> |</li>
+                                        <li class="search-type">高管</li>
+                                        <li> |</li>
+                                        <li class="search-type">品牌/产品</li>
+                                        <li> |</li>
+                                        <li class="search-type">联系方式</li>
+                                        <li> |</li>
+                                        <li class="search-type"> 经营范围</li>
+                                    </ul>
+                                </div>
+                                <div class="clearfix"></div>
+                                <form>
+                                    <div class="input-group"><input type="text" value="" id="searchkey"
+                                                                    autocomplete="off"
+                                                                    placeholder="请输入企业名称、人名，产品名等，多关键词用空格隔开，如“小米 雷军”"
+                                                                    name="key"
+                                                                    class="form-control input-lg" required="required"
+                                                                    onkeydown="searchKeydown(event,1);"> <input
+                                            type="hidden"
+                                            id="index"
+                                            name="index"
+                                            value="0"/>
+                                        <span class="input-group-btn"> <input type="submit"
+                                                                              class="button btn btn-success btn-lg"
+                                                                              value="查一下"> </span>
+                                    </div>
+                                </form>
+                                <section class="panel hidden-xs" id="search-list"></section>
                             </div>
-                        </form>
-                        <section class="panel hidden-xs" id="search-list"></section>
+                            <div class="col-md-8 col-md-offset-2"><p class="index-hot">热搜：
+                                <a class="index-hot-company" href="firm_CN_ad52daf3a192de2eb0d1dc8219fdbb0d.htm"
+                                   target="_blank">奔驰高管辱华</a>
+                                <a class="index-hot-company" href="firm_CN_84c17a005a759a5e0d875c1ebb6c9846.htm"
+                                   target="_blank">乐视资金链</a>
+                                <a class="index-hot-company" href="firm_CN_101f9dbf8701f659812440c3cff4b748.htm"
+                                   target="_blank">优酷土豆</a>
+                                <a class="index-hot-company" href="firm_CN_dbdf0fb127e52449ff4b4c79e3ea6f44.htm"
+
+                                   target="_blank">董明珠</a> <a class="index-hot-company"
+                                                              href="firm_CN_16eba61f412cf970050202d0994ca76b.htm"
+
+                                                              target="_blank">360云盘关闭</a></p></div>
+                        </div>
                     </div>
-                    <div class="col-md-8 col-md-offset-2"><p class="index-hot">热搜：
-                        <a class="index-hot-company" href="firm_CN_ad52daf3a192de2eb0d1dc8219fdbb0d.htm"
-                           target="_blank">奔驰高管辱华</a>
-                        <a class="index-hot-company" href="firm_CN_84c17a005a759a5e0d875c1ebb6c9846.htm"
-                           target="_blank">乐视资金链</a>
-                        <a class="index-hot-company" href="firm_CN_101f9dbf8701f659812440c3cff4b748.htm"
-                           target="_blank">优酷土豆</a>
-                        <a class="index-hot-company" href="firm_CN_dbdf0fb127e52449ff4b4c79e3ea6f44.htm"
-
-                           target="_blank">董明珠</a> <a class="index-hot-company"
-                                                      href="firm_CN_16eba61f412cf970050202d0994ca76b.htm"
-
-                                                      target="_blank">360云盘关闭</a></p></div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+    </div><!-- /.container -->
+</div>
+
 <div class="container m-t-lg">
     <div class="col-md-12">
         <section>
@@ -1330,7 +1361,7 @@
                             </div>
                         </div>
                         <p class="baidu-des" style="color:#fff;">
-                            企查查,启信宝,企业工商信息查询,企业信用信息查询,企业信息查询,工商信息查询,企业信用报告,征信查询,红盾网,天眼查,悉知
+                            快信,启信宝,企业工商信息查询,企业信用信息查询,企业信息查询,工商信息查询,企业信用报告,征信查询,红盾网,天眼查,悉知
                         </p></div>
                 </div>
             </div>
@@ -1560,6 +1591,11 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/particles.min.js"></script>
+<script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/particlesRun.js"></script>
+<script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/jquery.mixitup.js"></script>
+<script type="text/javascript" src="/static/material/theme/chacha/cms/v2/js/style-switcher.js"></script>
 <script type="text/javascript">
     (function () {
         var bp = document.createElement('script');

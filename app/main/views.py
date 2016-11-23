@@ -12,7 +12,7 @@ def index():
     if current_user.is_authenticated:
         return render_template('index.html')
 
-    return render_template('welcome.html')
+    return render_template('enterprise/index.html')
 
 
 

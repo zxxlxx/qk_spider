@@ -18,12 +18,12 @@ def index():
 
 @main.route('/search')
 def search():
-    return render_template('func/search.html')
+    return render_template('enterprise/search.html')
 
 
 @main.route('/result')
 def result():
-    return render_template('func/result.html')
+    return render_template('enterprise/result.html')
 
 
 @main.route('/user/<username>')

@@ -379,7 +379,7 @@ function reply(e,u){
 		}else if(index==6){
 	       $('#searchkey').attr('placeholder','请输入高管名称，如“李嘉诚”')		  					
 		}else if(index==8){
-	       $('#searchkey').attr('placeholder','请输入品牌或产品的关键字，如“企查查”')							
+	       $('#searchkey').attr('placeholder','请输入品牌或产品的关键字，如“乾康”')
 		}else if(index==10){
 	       $('#searchkey').attr('placeholder','请输入企业注册地址、联系电话、邮箱或网址，如“苏州工业园区”')							
 		}else if(index==12){

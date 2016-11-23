@@ -157,7 +157,6 @@ class PengYuan(Third):
         threads = []
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=18) as executor:
-
             func_params = {func[1]: {param: kwargs.get(param) for param
                                      in inspect.signature(func[1]).parameters.keys()
                                      if kwargs.get(param) is not None}

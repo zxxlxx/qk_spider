@@ -16,7 +16,8 @@ class Third(metaclass=abc.ABCMeta):
     def source(self):
         return self.source
 
-    def pre_query_params(self, *args, **kwargs):
+    @classmethod
+    def pre_query_params(cls, *args, **kwargs):
         """
         与标准变量名之间的转换
         :param args:
@@ -25,8 +26,8 @@ class Third(metaclass=abc.ABCMeta):
         """
         temp = copy.deepcopy(kwargs)
         for arg in kwargs:
-            if self.params_mapping.get(arg) is not None:
-                temp.update({self.params_mapping.get(arg): temp.pop(arg)})
+            if cls.params_mapping.get(arg) is not None:
+                temp.update({cls.params_mapping.get(arg): temp.pop(arg)})
             else:
                 temp.pop(arg)
         return temp

@@ -12,7 +12,7 @@ class TestBBD(TestCase):
         result = BBD
 
     def test_query_qyxx_jbxx(self):
-        result = BBD.query_qyxx_jbxx(company=u'乾康(上海)金融信息服务股份有限公司')
+        result = BBD.query_qyxx_jbxx(company=u'乾康（上海）金融信息服务股份有限公司')
         print(result.text)
 
     def test_query_qyxx_gdxx(self):

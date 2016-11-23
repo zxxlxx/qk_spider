@@ -22,8 +22,10 @@ class BBD(Third):
         'car_type': 'carType'
     }
 
-    def query(self, *args, **kwargs):
-        pass
+    @staticmethod
+    def query(*args, **kwargs):
+        kwargs = BBD.pre_query_params(*args, **kwargs)
+
 
     @staticmethod
     def query_qyxx_jbxx(company=None, qyxx_id=None):

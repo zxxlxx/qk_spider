@@ -157,7 +157,7 @@ class BBD(Third):
         return result
 
     @classmethod
-    def query_dishonesty(cls, company=None, qyxx_id=None, page_size=None):
+    def query_dishonesty(cls, company=None, page_size=None, qyxx_id=None):
         """
         失信被执行人
         :param company: 企业名称，精确匹配(key)

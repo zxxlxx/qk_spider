@@ -22,8 +22,10 @@ class BBD(Third):
         'car_type': 'carType'
     }
 
-    def query(self, *args, **kwargs):
-        pass
+    @staticmethod
+    def query(*args, **kwargs):
+        kwargs = BBD.pre_query_params(*args, **kwargs)
+
 
     @staticmethod
     def query_qyxx_jbxx(company=None, qyxx_id=None):
@@ -34,7 +36,7 @@ class BBD(Third):
         :param qk: 用户唯一性验证
         :return:
         """
-        url = 'http://dataom.api.bbdservice.com/api/bbd_qyxx_jbxx'
+        url = 'http://dataom.api.bbdservice.com/api/bbd_qyxx_jbxx/'
         kwargs = params_to_dict(1)
         kwargs['ak'] = '6218684779c4132bbf9180e20e2ebc4d'
         result = requests.get(url=url, params=kwargs)
@@ -52,7 +54,7 @@ class BBD(Third):
         :param end: bbd_dotime ：格式2016-01-29
         :return:
         """
-        url = 'http://dataom.api.bbdservice.com/api/bbd_qyxx_gdxx'
+        url = 'http://dataom.api.bbdservice.com/api/bbd_qyxx_gdxx/'
         kwargs = params_to_dict(1)
         kwargs['ak'] = '91718c463d479eeb5bcf41b8bac114'
         result = requests.get(url=url, params=kwargs)

@@ -16,6 +16,9 @@ def params_to_dict(outer=1):
     result = {i: values[i] for i in args if values[i] is not None}
     if 'self' in result:
         result.pop('self')
+
+    if 'cls' in result:
+        result.pop('cls')
     return result
 
 

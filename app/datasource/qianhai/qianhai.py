@@ -1,4 +1,7 @@
+import base64
 import json
+import random
+import string
 import sys
 import os
 from datetime import datetime
@@ -38,30 +41,31 @@ class QianHai(Third):
 
     @staticmethod
     def format_json_header():
-        transNo = datetime.now().strftime('%Y%m%d%s')
-        transDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        trans_no = datetime.now().strftime('%Y%m%d%S') + \
+                  ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(14))
+        trans_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         header = r'"header":{{' \
                  r'"orgCode": "{orgCode}", ' \
                  r'"chnlId": "{chnlId}",' \
-                 r'"transNo": "{transNo}",' \
-                 r'"transDate": "{transDate}",' \
+                 r'"transNo": "{trans_no}",' \
+                 r'"transDate": "{trans_date}",' \
                  r'"authCode": "{authCode}",' \
                  r'"authDate": "{authDate}"}}'.format(orgCode=QianHai.org_code,
                                                       chnlId=QianHai.chnl_id,
-                                                      transNo=transNo,
-                                                      transDate=transDate,
+                                                      transNo=trans_no,
+                                                      transDate=trans_date,
                                                       authCode=QianHai.auth_code,
-                                                      authDate=transDate)
+                                                      authDate=trans_date)
         return header
 
     @staticmethod
-    def format_json_enc_busi_data(*args, **kwargs):
+    def format_json_enc_busi_data(**kwargs):
         origin_bus_data = r'{{' \
                           r'"batchNo": "{batchNo}",' \
                           r'"records":[{{' \
                           r'"idNo": "{personal_id}",' \
-                          r'"idTpye": "0",' \
+                          r'"idType": "0",' \
                           r'"name": "{user_name_cn}",' \
                           r'"mobileNo": "{mobile_num}",' \
                           r'"cardNo": "{card_id}",' \

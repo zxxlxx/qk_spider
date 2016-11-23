@@ -5,7 +5,7 @@ from unittest import mock
 
 sys.path.append('../')
 import pydevd
-pydevd.settrace('licho.iok.la', port=44957, stdoutToServer=True, stderrToServer=True)
+# pydevd.settrace('heqiang.imwork.net', port=44957, stdoutToServer=True, stderrToServer=True)
 
 from unittest import TestCase
 import xmltodict
@@ -17,7 +17,7 @@ import queue
 import sys
 sys.path.append('../')
 from app.datasource.pengyuan.pengyuan import PengYuan, FORMAT
-
+from app.datasource.pengyuan.transform import *
 
 class TestPengYuan(TestCase):
 
@@ -40,6 +40,7 @@ class TestPengYuan(TestCase):
 
     def test_create_query_condition(self):
         mock
+
     def test_query_personal_id_risk(self):
         sub_report = {10604: True, 10603: False, 14200: True}
         query_reason = {101: u"货款审批",
@@ -71,6 +72,8 @@ class TestPengYuan(TestCase):
                                            documentNo='210114198701251232',
                                            subreportIDs='10604',
                                             queryReasonID='101')
+
+        print(result)
 
     def test_query_airplane_info(self):
         py = PengYuan()

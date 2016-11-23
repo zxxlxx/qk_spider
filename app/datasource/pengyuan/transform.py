@@ -1,121 +1,177 @@
 # -*- coding: utf-8 -*-
-import xmltodict
-import json
 from lxml import etree
 import sys
-import os
-import io
+import xmltodict
+from app.info import *
+from app.util.logger import logger
+from sqlalchemy.exc import StatementError
+
 sys.path.append("..")
-from ..utils.tools import convert_dict
-xmlStr = """
-<?xml version="1.0" encoding="GBK"?>
-<cisReports receiveTime="查询申请时间,格式YYYYMMDD HH24:mm:ss" queryCount="查询请求数量" queryUserID="查询操作员登录名" subOrgan="分支机构名称" unitName="查询单位名称" batNo="查询批次号">
-<!-- 以下为每个查询申请的查询结果 1..n -->
-<cisReport isFrozen="该客户是否被冻结，true：被冻结，false：未被冻结" hasSystemError="有否系统错误，true：有错误，false：无错误" refID="引用ID,为查询申请条件中的引用ID" treatResult="对应的收费子报告收费次数,与subReportTypes一一对应,为大于等于0的值的集合,用逗号分隔" subReportTypes="查询的收费子报告ID,多个收费子报告ID用逗号分隔" queryReasonID="查询原因ID，详见数据字典" buildEndTime="报告生成结束时间,格式YYYYMMDD HH24:mm:ss" reportID="报告编号">
-<!-- 查询条件信息 1..1 -->
-<queryConditions>
-<!-- 1..n -->
-<item>
-<name>查询条件英文名称</name>
-<caption>查询条件中文名称</caption>
-<value>查询条件值</value>
-</item>
-</queryConditions>
-<industrySentimentIndex treatResult="子报告查询状态,1：查得，2：未查得，3：其他原因未查得" errorMessage="treatResult=3时的错误描述信息,treatResult!=3时,该属性的值为空" treatErrorCode="treatResult=3时的错误代码,详见数据字典,treatResult!=3时,该属性不存在" subReportTypeCost="收费子报告ID" subReportType="子报告ID">
-<industryCode>行业代码</industryCode>
-<industryName>行业名称</industryName>
-<lastestYear>最新更新年份</lastestYear>
-<lastestMonth>最新更新月份</lastestMonth>
-<lastestQuarter>最新更新季度</lastestQuarter>
-<!--景气指数分析简报数据-->
-<analysisBrief>
-<lastest3YearAvgIndex>最近3年的平均景气指数</lastest3YearAvgIndex>
-<lastestMonth>最新月份</lastestMonth>
-<lastestMonthIndexValue>最新月份的景气指数，数值型</lastestMonthIndexValue>
-<lastestMonthIncrIndexValue>景气指数最新一个月的增量，数值型</lastestMonthIncrIndexValue>
-<briefCaption>行业景气指数分析简报描述</briefCaption>
-</analysisBrief>
-<!--景气指数列表数据-->
-<sentimentIndex>
-<item>
-<year>年份</year>
-<project>项目名称ID，1表示行业景气指数；2表示企业数量</project>
-<secondMonth>第二个月的项目值，数值型</secondMonth>
-<thirdMonth>第三个月的项目值，数值型</thirdMonth>
-<forthMonth>第四个月的项目值，数值型</forthMonth>
-<fifthMonth>第五个月的项目值，数值型</fifthMonth>
-<sixthMonth>第六个月的项目值，数值型</sixthMonth>
-<seventhMonth>第七个月的项目值，数值型</seventhMonth>
-<eightnMonth>第八个月的项目值，数值型</eightnMonth>
-<ninthMonth>第九个月的项目值，数值型</ninthMonth>
-<tenthMonth>第十个月的项目值，数值型</tenthMonth>
-<eleventhMonth>第十一个月的项目值，数值型</eleventhMonth>
-<twelfthMonth>第十二个月的项目值，数值型</twelfthMonth>
-</item>
-</sentimentIndex>
-<!--行业亏损企业比例变化趋势数据-->
-<businessLossesRatio>
-<item>
-<year>所在年份</year>
-<quarter>所在季度</quarter>
-<ratioValue>所在年份季度比例值，数值型，单位为%</ratioValue>
-<ratioBalance>变化量</ratioBalance>
-</item>
-</businessLossesRatio>
-<!--行业累计销售收入同比增长率变化趋势数据-->
-<salesRevenueGrowthRatio>
-<item>
-<year>所在年份</year>
-<quarter>所在季度</quarter>
-<ratioValue>所在年份季度比例值，数值型，单位为%</ratioValue>
-</item>
-<item>
-<year>2016</year>
-<quarter>3</quarter>
-<ratioValue>1%</ratioValue>
-</item>
-</salesRevenueGrowthRatio>
-<totalProfitGrowthRatio>
-<!--行业利润总额同比增长率变化情况 0..1-->
-<item>
-<year>所在年份</year>
-<quarter>所在季度</quarter>
-<ratioValue>所在年份季度比例值，数值型，单位为%</ratioValue>
-</item>
-</totalProfitGrowthRatio>
-</industrySentimentIndex>
-</cisReport>
-</cisReports>
-"""
 
 
-def format_result(xml_data, path, header=None):
-    if header is None:
-        document = etree.XML(xml_data)
+def __remove_xml_head(xml_string):
+    """
+    去除xml文档头部
+    :param xml_string: 完整xml文档内容
+    :return: 去除xml头部的字符串
+    """
+    index = xml_string.find('>')
+    if xml_string[index - 1] is '?':
+        return xml_string[index + 1:].strip()
     else:
-        tempf = open("temp.xml", "w")
-        tempf.write(xml_data.strip("\n"))
-        tempf.close()
-        document = etree.parse("temp.xml")
-        os.remove("temp.xml")
+        return xml_string.strip()
+
+
+def __get_report_dict(report, path):
+    """
+    将结果报告中选取节点转换为字典
+    :param report: 结果报告
+    :param path:  选取内容路径
+    :return: 结果字典
+    """
+    document = etree.XML(__remove_xml_head(report))
     result_report = document.find(path)
     if result_report is None:
-        return
+        return None
     selected = etree.tostring(result_report, encoding='UTF-8')
-    selected_dict = xmltodict.parse(selected, xml_attribs=False)
+    return xmltodict.parse(selected, xml_attribs=False)
 
-    # result = {}
-    # # 顶层节点（industrySentimentIndex节点）
-    # for name, value in selected_dict.items():
-    #     map_name = config.get(name)
-    #     result["name"] = map_name.get("name")
-    #     result["value"] = parse_node(value)
-    #     result["desc"] = name
-    #     result["tag"] = map_name.get("tag")
-    return convert_dict(selected_dict)
+
+def create_person(name, identity, db_session):
+    """
+    创建个人
+    :param name: 姓名
+    :param identity: 身份证
+    :param db_session: 数据库会话
+    :return: 无返回，在Person表新建记录
+    """
+    person = Person(name=name, identity=identity)
+    # 存个人信息
+    try:
+        db_session.add(person)
+        db_session.commit()
+    except StatementError as e:
+        logger.error(e)
+
+
+def process_person_id_risk(identity, report, db_session):
+    """
+    处理个人身份认证信息及风险信息
+    :param identity：身份证
+    :param report: 鹏元查询接口返回数据
+    :param db_session: 数据库会话
+    :return: 无返回值，将结果存入Person
+    """
+    selected_dict = __get_report_dict(report, 'cisReport/policeCheck2Info/item')
+    if selected_dict is None:
+        return
+    # 写入个人基本信息表
+    person = db_session.query(Person).filter_by(identity=identity).first()
+    person.name = selected_dict['item']['name']
+    person.photo = selected_dict['item']['photo']
+    person.identity_status = selected_dict['item']['result']
+    try:
+        db_session.add(person)
+        db_session.commit()
+    except StatementError as e:
+        logger.error(e)
+
+    # 个人风险分析
+    risk_dict = __get_report_dict(report, 'cisReport/personRiskStatInfo/stat')
+    if risk_dict is None:
+        return
+    person_risk = db_session.query(PersonRisk).filter_by(person_id=person.id).first()
+    if person_risk is None:
+        person_risk = PersonRisk(person=person)
+    person_risk.judicial_case = risk_dict['stat']['alCount']
+    person_risk.judicial_performed = risk_dict['stat']['zxCount']
+    person_risk.judicial_blacklist = risk_dict['stat']['sxCount']
+    person_risk.tax_performed = risk_dict['stat']['swCount']
+    person_risk.tax_debt = risk_dict['stat']['cqggCount']
+    person_risk.loan_expired = risk_dict['stat']['wdyqCount']
+    try:
+        db_session.add(person_risk)
+        db_session.commit()
+    except StatementError as e:
+        logger.error(e)
+
+
+def process_air_traffic(identity, report, db_session):
+    """
+    航空出行
+    :param identity 被查询证件号
+    :param report: 查询结果
+    :param db_session: 数据库会话
+    :return: 无返回值
+    """
+    select_dict = __get_report_dict(report, 'cisReport/AirTktInfo/item')
+    if select_dict is None:
+        return
+    person = db_session.query(Person).filter_by(identity=identity).first()
+    air_info = AirTraffic.query.filter_by(person_id=person.id).first()
+    if air_info is None:
+        air_info = AirTraffic(person=person)
+    air_info.most_month = select_dict['item']['mostMonth']
+    air_info.most_month_percent = select_dict['item']['mostMonthPercent']
+    air_info.avg_discount_area = select_dict['item']['avgDiscountArea']
+    air_info.business_cabin_percent = select_dict['item']['businessCabinPercent']
+    air_info.official_cabin_percent = select_dict['item']['officialCabinPercent']
+    air_info.economy_cabin_percent = select_dict['item']['economyCabinPercent']
+    air_info.from_city = select_dict['item']['fromCity']
+    air_info.from_city_percent = select_dict['item']['fromCityPercent']
+    air_info.dest_city = select_dict['item']['destCity']
+    air_info.dest_city_percent = select_dict['item']['destCityPercent']
+    air_info.most_airline = select_dict['item']['mostAirline']
+    air_info.most_airline_percent = select_dict['item']['mostAirlinePercent']
+    air_info.domestic_percent = select_dict['item']['domesticPercent']
+    air_info.inter_percent = select_dict['item']['interPercent']
+    air_info.free_percent = select_dict['item']['freeCountArea']
+    air_info.avg_price = select_dict['item']['avgPrice']
+    air_info.avg_delay_area = select_dict['item']['avgDelayArea']
+    air_info.avg_ticket_day_area = select_dict['item']['avgTicketDayArea']
+    air_info.last_flight_date_area = select_dict['item']['lastFlightDateArea']
+    air_info.fly_count_level = select_dict['item']['flyCountLevel']
+    air_info.fly_count_name = select_dict['item']['flyCountName']
+    air_info.fly_count_area = select_dict['item']['flyCountArea']
+    air_info.grade_desc = select_dict['item']['gradeDesc']
+    air_info.cabin_desc = select_dict['item']['cabinDesc']
+    air_info.fly_score = select_dict['item']['flyScore']
+    air_info.cabin_score = select_dict['item']['cabinScore']
+    try:
+        db_session.add(air_info)
+        db_session.commit()
+    except StatementError as e:
+        logger.error(e)
+
+
+def process_person_query_last_two_years(identity, report, db_session):
+    """
+    个人近两年查询记录
+    :param identity 被查询证件号
+    :param report: 查询结果
+    :param db_session: 数据库会话
+    :return: 无返回值
+    """
+    select_dict = __get_report_dict(report, 'cisReport/historyQueryInfo')
+    if select_dict is None:
+        return
+    person = db_session.query(Person).filter_by(identity=identity).first()
+    for node in select_dict['historyQueryInfo']['item']:
+        info = PersonQueried(person=person)
+        info.unit = node['unit']
+        info.unit_member = node['unitMember']
+        info.query_date = node['queryDate']
+        try:
+            db_session.add(info)
+            db_session.commit()
+        except StatementError as e:
+            logger.error(e)
 
 
 if __name__ == '__main__':
-    report = format_result(xmlStr, 'cisReport/industrySentimentIndex', header=True)
-    json_str = json.dumps(report, indent=2, ensure_ascii=False)
-    print(json_str)
+    # app = create_app('testing')
+    # app_context = app.app_context()
+    # app_context.push()
+    # db.create_all()
+    # process_person_id_risk(test)
+    pass

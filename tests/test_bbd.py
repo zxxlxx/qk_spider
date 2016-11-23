@@ -11,19 +11,18 @@ class TestBBD(TestCase):
 
     def test_query(self):
         params = {'enterprise_name': u'乾康（上海）金融信息服务股份有限公司'}
-        result = BBD.query(**params)
+        result, _ = BBD.query(**params)
+        pass
 
     def test_query_qyxx_jbxx(self):
-        # result = BBD.query_qyxx_jbxx(company=u'乾康（上海）金融信息服务股份有限公司')
-        # print(result.text)
-        pass
+        result = BBD.query_qyxx_jbxx(company=u'乾康（上海）金融信息服务股份有限公司')
+        assert result.text
 
     def test_query_qyxx_gdxx(self):
-        pass
-
+        result = BBD.query_qyxx_gdxx(company=u'乾康（上海）金融信息服务股份有限公司')
+        assert result.text
 
 if __name__ == '__main__':
     t = TestBBD()
     # t.test_query_qyxx_jbxx()
-    t.test_query()
-    
+

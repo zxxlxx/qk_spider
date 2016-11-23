@@ -14,12 +14,12 @@ def index():
 
 @enterprise.route('/search')
 def search():
-    return render_template('enterprise//search.html')
+    return render_template('enterprise/search.html')
 
 
 @enterprise.route('/result')
 def result():
-    return render_template('enterprise//result.html')
+    return render_template('enterprise/result.html')
 
 
 @enterprise.route('/user/<username>')

@@ -14,7 +14,8 @@ def params_to_dict(outer=1):
     args, _, _, values = inspect.getargvalues(frame)
     # print('function name "%s"' % inspect.getframeinfo(frame)[2])
     result = {i: values[i] for i in args if values[i] is not None}
-    result.pop('self')
+    if 'self' in result:
+        result.pop('self')
     return result
 
 

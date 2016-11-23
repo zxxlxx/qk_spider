@@ -9,13 +9,13 @@ from app.datasource.qianhai.qianhai import QianHai
 
 class TestQianHai(TestCase):
 
-    # url = 'https://test-qhzx.pingan.com.cn:5443/do/dmz/query/credoo/v1/MSC8005'
-    url = 'https://test-qhzx.pingan.com.cn:5443/do/dmz/query/blacklist/v1/MSC8004'
+    url = 'https://test-qhzx.pingan.com.cn:5443/do/dmz/query/credoo/v1/MSC8005'
+    # url = 'https://test-qhzx.pingan.com.cn:5443/do/dmz/query/blacklist/v1/MSC8004'
     kwargs = {
         'batchNo': '29342fasdf',
         'personal_id': '430102197111062010',
         'user_name_cn': u'谭俊峰',
-        'mobile_num': 'mobile_num',
+        'mobile_num': '18192349450',
         'card_id': '4340624220484768',
         'email': 'sunlc@qkjr.com.cn',
         'weibo_id': 'chinabhsun',
@@ -53,7 +53,7 @@ class TestQianHai(TestCase):
         busi_data_result = js.get('busiData')
         security_info_result = js.get('securityInfo').get('signatureValue')
         v = DataSecurityUtil.verify_data(busi_data_result.encode(), security_info_result)
-        final_result = DataSecurityUtil.decrypt(busi_data_result, QianHai.check_sum)
-        print(final_result.decode())
+        final_result = DataSecurityUtil.decrypt(busi_data_result, QianHai.check_sum).decode('utf-8', 'ignore')
+        print(final_result)
 
 

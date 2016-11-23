@@ -61,7 +61,7 @@ class QianHai(Third):
                           r'"batchNo": "{batchNo}",' \
                           r'"records":[{{' \
                           r'"idNo": "{personal_id}",' \
-                          r'"idTpye": "0",' \
+                          r'"idType": "0",' \
                           r'"name": "{user_name_cn}",' \
                           r'"mobileNo": "{mobile_num}",' \
                           r'"cardNo": "{card_id}",' \
